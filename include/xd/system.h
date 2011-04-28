@@ -1,6 +1,7 @@
 #ifndef H_XD_SYSTEM
 #define H_XD_SYSTEM
 
+#include <GL/glew.h>
 #include <xd/common.h>
 #include <xd/system/types.h>
 #include <xd/system/exceptions.h>

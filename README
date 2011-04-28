@@ -42,7 +42,7 @@ XD depends on many third party libraries to deliver its features.
 Here's a list of the dependancies and which components depend on them:
 
 boost     all components
-glew      all components
+glew      system, graphics
 glm       graphics
 SDL       system, requires version 1.3
 
