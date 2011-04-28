@@ -25,10 +25,10 @@ Tools to work with audio data like streaming music, sound effects, etc.
 scripting (PLANNED)
 ---------
 A library to make it easier for you to embed scripting capabilities into your game, possibly providing way to bind xd's
-own subsystems. The first supported scripting language will most likely be JavaScript, but it'd be possible to support other
-languages like Lua. One feature that would be hugely useful is making a common interface for binding C++ functions/classes
-into the scripting vm, but this might be difficult without making compromises due to many scripting languages being so
-different. Maybe make a simplified common bind API.
+own subsystems. The first supported scripting language will most likely be JavaScript, but it'd be possible to support
+other languages like Lua. One feature that would be hugely useful is making a common interface for binding C++
+functions/classes into the scripting vm, but this might be difficult without making compromises due to many scripting
+languages being so different. Maybe make a simplified common bind API.
 
 
 XD depends on many third party libraries to deliver its features. Here's a list of the dependancies and which components
