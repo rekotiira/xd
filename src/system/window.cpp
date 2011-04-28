@@ -8,10 +8,10 @@ xd::window::window(const char *title)
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	m_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -37,7 +37,7 @@ xd::window::window(const char *title)
 xd::window::~window()
 {
 	SDL_GL_DeleteContext(m_context);
-    SDL_DestroyWindow(m_window);
+	SDL_DestroyWindow(m_window);
 
 	SDL_Quit();
 }
@@ -173,15 +173,8 @@ bool xd::window::pressed(const std::string& key, int modifiers)
 		Uint8 *state = SDL_GetKeyboardState(0);
 		// iterate through each physical eky
 		for (xd::window::key_set_t::iterator j = i->second.begin(); j != i->second.end(); ++j) {
-			if (j->type == xd::keyboard) {
-				Uint8 *state = SDL_GetKeyboardState(0);
-				if (state[SDL_GetScancodeFromKey(j->code)] && modifier(modifiers))
+			if (pressed(*j, modifiers))
 					return true;
-			}
-			if (j->type == xd::mouse) {
-				if ((SDL_GetMouseState(0, 0) & SDL_BUTTON(j->code)) != 0 && modifier(modifiers))
-					return true;
-			}
 		}
 	}
 	return false;
@@ -194,21 +187,16 @@ bool xd::window::triggered(const xd::key& key, int modifiers)
 
 bool xd::window::triggered(const std::string& key, int modifiers)
 {
-	// track return value
-	bool triggered = false;
-
 	// find if this virtual key is bound
 	xd::window::virtual_table_t::iterator i = m_virtual_to_key.find(key);
 	if (i != m_virtual_to_key.end()) {
 		// iterate through each physical eky
 		for (xd::window::key_set_t::iterator j = i->second.begin(); j != i->second.end(); ++j) {
-			triggered = (m_triggered_keys.find(*j) != m_triggered_keys.end());
-			if (triggered)
-				break;
+			if (triggered(*j, modifiers))
+				return true;
 		}
 	}
-
-	return (triggered && modifier(modifiers));
+	return false;
 }
 
 bool xd::window::modifier(int modifiers)

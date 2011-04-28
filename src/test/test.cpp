@@ -42,8 +42,8 @@ test::test()
 	bind_key(xd::keyb(xd::key_esc), "quit");
 
 	// test event callbacks
-	//bind_input_event("key_down", &test::on_key_down, this, xd::input_filter(xd::keyboard));
-	//bind_input_event("key_down", &test::on_fire, this, xd::input_filter("fire", xd::mod_lctrl|xd::mod_lshift));
+	bind_input_event("key_down", &test::on_key_down, this, xd::input_filter(xd::keyboard));
+	bind_input_event("key_down", &test::on_fire, this, xd::input_filter("fire", xd::mod_lctrl|xd::mod_lshift));
 }
 
 test::~test()
