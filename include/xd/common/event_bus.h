@@ -7,7 +7,10 @@
 #include <boost/unordered_map.hpp>
 #include <boost/function.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/optional.hpp>
 #include <xd/common/types.h>
+
+#include <iostream>
 
 namespace xd
 {
@@ -28,7 +31,12 @@ namespace xd
 	public:
 		typedef boost::function<bool (const Args&)> callback_t;
 
-		event_callback(callback_t callback, const Filter& filter = Filter())
+		event_callback(callback_t callback)
+			: m_callback(callback)
+		{
+		}
+
+		event_callback(callback_t callback, const Filter& filter)
 			: m_callback(callback)
 			, m_filter(filter)
 		{
@@ -36,7 +44,7 @@ namespace xd
 
 		bool operator()(const Args& args)
 		{
-			if (m_filter(args)) {
+			if (!m_filter || (*m_filter)(args)) {
 				return m_callback(args);
 			}
 			return true;
@@ -44,7 +52,7 @@ namespace xd
 
 	private:
 		callback_t m_callback;
-		Filter m_filter;
+		boost::optional<Filter> m_filter;
 	};
 
 	// specialization when no filter
@@ -113,6 +121,16 @@ namespace xd
 	class event_info : public event_info_base<Args, Filter>
 	{
 	public:
+		event_link add(typename event_callback_t::callback_t callback, event_placement placement = event_prepend)
+		{
+			std::size_t link = m_counter++;
+			if (placement == event_prepend)
+				m_callbacks.push_front(std::make_pair(link, event_callback_t(callback)));
+			else
+				m_callbacks.push_back(std::make_pair(link, event_callback_t(callback)));
+			return link;
+		}
+
 		event_link add(typename event_callback_t::callback_t callback, Filter filter, event_placement placement = event_prepend)
 		{
 			std::size_t link = m_counter++;

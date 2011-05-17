@@ -1,6 +1,6 @@
 #include <xd/system.h>
 
-xd::window::window(const char *title)
+xd::window::window(const std::string& title)
 	: m_closed(false)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -14,7 +14,7 @@ xd::window::window(const char *title)
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	m_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         800, 600, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
 	if (!m_window) {
 		throw xd::window_creation_failed();
@@ -73,9 +73,9 @@ void xd::window::update()
 				// construct event arguments
 				input_args args;
 				if (evt.type == SDL_KEYDOWN || evt.type == SDL_KEYUP) {
-					args.physical_key = keyb(static_cast<xd::key_code>(evt.key.keysym.sym));
+					args.physical_key = keyb(evt.key.keysym.sym);
 				} else {
-					args.physical_key = mouseb(static_cast<xd::key_code>(evt.button.button));
+					args.physical_key = mouseb(evt.button.button);
 				}
 				args.modifiers = SDL_GetModState();
 
@@ -108,12 +108,12 @@ void xd::window::swap()
 	SDL_GL_SwapWindow(m_window);
 }
 
-bool xd::window::closed()
+bool xd::window::closed() const
 {
 	return m_closed;
 }
 
-void xd::window::bind_key(const xd::key& physical_key, std::string virtual_key)
+void xd::window::bind_key(const xd::key& physical_key, const std::string& virtual_key)
 {
 	// find if the physical key is bound
 	xd::window::key_table_t::iterator i = m_key_to_virtual.find(physical_key);
@@ -150,7 +150,7 @@ void xd::window::unbind_key(const std::string& virtual_key)
 	}
 }
 
-bool xd::window::pressed(const xd::key& key, int modifiers)
+bool xd::window::pressed(const xd::key& key, int modifiers) const
 {
 	if (key.type == xd::keyboard) {
 		Uint8 *state = SDL_GetKeyboardState(0);
@@ -164,14 +164,14 @@ bool xd::window::pressed(const xd::key& key, int modifiers)
 	return false;
 }
 
-bool xd::window::pressed(const std::string& key, int modifiers)
+bool xd::window::pressed(const std::string& key, int modifiers) const
 {
 	// find if this virtual key is bound
-	xd::window::virtual_table_t::iterator i = m_virtual_to_key.find(key);
+	xd::window::virtual_table_t::const_iterator i = m_virtual_to_key.find(key);
 	if (i != m_virtual_to_key.end()) {
 		// get keystate
 		Uint8 *state = SDL_GetKeyboardState(0);
-		// iterate through each physical eky
+		// iterate through each physical key
 		for (xd::window::key_set_t::iterator j = i->second.begin(); j != i->second.end(); ++j) {
 			if (pressed(*j, modifiers))
 					return true;
@@ -180,17 +180,17 @@ bool xd::window::pressed(const std::string& key, int modifiers)
 	return false;
 }
 
-bool xd::window::triggered(const xd::key& key, int modifiers)
+bool xd::window::triggered(const xd::key& key, int modifiers) const
 {
 	return (m_triggered_keys.find(key) != m_triggered_keys.end() && modifier(modifiers));
 }
 
-bool xd::window::triggered(const std::string& key, int modifiers)
+bool xd::window::triggered(const std::string& key, int modifiers) const
 {
 	// find if this virtual key is bound
-	xd::window::virtual_table_t::iterator i = m_virtual_to_key.find(key);
+	xd::window::virtual_table_t::const_iterator i = m_virtual_to_key.find(key);
 	if (i != m_virtual_to_key.end()) {
-		// iterate through each physical eky
+		// iterate through each physical key
 		for (xd::window::key_set_t::iterator j = i->second.begin(); j != i->second.end(); ++j) {
 			if (triggered(*j, modifiers))
 				return true;
@@ -199,18 +199,18 @@ bool xd::window::triggered(const std::string& key, int modifiers)
 	return false;
 }
 
-bool xd::window::modifier(int modifiers)
+bool xd::window::modifier(int modifiers) const
 {
 	return ((modifiers & SDL_GetModState()) == modifiers);
 }
 
-xd::event_link xd::window::bind_input_event(std::string event_name, input_event_callback_t callback,
+xd::event_link xd::window::bind_input_event(const std::string& event_name, input_event_callback_t callback,
 	const input_filter& filter, event_placement place)
 {
 	return m_input_events[event_name].add(callback, filter, place);
 }
 
-void xd::window::unbind_input_event(std::string event_name, event_link link)
+void xd::window::unbind_input_event(const std::string& event_name, event_link link)
 {
 	m_input_events[event_name].remove(link);
 }

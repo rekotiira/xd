@@ -3,7 +3,7 @@
 
 #include <SDL/SDL.h>
 #include <string>
-#include <xd/system/types.h>
+#include <xd/system/input.h>
 #include <xd/common/event_bus.h>
 #include <xd/graphics/transform_geometry.h>
 #include <boost/noncopyable.hpp>
@@ -20,34 +20,34 @@ namespace xd
 		typedef event_bus<input_args, input_filter>::callback_t input_event_callback_t;
 
 		// public interface
-		window(const char *title);
+		window(const std::string& title);
 		virtual ~window();
 
 		void update();
 		void clear();
 		void swap();
 
-		bool closed();
+		bool closed() const;
 
-		void bind_key(const key& physical_key, std::string virtual_key);
+		void bind_key(const key& physical_key, const std::string& virtual_key);
 		void unbind_key(const key& key);
 		void unbind_key(const std::string& key);
 
-		bool pressed(const key& key, int modifiers = 0);
-		bool pressed(const std::string& key, int modifiers = 0);
+		bool pressed(const key& key, int modifiers = 0) const;
+		bool pressed(const std::string& key, int modifiers = 0) const;
 
-		bool triggered(const key& key, int modifiers = 0);
-		bool triggered(const std::string& key, int modifiers = 0);
+		bool triggered(const key& key, int modifiers = 0) const;
+		bool triggered(const std::string& key, int modifiers = 0) const;
 
-		bool modifier(int modifiers);
+		bool modifier(int modifiers) const;
 
-		event_link bind_input_event(std::string event_name, input_event_callback_t callback,
+		event_link bind_input_event(const std::string& event_name, input_event_callback_t callback,
 			const input_filter& filter = input_filter(), event_placement place = event_prepend);
-		void unbind_input_event(std::string event_name, event_link link);
+		void unbind_input_event(const std::string& event_name, event_link link);
 
 		// an utility template function for member function callbacks, so user doesn't have to use boost::bind directly
 		template <typename T>
-		event_link bind_input_event(std::string event_name, bool (T::*callback)(const input_args&), T* instance,
+		event_link bind_input_event(const std::string& event_name, bool (T::*callback)(const input_args&), T* instance,
 			const input_filter& filter = input_filter(), event_placement place = event_prepend)
 		{
 			return bind_input_event(event_name, boost::bind(callback, instance, _1), filter, place);

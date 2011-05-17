@@ -1,8 +1,9 @@
-
 /win/vc10/common/Release
 /win/vc10/graphics/Release
 /win/vc10/ipch
 /win/vc10/Debug
 /win/vc10/Release
 /win/vc10/test/Release
-/win/vc10/window/Release
+/win/vc10/system/Release
+/win/vc10/lua/Release
+/win/vc10/test/test.lua

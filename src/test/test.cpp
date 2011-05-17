@@ -37,9 +37,9 @@ test::test()
 	}
 
 	// bind physical keys to virtual ones
-	bind_key(xd::keyb(xd::key_space), "fire");
-	bind_key(xd::mouseb(xd::mouse_left), "fire");
-	bind_key(xd::keyb(xd::key_esc), "quit");
+	bind_key(xd::key_space, "fire");
+	bind_key(xd::mouse_left, "fire");
+	bind_key(xd::key_esc, "quit");
 
 	// test event callbacks
 	bind_input_event("key_down", &test::on_key_down, this, xd::input_filter(xd::keyboard));
@@ -79,9 +79,9 @@ void test::run()
 			break;
 		}
 
-		if (triggered("fire", xd::mod_lctrl|xd::mod_lshift)) {
+		/*if (triggered("fire", xd::mod_lctrl|xd::mod_lshift)) {
 			std::cout << "fire" << std::endl;
-		}
+		}*/
 
 		// clear screen
 		clear();

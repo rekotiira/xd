@@ -2,14 +2,16 @@
 #define H_XD_COMMON_EXCEPTION
 
 #include <stdexcept>
+#include <string>
 
 namespace xd
 {
-	class exception : public std::exception
+	class exception : public std::runtime_error
 	{
 	public:
-		virtual ~exception();
-		virtual const char* what() const throw();
+		exception() : std::runtime_error("xd::exception") {}
+		exception(const std::string& what) : std::runtime_error(what) {}
+		virtual ~exception() {}
 	};
 }
 

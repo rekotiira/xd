@@ -9,9 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Script Files">
+      <UniqueIdentifier>{e64796c0-6563-4124-8f7b-5c866e34535c}</UniqueIdentifier>
+      <Extensions>lua</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,5 +32,10 @@
     <ClInclude Include="..\..\..\src\test\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\src\test\test.lua">
+      <Filter>Script Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

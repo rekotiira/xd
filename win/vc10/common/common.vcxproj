@@ -84,9 +84,6 @@
     <ClInclude Include="..\..\..\include\xd\common\exception.h" />
     <ClInclude Include="..\..\..\include\xd\common\types.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\src\common\exceptions.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

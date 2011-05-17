@@ -8,7 +8,9 @@ namespace xd
 	class window_creation_failed : public xd::exception
 	{
 	public:
-		const char *what();
+		window_creation_failed();
+		virtual ~window_creation_failed();
+		virtual const char *what() const;
 	};
 }
 

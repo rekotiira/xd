@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7CD9E711-43D4-4D5C-B53C-1FBD82816BFE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>window</RootNamespace>
+    <RootNamespace>system</RootNamespace>
     <ProjectName>system</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -82,14 +82,14 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\system\exceptions.cpp" />
     <ClCompile Include="..\..\..\src\system\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\xd\system.h" />
     <ClInclude Include="..\..\..\include\xd\system\application.h" />
     <ClInclude Include="..\..\..\include\xd\system\exceptions.h" />
-    <ClInclude Include="..\..\..\include\xd\system\types.h" />
-    <ClInclude Include="..\..\..\include\xd\system\utility.h" />
+    <ClInclude Include="..\..\..\include\xd\system\input.h" />
     <ClInclude Include="..\..\..\include\xd\system\window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
