@@ -6,6 +6,7 @@
 
 int main(int argc, char *argv[])
 {
+	/*
 	try
 	{
 		xd::lua::vm vm;
@@ -19,12 +20,15 @@ int main(int argc, char *argv[])
 	} catch (...) {
 	}
 	return 0;
+	*/
 
-	/*try {
+	try {
 		test my_app;
 		my_app.run();
 	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
+		std::cerr << e.what() << std::endl;
+	} catch(...) {
+		std::cerr << "unknown exception" << std::endl;
 	}
-	return 0;*/
+	return 0;
 }

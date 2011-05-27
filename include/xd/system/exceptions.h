@@ -1,16 +1,16 @@
-#ifndef X_H_SYSTEM_EXCEPTIONS
-#define X_H_SYSTEM_EXCEPTIONS
+#ifndef H_XD_SYSTEM_EXCEPTIONS
+#define H_XD_SYSTEM_EXCEPTIONS
 
 #include <xd/common/exception.h>
 
 namespace xd
 {
-	class window_creation_failed : public xd::exception
+	struct window_creation_failed : exception
 	{
-	public:
-		window_creation_failed();
-		virtual ~window_creation_failed();
-		virtual const char *what() const;
+		window_creation_failed()
+			: exception("failed to create window")
+		{
+		}
 	};
 }
 

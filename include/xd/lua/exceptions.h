@@ -8,22 +8,20 @@ namespace xd
 {
 	namespace lua
 	{
-		class script_load_failed : public xd::exception
+		struct script_load_failed : exception
 		{
-		public:
-			script_load_failed(const std::string& message);
-			virtual ~script_load_failed();
-			virtual const char *what() const;
-			const char *error_message() const;
-		private:
-			std::string m_error_message;
+			script_load_failed(const std::string& message)
+				: exception("failed to load script: " + message)
+			{
+			}
 		};
 
-		class panic_error : public xd::exception
+		struct panic_error : exception
 		{
-		public:
-			panic_error(const std::string& reason);
-			virtual ~panic_error();
+			panic_error(const std::string& message)
+				: exception("lua panic: " + message)
+			{
+			}
 		};
 	}
 }

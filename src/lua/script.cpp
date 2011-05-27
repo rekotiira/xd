@@ -1,6 +1,5 @@
-#include <xd/scripting/lua/script.h>
-#include <xd/scripting/lua/vm.h>
-#include <xd/scripting/exceptions.h>
+#include <xd/lua/script.h>
+#include <xd/lua/vm.h>
 
 xd::lua::script::script(lua_State *vm, int ref)
 	: m_vm(vm)

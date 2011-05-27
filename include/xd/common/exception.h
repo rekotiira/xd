@@ -6,12 +6,32 @@
 
 namespace xd
 {
-	class exception : public std::runtime_error
+	class exception : public std::exception
 	{
 	public:
-		exception() : std::runtime_error("xd::exception") {}
-		exception(const std::string& what) : std::runtime_error(what) {}
-		virtual ~exception() {}
+		exception()
+		{
+		}
+		
+		exception(const std::string& message)
+			: m_message(message)
+		{
+		}
+
+		virtual ~exception() throw()
+		{
+		}
+		
+		virtual const char *what() const
+		{
+			if (m_message.length() != 0)
+				return m_message.c_str();
+			else
+				return "unknown xd::exception";
+		}
+
+	private:
+		std::string m_message;
 	};
 }
 

@@ -42,6 +42,11 @@ namespace xd
 			return m_draw_mode;
 		}
 
+		void set_draw_mode(GLenum draw_mode)
+		{
+			m_draw_mode = draw_mode;
+		}
+
 		void load(const void *data, size_t count)
 		{
 			// bind the buffer

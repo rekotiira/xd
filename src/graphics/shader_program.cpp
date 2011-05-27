@@ -1,162 +1,123 @@
 #include <xd/graphics.h>
+#include <boost/throw_exception.hpp>
 
 xd::shader_program::shader_program()
-	: m_program(0)
 {
-}
-
-xd::shader_program::shader_program(const char *vertexShader, const char *fragmentShader)
-	: m_program(0)
-{
-	load(vertexShader, fragmentShader);
-}
-
-xd::shader_program::shader_program(const char *vertexShader, const char *fragmentShader, const attrib_list& attribs)
-	: m_program(0)
-{
-	load(vertexShader, fragmentShader, attribs);
+	m_program = glCreateProgram();
 }
 
 xd::shader_program::~shader_program()
 {
-	free();
+	glDeleteProgram(m_program);
 }
 
-void xd::shader_program::load(const char *vertex_shader_src, const char *fragment_shader_src)
+void xd::shader_program::attach(GLuint type, const std::string& src)
 {
-	free();
-	build(vertex_shader_src, fragment_shader_src);
+	// compile the shader
+	const char *srcp = src.c_str();
+	GLuint shader = glCreateShader(type);
+	glShaderSource(shader, 1, &srcp, NULL);
+	glCompileShader(shader);
+
+	// check for errors
+	GLint status;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+	if (!status) {
+		int length;
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length);
+		char *buf = new char[length];
+		glGetShaderInfoLog(shader, length, NULL, buf);
+		std::string message(buf);
+		delete[] buf;
+
+		// delete the shader
+		glDeleteShader(shader);
+
+		// throw the exception
+		throw xd::shader_build_failed(message);
+	}
+
+	// attach the shader to the program and delete it afterwards
+	glAttachShader(m_program, shader);
+	glDeleteShader(shader);
 }
 
-void xd::shader_program::load(const char *vertex_shader_src, const char *fragment_shader_src, const attrib_list& attribs)
+void xd::shader_program::link()
 {
-	free();
-	m_attribs = attribs;
-	build(vertex_shader_src, fragment_shader_src);
-}
+	// link the program
+	glLinkProgram(m_program);
 
-void xd::shader_program::free()
-{
-	if (m_program) {
-		m_attribs.clear();
-		glDeleteProgram(m_program);
-		m_program = 0;
+	// check for errors
+	GLint status;
+	glGetProgramiv(m_program, GL_LINK_STATUS, &status);
+	if (!status) {
+		int length;
+		glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &length);
+		char *buf = new char[length];
+		glGetProgramInfoLog(m_program, length, NULL, buf);
+		std::string message(buf);
+		delete[] buf;
+
+		// throw the exception
+		throw xd::shader_build_failed(message);
 	}
 }
 
 void xd::shader_program::use()
 {
-	prepare();
+	glUseProgram(m_program);
 }
 
-void xd::shader_program::bind_attrib(const char *name, GLuint attr)
+void xd::shader_program::bind_attrib(const std::string& name, GLuint attr)
 {
-	m_attribs[name] = attr;
+	glBindAttribLocation(m_program, attr, name.c_str());
 }
 
-void xd::shader_program::bind_uniform(const char *name, int val)
+void xd::shader_program::bind_uniform(const std::string& name, int val)
 {
 	glUniform1i(get_uniform_location(name), val);
 }
 
-void xd::shader_program::bind_uniform(const char *name, float val)
+void xd::shader_program::bind_uniform(const std::string& name, float val)
 {
 	glUniform1f(get_uniform_location(name), val);
 }
 
-void xd::shader_program::bind_uniform(const char *name, const glm::vec2& val)
+void xd::shader_program::bind_uniform(const std::string& name, const glm::vec2& val)
 {
 	glUniform2fv(get_uniform_location(name), 1, &val[0]);
 }
 
-void xd::shader_program::bind_uniform(const char *name, const glm::vec3& val)
+void xd::shader_program::bind_uniform(const std::string& name, const glm::vec3& val)
 {
 	glUniform3fv(get_uniform_location(name), 1, &val[0]);
 }
 
-void xd::shader_program::bind_uniform(const char *name, const glm::vec4& val)
+void xd::shader_program::bind_uniform(const std::string& name, const glm::vec4& val)
 {
 	glUniform4fv(get_uniform_location(name), 1, &val[0]);
 }
 
-void xd::shader_program::bind_uniform(const char *name, const glm::mat2& val)
+void xd::shader_program::bind_uniform(const std::string& name, const glm::mat2& val)
 {
 	glUniformMatrix2fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(val));
 }
 
-void xd::shader_program::bind_uniform(const char *name, const glm::mat3& val)
+void xd::shader_program::bind_uniform(const std::string& name, const glm::mat3& val)
 {
 	glUniformMatrix3fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(val));
 }
 
-void xd::shader_program::bind_uniform(const char *name, const glm::mat4& val)
+void xd::shader_program::bind_uniform(const std::string& name, const glm::mat4& val)
 {
 	glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, glm::value_ptr(val));
 }
 
-void xd::shader_program::build(const char *vertex_shader_src, const char *fragment_shader_src)
+GLint xd::shader_program::get_uniform_location(const std::string& name)
 {
-	// create a program
-	m_program = glCreateProgram();
-
-	try {
-		// compile vertex shader
-		GLuint vertex_shader = compile(GL_VERTEX_SHADER, vertex_shader_src);
-		glAttachShader(m_program, vertex_shader);
-		glDeleteShader(vertex_shader);
-
-		// compile fragment shader
-		GLuint fragment_shader = compile(GL_FRAGMENT_SHADER, fragment_shader_src);
-		glAttachShader(m_program, fragment_shader);
-		glDeleteShader(fragment_shader);
-
-		// load bound attributes
-		load_attribs();
-
-		// link the program
-		glLinkProgram(m_program);
-
-		GLint status;
-		glGetShaderiv(m_program, GL_LINK_STATUS, &status);
-		if (!status) {
-			throw std::runtime_error("failed to link program");
-		}
-	} catch (...) {
-		free();
-	}
-}
-
-GLuint xd::shader_program::compile(GLuint type, const char *src)
-{
-	GLuint shader = glCreateShader(type);
-	glShaderSource(shader, 1, &src, NULL);
-	glCompileShader(shader);
-	GLint status;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-	if (!status) {
-		glDeleteShader(shader);
-		throw std::runtime_error("failed to compile vertex shader");
-	}
-	return shader;
-}
-
-void xd::shader_program::load_attribs()
-{
-	for (attrib_list::iterator i = m_attribs.begin(); i != m_attribs.end(); ++i) {
-		glBindAttribLocation(m_program, i->second, i->first.c_str());
-	}
-}
-
-void xd::shader_program::prepare()
-{
-	glUseProgram(m_program);
-}
-
-GLint xd::shader_program::get_uniform_location(const char *name)
-{
-	GLint location = glGetUniformLocation(m_program, name);
+	GLint location = glGetUniformLocation(m_program, name.c_str());
 	if (location == -1) {
-		throw std::runtime_error("invalid uniform");
+		throw invalid_shader_uniform(name);
 	}
 	return location;
 }

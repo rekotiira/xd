@@ -87,7 +87,6 @@
     <ClInclude Include="..\..\..\include\xd\lua\vm.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\lua\exceptions.cpp" />
     <ClCompile Include="..\..\..\src\lua\script.cpp" />
     <ClCompile Include="..\..\..\src\lua\vm.cpp" />
   </ItemGroup>

@@ -19,7 +19,6 @@ struct my_vertex_traits : public xd::vertex_traits
 		pos.size = 2;
 		pos.offset = 0;
 		pos.normalized = GL_FALSE;
-		insert(std::make_pair(xd::vertex_attr_pos, pos));
 
 		// and RGBA color
 		xd::vertex_attr_traits color;
@@ -27,9 +26,12 @@ struct my_vertex_traits : public xd::vertex_traits
 		color.size = 4;
 		color.offset = sizeof(glm::vec2);
 		color.normalized = GL_FALSE;
-		insert(std::make_pair(xd::vertex_attr_color, color));
 
-		// set the size and draw mode
+		// add the traits to the vertex
+		add_attr_traits(xd::vertex_attr_pos, pos);
+		add_attr_traits(xd::vertex_attr_color, color);
+
+		// set the size of the vertex
 		vertex_size = sizeof(my_vertex);
 	}
 };

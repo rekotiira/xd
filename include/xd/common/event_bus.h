@@ -10,8 +10,6 @@
 #include <boost/optional.hpp>
 #include <xd/common/types.h>
 
-#include <iostream>
-
 namespace xd
 {
 	// where to place the event

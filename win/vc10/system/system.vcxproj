@@ -82,12 +82,10 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\system\exceptions.cpp" />
     <ClCompile Include="..\..\..\src\system\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\xd\system.h" />
-    <ClInclude Include="..\..\..\include\xd\system\application.h" />
     <ClInclude Include="..\..\..\include\xd\system\exceptions.h" />
     <ClInclude Include="..\..\..\include\xd\system\input.h" />
     <ClInclude Include="..\..\..\include\xd\system\window.h" />

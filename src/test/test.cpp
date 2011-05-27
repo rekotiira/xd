@@ -2,13 +2,31 @@
 #include <boost/bind.hpp>
 #include "test.h"
 
+std::string my_variable(const std::string& variable)
+{
+	return "00:23";
+}
+
 test::test()
 	: xd::window("test app")
 	, m_triangle(GL_TRIANGLES)
 	, m_quad(GL_QUADS)
+	, m_font("verdana.ttf", 24)
 {
 	// setup projection
 	m_geometry.projection().load(glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f));
+
+	// register variable and decorator
+	m_text_formatter.register_variable("time", &my_variable);
+	//m_text_formatter.register_decorator("c", &my_color_formatter);
+	//m_text_formatter.register_decorator("b", &my_bold_formatter);
+
+	// link bold
+	m_font.link_font("bold", xd::font_ptr(new xd::font("verdanab.ttf", 24)));
+
+	// enable texturing
+	glEnable(GL_TEXTURE_2D);
+	glClearColor(0.5f, 0.5f, 0.7f, 1);
 
 	// create a triangle
 	{
@@ -66,6 +84,21 @@ bool test::on_key_down(const xd::input_args& args)
 	return true;
 }
 
+void test::draw_text(float x, float y, const std::string& text, const glm::vec4& color, std::string type)
+{
+	xd::font_style style;
+	style.type = type;
+	style.color = color;
+	//style.shadow = xd::font_shadow(2, -2, glm::vec4(0, 0, 0, 1));
+
+	xd::matrix_stack& model_view = m_geometry.model_view();
+	model_view.push();
+		model_view.translate(x, y, 0);
+		model_view.scale(1, -1, 1);
+		m_text_formatter.render(text, m_font, style, m_text_shader, m_geometry.mvp());
+	model_view.pop();
+}
+
 void test::run()
 {
 	while (true)
@@ -85,6 +118,10 @@ void test::run()
 
 		// clear screen
 		clear();
+
+		// disable blending
+		glDisable(GL_BLEND);
+		glDisable(GL_ALPHA_TEST);
 
 		// get model view stack
 		xd::matrix_stack& model_view = m_geometry.model_view();
@@ -107,6 +144,22 @@ void test::run()
 			model_view.translate(1.5f, 0.0f, 0.0f);
 			xd::draw(m_quad, m_flat_shader, m_geometry.mvp(), glm::vec4(1, 0, 0, 1));
 		model_view.pop();
+
+		// enable blending
+		glEnable(GL_BLEND);
+		glEnable(GL_ALPHA_TEST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// draw text
+		model_view.identity();
+		draw_text(20, 40, "You can now draw {bold}decorated text{/bold}");
+		draw_text(20, 70, "You can even use {color=red}different{/color} {color=100,200,100}colors{/color}");
+		draw_text(20, 100, "{bold}{color=green}Nested{/color} tags{/bold} are supported");
+		draw_text(20, 130, "{shadow}How do you like 'em {bold}{color=red}shadows{/color}{/bold}?{/shadow}");
+
+		model_view.translate(600, 50, 0);
+		model_view.rotate(45, 0, 0, 1);
+		draw_text(0, 0, "{shadow}{bold}Rotated text!{/bold}{/shadow}");
 
 		swap();
 	}

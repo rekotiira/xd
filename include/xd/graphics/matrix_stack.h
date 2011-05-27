@@ -1,5 +1,5 @@
-#ifndef H_XD_MATRIX_STACK
-#define H_XD_MATRIX_STACK
+#ifndef H_XD_GRAPHICS_MATRIX_STACK
+#define H_XD_GRAPHICS_MATRIX_STACK
 
 #include <stdexcept>
 #include <stack>
@@ -20,7 +20,7 @@ namespace xd
 		{
 		}
 		
-		const glm::mat4& get()
+		const glm::mat4& get() const
 		{
 			return m_stack.top();
 		}

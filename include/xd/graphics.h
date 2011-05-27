@@ -7,6 +7,7 @@
 
 #include <xd/graphics/types.h>
 #include <xd/graphics/traits.h>
+#include <xd/graphics/exceptions.h>
 #include <xd/graphics/matrix_stack.h>
 #include <xd/graphics/transform_geometry.h>
 #include <xd/graphics/shader_program.h>

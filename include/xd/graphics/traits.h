@@ -18,6 +18,11 @@ namespace xd
 
 	struct vertex_traits : public boost::unordered_map<GLuint, vertex_attr_traits>
 	{
+		void add_attr_traits(GLuint attr, const vertex_attr_traits& traits)
+		{
+			insert(std::make_pair(attr, traits));
+		}
+
 		GLsizei vertex_size;
 	};
 }
