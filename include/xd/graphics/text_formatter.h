@@ -216,10 +216,18 @@ namespace xd
 
 		void push_text(const formatted_text& text);
 		void push_text(const std::string& text);
+		void push_text(const formatted_char& chr);
 		void push_text(char chr);
 		void push_color(const glm::vec4& color);
 		void push_type(const std::string& type);
 		void push_shadow(const font_shadow& color);
+
+		template <typename T>
+		void push_text(const T& val)
+		{
+			std::string str = boost::lexical_cast<std::string>(val);
+			push_text(str);
+		}
 
 	private:
 		// current state

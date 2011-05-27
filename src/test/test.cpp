@@ -1,10 +1,31 @@
 #include <iostream>
+#include <sstream>
 #include <boost/bind.hpp>
+#include <ctime>
 #include "test.h"
 
-std::string my_variable(const std::string& variable)
+std::string current_time_variable(const std::string& variable)
 {
-	return "00:23";
+	std::time_t current_time = std::time(0);
+	std::tm *time_info = localtime(&current_time);
+	std::ostringstream ss;
+	ss << time_info->tm_hour << ":" << time_info->tm_min;
+	return ss.str();
+}
+
+void time_decorator(xd::text_decorator& decorator, const xd::formatted_text& text, const xd::text_decorator_args& args)
+{
+	float alpha = (std::time(0) % 2 == 0) ? 1 : 0;
+	std::istringstream is(text.get_unformatted());
+	int hours, mins;
+	char delim;
+	is >> hours >> delim >> mins;
+	decorator.push_color(glm::vec4(1,1,1,1));
+	decorator.push_text(hours);
+	decorator.push_color(glm::vec4(1,1,1,alpha));
+	decorator.push_text(delim);
+	decorator.push_color(glm::vec4(1,1,1,1));
+	decorator.push_text(mins);
 }
 
 test::test()
@@ -17,9 +38,8 @@ test::test()
 	m_geometry.projection().load(glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f));
 
 	// register variable and decorator
-	m_text_formatter.register_variable("time", &my_variable);
-	//m_text_formatter.register_decorator("c", &my_color_formatter);
-	//m_text_formatter.register_decorator("b", &my_bold_formatter);
+	m_text_formatter.register_variable("current_time", &current_time_variable);
+	m_text_formatter.register_decorator("time", &time_decorator);
 
 	// link bold
 	m_font.link_font("bold", xd::font_ptr(new xd::font("verdanab.ttf", 24)));
@@ -156,6 +176,7 @@ void test::run()
 		draw_text(20, 70, "You can even use {color=red}different{/color} {color=100,200,100}colors{/color}");
 		draw_text(20, 100, "{bold}{color=green}Nested{/color} tags{/bold} are supported");
 		draw_text(20, 130, "{shadow}How do you like 'em {bold}{color=red}shadows{/color}{/bold}?{/shadow}");
+		draw_text(20, 160, "You can use variables, the time is: {shadow=1,-1}{time}${current_time}{/time}{/shadow}");
 
 		model_view.translate(600, 50, 0);
 		model_view.rotate(45, 0, 0, 1);

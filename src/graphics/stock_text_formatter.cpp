@@ -10,7 +10,7 @@ xd::stock_text_formatter::stock_text_formatter()
 	m_colors["red"]    = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	m_colors["green"]  = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 	m_colors["blue"]   = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-	m_colors["orange"] = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+	m_colors["yellow"] = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
 	m_colors["purple"] = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 	m_colors["cyan"]   = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
@@ -89,7 +89,7 @@ void xd::stock_text_formatter::shadow_decorator(text_decorator& decorator, const
 		float b = args.get<float>(5) / 255.0f;
 		float a = args.get<float>(6, 255) / 255.0f;
 		shadow.color = glm::vec4(r, g, b, a);
-	} else if (args.count() != 0) {
+	} else if (args.count() != 0 && args.count() != 2) {
 		throw text_decorator_exception("invalid arguments to shadow decorator");
 	} else {
 		// default shadow color

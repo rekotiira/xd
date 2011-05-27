@@ -241,8 +241,12 @@ void xd::font::render(const std::string& text, const font_style& style,
 			shadow_pos.x += style.shadow->x;
 			shadow_pos.y += style.shadow->y;
 
+			// calculate shadow color
+			glm::vec4 shadow_color = style.shadow->color;
+			shadow_color.a *= style.color.a;
+
 			// bind uniforms
-			shader.bind_uniform(m_color_uniform, style.shadow->color);
+			shader.bind_uniform(m_color_uniform, shadow_color);
 			shader.bind_uniform(m_position_uniform, shadow_pos);
 
 			// draw shadow

@@ -311,11 +311,16 @@ void xd::text_decorator::push_text(const std::string& text)
 	push_text(formatted_text(text));
 }
 
-void xd::text_decorator::push_text(char chr)
+void xd::text_decorator::push_text(const formatted_char& chr)
 {
 	formatted_text text;
 	text += chr;
 	push_text(text);
+}
+
+void xd::text_decorator::push_text(char chr)
+{
+	push_text(formatted_char(chr));
 }
 
 void xd::text_decorator::push_color(const glm::vec4& value)
