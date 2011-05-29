@@ -100,10 +100,10 @@ void xd::stock_text_formatter::shadow_decorator(text_decorator& decorator, const
 			throw text_decorator_exception("invalid color: "+name);
 		shadow.color = i->second;
 	} else if (args.count() >= 5) {
-		float r = args.get<float>(3) / 255.0f;
-		float g = args.get<float>(4) / 255.0f;
-		float b = args.get<float>(5) / 255.0f;
-		float a = args.get<float>(6, 255) / 255.0f;
+		float r = args.get<float>(2) / 255.0f;
+		float g = args.get<float>(3) / 255.0f;
+		float b = args.get<float>(4) / 255.0f;
+		float a = args.get<float>(5, 255) / 255.0f;
 		shadow.color = glm::vec4(r, g, b, a);
 	} else if (args.count() != 0 && args.count() != 2) {
 		throw text_decorator_exception("invalid arguments to shadow decorator");
@@ -127,10 +127,10 @@ void xd::stock_text_formatter::outline_decorator(text_decorator& decorator, cons
 			throw text_decorator_exception("invalid color: "+name);
 		outline.color = i->second;
 	} else if (args.count() >= 4) {
-		float r = args.get<float>(2) / 255.0f;
-		float g = args.get<float>(3) / 255.0f;
-		float b = args.get<float>(4) / 255.0f;
-		float a = args.get<float>(5, 255) / 255.0f;
+		float r = args.get<float>(1) / 255.0f;
+		float g = args.get<float>(2) / 255.0f;
+		float b = args.get<float>(3) / 255.0f;
+		float a = args.get<float>(4, 255) / 255.0f;
 		outline.color = glm::vec4(r, g, b, a);
 	} else if (args.count() != 0 && args.count() != 1) {
 		throw text_decorator_exception("invalid arguments to outline decorator");
@@ -170,11 +170,11 @@ void xd::stock_text_formatter::rainbow_decorator(text_decorator& decorator, cons
 
 void xd::stock_text_formatter::typewriter_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args)
 {
-	// the speed of the typewriter (default: 10 cps)
-	float speed = args.get<float>(0, 10.0f);
-
 	// get the typewriter timer to use (default: 0)
-	int timer = args.get<int>(1, 0);
+	int timer = args.get<int>(0, 0);
+
+	// the speed of the typewriter (default: 10 cps)
+	float speed = args.get<float>(1, 10.0f);
 
 	// find the start time, or create a new timer if one doesn't exist with current time
 	std::clock_t started;

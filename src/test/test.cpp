@@ -42,7 +42,7 @@ void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& tex
 {
 	const float pi = 3.14159265f;
 	float step = pi / 3;
-	float height = 2;
+	float height = 1;
 	float start = (float)(clock() % 1000) / 1000.0f * 2*pi;
 	for (xd::formatted_text::const_iterator i = text.begin(); i != text.end(); ++i) {
 		decorator.push_position(glm::vec2(0, sin(start)*height));
@@ -198,9 +198,11 @@ void test::run()
 		glEnable(GL_ALPHA_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		// reset typewriter
-		if (triggered(xd::key_space))
-			m_text_formatter.reset_typewriter();
+		// reset typewriters
+		if (triggered(xd::key_1))
+			m_text_formatter.reset_typewriter(0);
+		if (triggered(xd::key_2))
+			m_text_formatter.reset_typewriter(1);
 
 		// draw text
 		model_view.identity();
@@ -211,12 +213,12 @@ void test::run()
 		draw_text(20, 160, "You can use variables, the time is: {shadow}{time}${current_time}{/time}{/shadow}");
 		draw_text(20, 190, "{shadow}2{sup}4{/sup} = 16{/shadow}");
 		draw_text(20, 220, "{shadow}It's a {rainbow}rainbow{/rainbow}{/shadow}");
-		draw_text(20, 250, "{shadow}foo{wave}{typewriter} this text should appear one character at a time.{/typewriter}{/wave} bar{/shadow}");
+		draw_text(20, 250, "{outline=1,0,0,0,128}foo{wave}{typewriter} this text should appear one character at a time.{/typewriter}{/wave} bar{/outline}");
 
 		// rotate and draw
-		model_view.translate(600, 50, 0);
+		model_view.translate(600, 30, 0);
 		model_view.rotate(45, 0, 0, 1);
-		draw_text(0, 0, "{shadow=2,-2}{type=big}Rotated text!{/type}{/shadow}");
+		draw_text(0, 0, "{shadow=2,-2}{type=big}{spacing=5}{typewriter=1}Rotated text!{/typewriter}{/spacing}{/type}{/shadow}");
 
 		swap();
 	}

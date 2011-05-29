@@ -166,6 +166,16 @@ namespace xd
 	const key key_down = keyb(SDLK_DOWN);
 	const key key_space = keyb(SDLK_SPACE);
 	const key key_esc = keyb(SDLK_ESCAPE);
+	const key key_0 = keyb(SDLK_0);
+	const key key_1 = keyb(SDLK_1);
+	const key key_2 = keyb(SDLK_2);
+	const key key_3 = keyb(SDLK_3);
+	const key key_4 = keyb(SDLK_4);
+	const key key_5 = keyb(SDLK_5);
+	const key key_6 = keyb(SDLK_6);
+	const key key_7 = keyb(SDLK_7);
+	const key key_8 = keyb(SDLK_8);
+	const key key_9 = keyb(SDLK_9);
 
 	// pre-defined mouse keys
 	const key mouse_left = mouseb(SDL_BUTTON_LEFT);
