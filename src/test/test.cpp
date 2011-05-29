@@ -45,7 +45,9 @@ void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& tex
 	float height = 1;
 	float start = (float)(clock() % 1000) / 1000.0f * 2*pi;
 	for (xd::formatted_text::const_iterator i = text.begin(); i != text.end(); ++i) {
-		decorator.push_position(glm::vec2(0, sin(start)*height));
+		float pos = sin(start)*height;
+		//decorator.push_position(glm::vec2(0, pos));
+		decorator.push_position(glm::vec2(0, int(pos > 0 ? pos + 0.5f : pos - 0.5f)));
 		decorator.push_text(*i);
 		decorator.pop_position();
 		start += step;
@@ -53,13 +55,13 @@ void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& tex
 }
 
 test::test()
-	: xd::window("test app")
+	: xd::window("test app", 350, 200)
 	, m_triangle(GL_TRIANGLES)
 	, m_quad(GL_QUADS)
-	, m_font("verdana.ttf", 16)
+	, m_font("Unibody 8-Regular.otf", 8)
 {
 	// setup projection
-	m_geometry.projection().load(glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f));
+	m_geometry.projection().load(glm::ortho(0.0f, (float)width(), (float)height(), 0.0f, -1.0f, 1.0f));
 
 	// register variable and decorator
 	m_text_formatter.register_variable("current_time", &current_time_variable);
@@ -68,9 +70,12 @@ test::test()
 	m_text_formatter.register_decorator("wave", &wave_decorator);
 
 	// link other styles
-	m_font.link_font("bold", xd::font_ptr(new xd::font("verdanab.ttf", 16)));
-	m_font.link_font("small", xd::font_ptr(new xd::font("verdana.ttf", 10)));
-	m_font.link_font("big", xd::font_ptr(new xd::font("verdanab.ttf", 24)));
+	//m_font.link_font("bold", xd::font_ptr(new xd::font("verdanab.ttf", 16)));
+	m_font.link_font("bold", "Unibody 8-Bold.otf");
+	m_font.link_font("italic", "Unibody 8-Italic.otf");
+	m_font.link_font("small", "Unibody 8-SmallCaps.otf");
+	m_font.link_font("big", "Unibody 8-Black.otf");
+	//m_font.link_font("big", xd::font_ptr(new xd::font("verdanab.ttf", 24)));
 
 	// enable texturing
 	glEnable(GL_TEXTURE_2D);
@@ -175,7 +180,7 @@ void test::run()
 		xd::matrix_stack& model_view = m_geometry.model_view();
 
 		// translate and scale
-		model_view.identity();
+		/*model_view.identity();
 		model_view.translate(400.0f, 300.0f, 0.0f);
 		model_view.scale(200.0f, -150.0f, 0.0f);
 
@@ -191,7 +196,7 @@ void test::run()
 			model_view.scale(0.5f, -0.5f, 0.0f);
 			model_view.translate(1.5f, 0.0f, 0.0f);
 			xd::draw(m_quad, m_flat_shader, m_geometry.mvp(), glm::vec4(1, 0, 0, 1));
-		model_view.pop();
+		model_view.pop();*/
 
 		// enable blending
 		glEnable(GL_BLEND);
@@ -206,19 +211,20 @@ void test::run()
 
 		// draw text
 		model_view.identity();
-		draw_text(20, 40, "You can now draw {bold}decorated text{/bold}");
-		draw_text(20, 70, "You can even use {color=red}different{/color} {color=100,200,100}colors{/color}");
-		draw_text(20, 100, "{bold}{color=green}Nested{/color} tags{/bold} are supported");
-		draw_text(20, 130, "{shadow}How do you like 'em {bold}{color=red}shadows{/color}{/bold}?{/shadow}");
-		draw_text(20, 160, "You can use variables, the time is: {shadow}{time}${current_time}{/time}{/shadow}");
-		draw_text(20, 190, "{shadow}2{sup}4{/sup} = 16{/shadow}");
-		draw_text(20, 220, "{shadow}It's a {rainbow}rainbow{/rainbow}{/shadow}");
-		draw_text(20, 250, "{outline=1,0,0,0,128}foo{wave}{typewriter} this text should appear one character at a time.{/typewriter}{/wave} bar{/outline}");
+		draw_text(10, 20, "You can now draw {bold}decorated text{/bold}");
+		draw_text(10, 40, "You can even use {color=red}different{/color} {color=100,200,100}colors{/color}");
+		draw_text(10, 60, "{bold}{color=green}Nested{/color} tags{/bold} are supported");
+		draw_text(10, 80, "{shadow}How do you like 'em {bold}{color=red}shadows{/color}{/bold}?{/shadow}");
+		draw_text(10, 100, "You can use {italic}variables{/italic}, the time is: {shadow}{time}${current_time}{/time}{/shadow}");
+		draw_text(10, 120, "{shadow}2{sup}4{/sup} = 16{/shadow}");
+		draw_text(10, 140, "{shadow}It's a {rainbow}rainbow{/rainbow}{/shadow}");
+		draw_text(10, 160, "{shadow}foo{wave}{typewriter} this text should appear one character at a time{/typewriter}{/wave} bar{/shadow}");
+		draw_text(10, 180, "{outline}some outlined text{/outline}");
 
 		// rotate and draw
-		model_view.translate(600, 30, 0);
-		model_view.rotate(45, 0, 0, 1);
-		draw_text(0, 0, "{shadow=2,-2}{type=big}{spacing=5}{typewriter=1}Rotated text!{/typewriter}{/spacing}{/type}{/shadow}");
+		model_view.translate(320, 10, 0);
+		model_view.rotate(90, 0, 0, 1);
+		draw_text(0, 0, "Some {color=purple}rotated{/color} text");
 
 		swap();
 	}

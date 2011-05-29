@@ -164,6 +164,9 @@ namespace xd { namespace detail { namespace text_formatter {
 				} else {
 					m_texts.push_front(decorator.m_current_text);
 				}
+
+			} else {
+				m_texts.push_front(formatted_text());
 			}
 
 			// tokens are iterated in reverse order, hence we decrement

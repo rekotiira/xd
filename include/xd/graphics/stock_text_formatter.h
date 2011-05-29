@@ -27,6 +27,7 @@ namespace xd
 
 		void type_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
 		void bold_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
+		void italic_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
 		void color_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
 		void shadow_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
 		void outline_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);

@@ -257,7 +257,7 @@ void xd::lua::vm::load_library(const std::string& module_name)
 
 		// window class
 		class_<window>("window")
-			.def(constructor<const std::string&>())
+			.def(constructor<const std::string&, int, int>())
 			.def("update", &window::update)
 			.def("clear", &window::clear)
 			.def("swap", &window::swap)

@@ -234,6 +234,9 @@ void xd::font::render(const std::string& text, const font_style& style,
 		glyph_pos.x += glyph.offset.x;
 		glyph_pos.y += glyph.offset.y;
 
+		// add optional letter spacing
+		glyph_pos.x += style.letter_spacing/2;
+
 		// if shadow is enabled, draw the shadow first
 		if (style.shadow) {
 			// calculate shadow position

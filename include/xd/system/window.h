@@ -20,7 +20,7 @@ namespace xd
 		typedef event_bus<input_args, input_filter>::callback_t input_event_callback_t;
 
 		// public interface
-		window(const std::string& title);
+		window(const std::string& title, int width, int height);
 		virtual ~window();
 
 		void update();
@@ -28,6 +28,8 @@ namespace xd
 		void swap();
 
 		bool closed() const;
+		int width() const;
+		int height() const;
 
 		void bind_key(const key& physical_key, const std::string& virtual_key);
 		void unbind_key(const key& key);
@@ -59,6 +61,10 @@ namespace xd
 
 		// was window closed
 		bool m_closed;
+
+		// window width/height
+		int m_width;
+		int m_height;
 
 		// internal typedefs
 		typedef boost::unordered_set<key> key_set_t;

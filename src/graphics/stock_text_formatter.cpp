@@ -17,6 +17,7 @@ xd::stock_text_formatter::stock_text_formatter()
 	// register default decorators
 	register_decorator("type", boost::bind(&stock_text_formatter::type_decorator, this, _1, _2, _3));
 	register_decorator("bold", boost::bind(&stock_text_formatter::bold_decorator, this, _1, _2, _3));
+	register_decorator("italic", boost::bind(&stock_text_formatter::italic_decorator, this, _1, _2, _3));
 	register_decorator("color", boost::bind(&stock_text_formatter::color_decorator, this, _1, _2, _3));
 	register_decorator("shadow", boost::bind(&stock_text_formatter::shadow_decorator, this, _1, _2, _3));
 	register_decorator("outline", boost::bind(&stock_text_formatter::outline_decorator, this, _1, _2, _3));
@@ -62,6 +63,12 @@ void xd::stock_text_formatter::type_decorator(text_decorator& decorator, const f
 void xd::stock_text_formatter::bold_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args)
 {
 	decorator.push_type("bold");
+	decorator.push_text(text);
+}
+
+void xd::stock_text_formatter::italic_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args)
+{
+	decorator.push_type("italic");
 	decorator.push_text(text);
 }
 
@@ -188,7 +195,8 @@ void xd::stock_text_formatter::typewriter_decorator(text_decorator& decorator, c
 	float elapsed = (float)(clock() - started) / 1000.0f;
 	int index = 0;
 	for (xd::formatted_text::const_iterator i = text.begin(); i != text.end(); ++i) {
-		if ((elapsed*speed) > ++index)
-			decorator.push_text(*i);
+		if ((elapsed*speed) < ++index)
+			break;
+		decorator.push_text(*i);
 	}
 }

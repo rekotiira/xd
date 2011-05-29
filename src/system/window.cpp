@@ -1,7 +1,9 @@
 #include <xd/system.h>
 
-xd::window::window(const std::string& title)
+xd::window::window(const std::string& title, int width, int height)
 	: m_closed(false)
+	, m_width(width)
+	, m_height(height)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -15,7 +17,7 @@ xd::window::window(const std::string& title)
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        800, 600, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
+        m_width, m_height, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
 	if (!m_window) {
 		throw xd::window_creation_failed();
 	}
@@ -111,6 +113,16 @@ void xd::window::swap()
 bool xd::window::closed() const
 {
 	return m_closed;
+}
+
+int xd::window::width() const
+{
+	return m_width;
+}
+
+int xd::window::height() const
+{
+	return m_height;
 }
 
 void xd::window::bind_key(const xd::key& physical_key, const std::string& virtual_key)
