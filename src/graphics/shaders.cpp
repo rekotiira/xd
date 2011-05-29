@@ -4,20 +4,20 @@
 xd::flat_shader::flat_shader()
 {
 	static const char *vertex_shader_src =
+		"#version 120\n"
 		"uniform mat4 mvpMatrix;"
-		"in vec4 vVertex;"
+		"attribute vec4 vVertex;"
 		"void main(void)"
 		"{"
 		"	gl_Position = mvpMatrix * vVertex;"
 		"}";
 
 	static const char *fragment_shader_src =
-		"#version 330\n"
-		"out vec4 vFragColor;"
+		"#version 120\n"
 		"uniform vec4 vColor;"
 		"void main(void)"
 		"{"
-		"	vFragColor = vColor;"
+		"	gl_FragColor = vColor;"
 		"}";
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
@@ -36,11 +36,11 @@ void xd::flat_shader::use(const glm::mat4& mvp, const glm::vec4& color)
 xd::shaded_shader::shaded_shader()
 {
 	static const char *vertex_shader_src =
-		"#version 330\n"
+		"#version 120\n"
 		"uniform mat4 mvpMatrix;"
-		"in vec4 vVertex;"
-		"in vec4 vColor;"
-		"out vec4 vVaryingColor;"
+		"attribute vec4 vVertex;"
+		"attribute vec4 vColor;"
+		"varying vec4 vVaryingColor;"
 		"void main(void)"
 		"{"
 		"	vVaryingColor = vColor;"
@@ -48,12 +48,11 @@ xd::shaded_shader::shaded_shader()
 		"}";
 
 	static const char *fragment_shader_src =
-		"#version 330\n"
-		"out vec4 vFragColor;"
-		"in vec4 vVaryingColor;"
+		"#version 120\n"
+		"varying vec4 vVaryingColor;"
 		"void main(void)"
 		"{"
-		"	vFragColor = vVaryingColor;"
+		"	gl_FragColor = vVaryingColor;"
 		"}";
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
@@ -72,11 +71,12 @@ void xd::shaded_shader::use(const glm::mat4& mvp)
 xd::text_shader::text_shader()
 {
 	static const char *vertex_shader_src =
+		"#version 120\n"
 		"uniform mat4 mvpMatrix;"
 		"uniform vec2 vPosition;"
-		"in vec4 vVertex;"
-		"in vec2 vTexCoords;"
-		"noperspective out vec2 vVaryingTexCoords;"
+		"attribute vec4 vVertex;"
+		"attribute vec2 vTexCoords;"
+		"varying vec2 vVaryingTexCoords;"
 		"void main(void)"
 		"{"
 		"	vVaryingTexCoords = vTexCoords;"
@@ -84,15 +84,14 @@ xd::text_shader::text_shader()
 		"}";
 
 	static const char *fragment_shader_src =
-		"#version 330\n"
+		"#version 120\n"
 		"uniform sampler2D colorMap;"
 		"uniform vec4 vColor;"
-		"out vec4 vFragColor;"
-		"noperspective in vec2 vVaryingTexCoords;"
+		"varying vec2 vVaryingTexCoords;"
 		"void main(void)"
 		"{"
-		"	vFragColor.rgb = vColor.rgb;"
-		"	vFragColor.a = vColor.a * texture(colorMap, vVaryingTexCoords.st).r;"
+		"	gl_FragColor.rgb = vColor.rgb;"
+		"	gl_FragColor.a = vColor.a * texture2D(colorMap, vVaryingTexCoords.st).r;"
 		"}";
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);

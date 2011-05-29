@@ -3,13 +3,11 @@
 #include <stdexcept>
 #include <vector>
 #include <utility>
-#include <fstream>
 #include <list>
 #include <cctype>
 #include <boost/lexical_cast.hpp>
 #include <xd/graphics/exceptions.h>
 #include <xd/graphics/text_formatter.h>
-#include <iostream>
 
 namespace xd { namespace detail { namespace text_formatter {
 
@@ -117,10 +115,20 @@ namespace xd { namespace detail { namespace text_formatter {
 
 		void operator()(const token_text& tok)
 		{
-			// text node, create a formatted version of it
+			// set level for each character
 			formatted_text text(tok.text);
-			text.m_level = m_level;
-			m_texts.push_front(text);
+			for (formatted_text::iterator i = text.begin(); i != text.end(); ++i) {
+				i->m_level = m_level;
+			}
+
+			// text node, create a formatted version of it
+			if (m_texts.size() && !m_prev_close_decorator) {
+				m_texts.front().m_chars.insert(m_texts.front().m_chars.begin(),
+					text.begin(), text.end());
+			} else {
+				m_texts.push_front(text);
+			}
+
 			m_prev_close_decorator = false;
 		}
 
@@ -141,20 +149,33 @@ namespace xd { namespace detail { namespace text_formatter {
 			m_texts.pop_front();
 			tok.callback(decorator, text, tok.args);
 			if (decorator.m_current_text.length()) {
-				decorator.m_current_text.m_level = m_level;
-				m_texts.push_front(decorator.m_current_text);
+				// set level for each character
+				formatted_text::iterator i = decorator.m_current_text.begin();
+				while (i != decorator.m_current_text.end()) {
+					if (m_level > i->m_level)
+						i->m_level = m_level;
+					++i;
+				}
+
+				// if we're inside another decorator, concatenate with previous string
+				if (m_texts.size() && m_texts.front().begin()->m_level == (m_level-1)) {
+					m_texts.front().m_chars.insert(m_texts.front().m_chars.begin(),
+						decorator.m_current_text.begin(), decorator.m_current_text.end());
+				} else {
+					m_texts.push_front(decorator.m_current_text);
+				}
 			}
-			m_prev_close_decorator = false;
 
 			// tokens are iterated in reverse order, hence we decrement
+			m_prev_close_decorator = false;
 			m_level--;
 		}
 
 		void operator()(const token_close_decorator& tok)
 		{
 			// tokens are iterated in reverse order, hence we increment
-			m_level++;
 			m_prev_close_decorator = true;
+			m_level++;
 		}
 
 	private:
@@ -167,23 +188,35 @@ namespace xd { namespace detail { namespace text_formatter {
 	{
 		stacked_font_style(const font_style& initial_state)
 		{
-			state_change_color color;
+			nested_color color;
 			color.value = initial_state.color;
 			color.level = 0;
 			colors.push_back(color);
 
+			nested_letter_spacing letter_spacing;
+			letter_spacing.value = initial_state.letter_spacing;
+			letter_spacing.level = 0;
+			letter_spacings.push_back(letter_spacing);
+
 			if (initial_state.type) {
-				state_change_type type;
+				nested_type type;
 				type.value = *initial_state.type;
 				type.level = 0;
 				types.push_back(type);
 			}
 
 			if (initial_state.shadow) {
-				state_change_shadow shadow;
+				nested_shadow shadow;
 				shadow.value = *initial_state.shadow;
 				shadow.level = 0;
 				shadows.push_back(shadow);
+			}
+
+			if (initial_state.outline) {
+				nested_outline outline;
+				outline.value = *initial_state.outline;
+				outline.level = 0;
+				outlines.push_back(outline);
 			}
 		}
 
@@ -191,10 +224,15 @@ namespace xd { namespace detail { namespace text_formatter {
 		{
 			font_style style;
 			style.color = colors.back().value;
+			style.letter_spacing = letter_spacings.back().value;
+			if (alphas.size() != 0)
+				style.color.a *= alphas.back().value;
 			if (types.size() != 0)
 				style.type = types.back().value;
 			if (shadows.size() != 0)
 				style.shadow = shadows.back().value;
+			if (outlines.size() != 0)
+				style.outline = outlines.back().value;
 			return style;
 		}
 
@@ -202,19 +240,31 @@ namespace xd { namespace detail { namespace text_formatter {
 		void push(std::list<T>& list, const V& value, int level)
 		{
 			int current_level = (list.size() != 0 ? list.back().level : -1);
-			if (level > current_level) {
+			if (level >= current_level) {
 				T state_change;
 				state_change.value = value;
 				state_change.level = level;
 				list.push_back(state_change);
-			} else if (level == current_level) {
-				list.back().value = value;
 			}
 		}
 
 		void push_color(const glm::vec4& value, int level)
 		{
-			push(colors, value, level);
+			if (colors.back().value.a != 1.0f) {
+				glm::vec4 color = value;
+				color.a *= colors.back().value.a;
+				push(colors, color, level);
+			} else {
+				push(colors, value, level);
+			}
+		}
+
+		void push_alpha(float value, int level)
+		{
+			if (alphas.size() != 0)
+				push(alphas, value * alphas.back().value, level);
+			else
+				push(alphas, value, level);
 		}
 
 		void push_type(const std::string& value, int level)
@@ -227,8 +277,72 @@ namespace xd { namespace detail { namespace text_formatter {
 			push(shadows, value, level);
 		}
 
+		void push_outline(const font_outline& value, int level)
+		{
+			push(outlines, value, level);
+		}
+
+		void push_position(const glm::vec2& value, int level)
+		{
+			if (positions.size() != 0)
+				push(positions, value + positions.back().value, level);
+			else
+				push(positions, value, level);
+		}
+
+		void push_letter_spacing(float value, int level)
+		{
+			if (letter_spacings.size() != 0)
+				push(letter_spacings, value, level);
+			else
+				push(letter_spacings, value, level);
+		}
+
 		template <typename T>
 		void pop(std::list<T>& list, int level)
+		{
+			if (list.size() == 0 || list.back().level != level)
+				throw xd::text_formatter_exception("no value to pop");
+			list.pop_back();
+		}
+
+		void pop_color(int level)
+		{
+			pop(colors, level);
+		}
+
+		void pop_alpha(int level)
+		{
+			pop(alphas, level);
+		}
+
+		void pop_type(int level)
+		{
+			pop(types, level);
+		}
+
+		void pop_shadow(int level)
+		{
+			pop(shadows, level);
+		}
+
+		void pop_outline(int level)
+		{
+			pop(outlines, level);
+		}
+
+		void pop_position(int level)
+		{
+			pop(positions, level);
+		}
+
+		void pop_letter_spacing(int level)
+		{
+			pop(letter_spacings, level);
+		}
+
+		template <typename T>
+		void pop_level(std::list<T>& list, int level)
 		{
 			std::list<T>::iterator i = list.begin();
 			while (i != list.end()) {
@@ -239,16 +353,24 @@ namespace xd { namespace detail { namespace text_formatter {
 			}
 		}
 
-		void purge(int level)
+		void pop_level(int level)
 		{
-			pop(colors, level);
-			pop(types, level);
-			pop(shadows, level);
+			pop_level(colors, level);
+			pop_level(alphas, level);
+			pop_level(types, level);
+			pop_level(shadows, level);
+			pop_level(outlines, level);
+			pop_level(positions, level);
+			pop_level(letter_spacings, level);
 		}
 
-		std::list<state_change_color> colors;
-		std::list<state_change_type> types;
-		std::list<state_change_shadow> shadows;
+		std::list<nested_color> colors;
+		std::list<nested_alpha> alphas;
+		std::list<nested_type> types;
+		std::list<nested_shadow> shadows;
+		std::list<nested_outline> outlines;
+		std::list<nested_position> positions;
+		std::list<nested_letter_spacing> letter_spacings;
 	};
 
 
@@ -260,19 +382,74 @@ namespace xd { namespace detail { namespace text_formatter {
 		{
 		}
 
-		void operator()(const state_change_color& state_change)
+		void operator()(const state_change_push_color& state_change)
 		{
 			m_style_stack.push_color(state_change.value, state_change.level);
 		}
 
-		void operator()(const state_change_type& state_change)
+		void operator()(const state_change_push_alpha& state_change)
+		{
+			m_style_stack.push_alpha(state_change.value, state_change.level);
+		}
+
+		void operator()(const state_change_push_type& state_change)
 		{
 			m_style_stack.push_type(state_change.value, state_change.level);
 		}
 
-		void operator()(const state_change_shadow& state_change)
+		void operator()(const state_change_push_shadow& state_change)
 		{
 			m_style_stack.push_shadow(state_change.value, state_change.level);
+		}
+
+		void operator()(const state_change_push_outline& state_change)
+		{
+			m_style_stack.push_outline(state_change.value, state_change.level);
+		}
+
+		void operator()(const state_change_push_position& state_change)
+		{
+			m_style_stack.push_position(state_change.value, state_change.level);
+		}
+
+		void operator()(const state_change_push_letter_spacing& state_change)
+		{
+			m_style_stack.push_letter_spacing(state_change.value, state_change.level);
+		}
+
+		void operator()(const state_change_pop_color& state_change)
+		{
+			m_style_stack.pop_color(state_change.level);
+		}
+
+		void operator()(const state_change_pop_alpha& state_change)
+		{
+			m_style_stack.pop_alpha(state_change.level);
+		}
+
+		void operator()(const state_change_pop_type& state_change)
+		{
+			m_style_stack.pop_type(state_change.level);
+		}
+
+		void operator()(const state_change_pop_shadow& state_change)
+		{
+			m_style_stack.pop_shadow(state_change.level);
+		}
+
+		void operator()(const state_change_pop_outline& state_change)
+		{
+			m_style_stack.pop_outline(state_change.level);
+		}
+
+		void operator()(const state_change_pop_position& state_change)
+		{
+			m_style_stack.pop_position(state_change.level);
+		}
+
+		void operator()(const state_change_pop_letter_spacing& state_change)
+		{
+			m_style_stack.pop_letter_spacing(state_change.level);
 		}
 
 	private:
@@ -325,7 +502,15 @@ void xd::text_decorator::push_text(char chr)
 
 void xd::text_decorator::push_color(const glm::vec4& value)
 {
-	detail::text_formatter::state_change_color state_change;
+	detail::text_formatter::state_change_push_color state_change;
+	state_change.value = value;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::push_alpha(float value)
+{
+	detail::text_formatter::state_change_push_alpha state_change;
 	state_change.value = value;
 	state_change.level = m_current_level;
 	m_current_state_changes.push_back(state_change);
@@ -333,7 +518,7 @@ void xd::text_decorator::push_color(const glm::vec4& value)
 
 void xd::text_decorator::push_type(const std::string& value)
 {
-	detail::text_formatter::state_change_type state_change;
+	detail::text_formatter::state_change_push_type state_change;
 	state_change.value = value;
 	state_change.level = m_current_level;
 	m_current_state_changes.push_back(state_change);
@@ -341,8 +526,81 @@ void xd::text_decorator::push_type(const std::string& value)
 
 void xd::text_decorator::push_shadow(const font_shadow& value)
 {
-	detail::text_formatter::state_change_shadow state_change;
+	detail::text_formatter::state_change_push_shadow state_change;
 	state_change.value = value;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::push_outline(const font_outline& value)
+{
+	detail::text_formatter::state_change_push_outline state_change;
+	state_change.value = value;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::push_position(const glm::vec2& value)
+{
+	detail::text_formatter::state_change_push_position state_change;
+	state_change.value = value;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::push_letter_spacing(float value)
+{
+	detail::text_formatter::state_change_push_letter_spacing state_change;
+	state_change.value = value;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::pop_color()
+{
+	detail::text_formatter::state_change_pop_color state_change;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::pop_alpha()
+{
+	detail::text_formatter::state_change_pop_alpha state_change;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::pop_type()
+{
+	detail::text_formatter::state_change_pop_type state_change;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::pop_shadow()
+{
+	detail::text_formatter::state_change_pop_shadow state_change;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::pop_outline()
+{
+	detail::text_formatter::state_change_pop_outline state_change;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::pop_position()
+{
+	detail::text_formatter::state_change_pop_position state_change;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::pop_letter_spacing()
+{
+	detail::text_formatter::state_change_pop_letter_spacing state_change;
 	state_change.level = m_current_level;
 	m_current_state_changes.push_back(state_change);
 }
@@ -487,17 +745,20 @@ void xd::text_formatter::render(const std::string& text, xd::font& font, const x
 	// render text
 	detail::text_formatter::stacked_font_style style_stack(style);
 	glm::vec2 pos;
+	int current_level = 0;
 	for (detail::text_formatter::formatted_text_list::iterator i = texts.begin(); i != texts.end(); ++i) {
-		// purge all styles above this level
-		style_stack.purge(i->m_level);
-
 		// iterate through each char until a style change is met
 		std::string current_str;
+
 		for (formatted_text::iterator j = i->begin(); j != i->end(); ++j) {
-			if (j->m_state_changes.size()) {
+			if (j->m_state_changes.size() || j->m_level < current_level) {
 				// draw the current string using current style
 				if (current_str.length() != 0) {
+					if (style_stack.positions.size() != 0)
+						pos += style_stack.positions.back().value;
 					font.render(current_str, style_stack.get_font_style(), shader, mvp, &pos);
+					if (style_stack.positions.size() != 0)
+						pos -= style_stack.positions.back().value;
 					current_str.clear();
 				}
 
@@ -506,13 +767,21 @@ void xd::text_formatter::render(const std::string& text, xd::font& font, const x
 				std::for_each(j->m_state_changes.begin(), j->m_state_changes.end(), boost::apply_visitor(change_current_style));
 			}
 
-			// add char to the current string
+			// purge styles from the previous level if the new level is smaller
+			if (j->m_level < current_level)
+				style_stack.pop_level(j->m_level);
+
+			// add char to the current string and keep track of current level
+			current_level = j->m_level;
 			current_str += *j;
 		}
 
 		// draw the rest of the string
-		if (current_str.length() != 0)
+		if (current_str.length() != 0) {
+			if (style_stack.positions.size() != 0)
+				pos += style_stack.positions.back().value;
 			font.render(current_str, style_stack.get_font_style(), shader, mvp, &pos);
+		}
 	}
 }
 

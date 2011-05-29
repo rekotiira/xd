@@ -255,6 +255,29 @@ void xd::font::render(const std::string& text, const font_style& style,
 			// restore the text color
 			shader.bind_uniform(m_color_uniform, style.color);
 		}
+		
+		// if outline is enabled, draw outline
+		if (style.outline) {
+			// calculate outline color
+			glm::vec4 outline_color = style.outline->color;
+			outline_color.a *= style.color.a;
+
+			// bind color
+			shader.bind_uniform(m_color_uniform, outline_color);
+
+			// draw font multiple times times to draw outline (EXPENSIVE!)
+			for (int x = -style.outline->width; x <= style.outline->width; x++) {
+				for (int y = -style.outline->width; y <= style.outline->width; y++) {
+					if (x == 0 && y == 0)
+						continue;
+					shader.bind_uniform(m_position_uniform, glyph_pos + glm::vec2(x, y));
+					glyph.quad_ptr->draw();
+				}
+			}
+
+			// restore the text color
+			shader.bind_uniform(m_color_uniform, style.color);
+		}
 
 		// bind uniforms
 		shader.bind_uniform(m_position_uniform, glyph_pos);
@@ -264,6 +287,9 @@ void xd::font::render(const std::string& text, const font_style& style,
 		
 		// advance the position
 		text_pos += glyph.advance;
+		text_pos.x += style.letter_spacing;
+
+		// keep track of previous glyph to do kerning
 		prev_glyph_index = glyph.glyph_index;
 	}
 

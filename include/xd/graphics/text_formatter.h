@@ -40,22 +40,61 @@ namespace xd
 
 		// nested value
 		template <typename T>
-		struct state_change_value
+		struct nested_value
 		{
 			T value;
 			int level;
 		};
 
+		// no value attached
+		template <>
+		struct nested_value<void>
+		{
+			int level;
+		};
+
+		// typedefs for styles
+		typedef nested_value<glm::vec4> nested_color;
+		typedef nested_value<float> nested_alpha;
+		typedef nested_value<std::string> nested_type;
+		typedef nested_value<font_shadow> nested_shadow;
+		typedef nested_value<font_outline> nested_outline;
+		typedef nested_value<glm::vec2> nested_position;
+		typedef nested_value<float> nested_letter_spacing;
+		typedef nested_value<void> nested_void;
+
 		// state changes
-		struct state_change_color : state_change_value<glm::vec4> {};
-		struct state_change_type : state_change_value<std::string> {};
-		struct state_change_shadow : state_change_value<font_shadow> {};
+		struct state_change_push_color : nested_color {};
+		struct state_change_push_alpha : nested_alpha {};
+		struct state_change_push_type : nested_type {};
+		struct state_change_push_shadow : nested_shadow {};
+		struct state_change_push_outline : nested_outline {};
+		struct state_change_push_position : nested_position {};
+		struct state_change_push_letter_spacing : nested_letter_spacing {};
+		struct state_change_pop_color : nested_void {};
+		struct state_change_pop_alpha : nested_void {};
+		struct state_change_pop_type : nested_void {};
+		struct state_change_pop_shadow : nested_void {};
+		struct state_change_pop_outline : nested_void {};
+		struct state_change_pop_position : nested_void {};
+		struct state_change_pop_letter_spacing : nested_void {};
 
 		// variant state change
 		typedef boost::variant<
-			state_change_color,			
-			state_change_type,
-			state_change_shadow
+			state_change_push_color,
+			state_change_push_alpha,
+			state_change_push_type,
+			state_change_push_shadow,
+			state_change_push_outline,
+			state_change_push_position,
+			state_change_push_letter_spacing,
+			state_change_pop_color,
+			state_change_pop_alpha,
+			state_change_pop_type,
+			state_change_pop_shadow,
+			state_change_pop_outline,
+			state_change_pop_position,
+			state_change_pop_letter_spacing
 		> state_change;
 
 		// token list
@@ -71,6 +110,7 @@ namespace xd
 	public:
 		formatted_char(char chr)
 			: m_chr(chr)
+			, m_level(0)
 		{
 		}
 
@@ -82,9 +122,11 @@ namespace xd
 	private:
 		char m_chr;
 		detail::text_formatter::state_change_list m_state_changes;
+		int m_level;
 
 		friend class text_decorator;
 		friend class text_formatter;
+		friend class detail::text_formatter::decorate_text;
 	};
 
 	class formatted_text
@@ -169,7 +211,6 @@ namespace xd
 
 	private:
 		std::vector<formatted_char> m_chars;
-		int m_level;
 
 		friend class text_decorator;
 		friend class text_formatter;
@@ -218,9 +259,22 @@ namespace xd
 		void push_text(const std::string& text);
 		void push_text(const formatted_char& chr);
 		void push_text(char chr);
+
 		void push_color(const glm::vec4& color);
+		void push_alpha(float alpha);
 		void push_type(const std::string& type);
-		void push_shadow(const font_shadow& color);
+		void push_shadow(const font_shadow& shadow);
+		void push_outline(const font_outline& outline);
+		void push_position(const glm::vec2& position);
+		void push_letter_spacing(float letter_spacing);
+
+		void pop_color();
+		void pop_alpha();
+		void pop_type();
+		void pop_shadow();
+		void pop_outline();
+		void pop_position();
+		void pop_letter_spacing();
 
 		template <typename T>
 		void push_text(const T& val)

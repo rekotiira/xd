@@ -25,14 +25,33 @@ namespace xd
 		glm::vec4 color;
 	};
 
+	struct font_outline
+	{
+		font_outline() {}
+		font_outline(int width_, const glm::vec4& color_)
+			: width(width_), color(color_) {}
+
+		int width;
+		glm::vec4 color;
+	};
+
 	struct font_style
 	{
+		font_style()
+			: letter_spacing(0)
+			, line_height(0)
+		{
+		}
+
 		// required styles
 		glm::vec4 color;
+		float letter_spacing;
+		float line_height;
 
 		// optional styles
 		boost::optional<std::string> type;
 		boost::optional<font_shadow> shadow;
+		boost::optional<font_outline> outline;
 	};
 
 	namespace detail
