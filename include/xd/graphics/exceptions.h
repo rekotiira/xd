@@ -71,6 +71,14 @@ namespace xd
 		{
 		}
 	};
+
+	struct invalid_utf8_sequence : exception
+	{
+		invalid_utf8_sequence()
+			: exception("invalid_utf8_sequence")
+		{
+		}
+	};
 }
 
 #endif

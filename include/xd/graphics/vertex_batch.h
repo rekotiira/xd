@@ -62,12 +62,12 @@ namespace xd
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 
-		void draw()
+		void render()
 		{
-			draw(0, m_count);
+			render(0, m_count);
 		}
 
-		void draw(int begin, int count)
+		void render(int begin, int count)
 		{
 			// bind the buffer
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);

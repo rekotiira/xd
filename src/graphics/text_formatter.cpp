@@ -8,6 +8,8 @@
 #include <boost/lexical_cast.hpp>
 #include <xd/graphics/exceptions.h>
 #include <xd/graphics/text_formatter.h>
+#include <xd/utf8.h>
+#include <iostream>
 
 namespace xd { namespace detail { namespace text_formatter {
 
@@ -498,7 +500,7 @@ void xd::text_decorator::push_text(const formatted_char& chr)
 	push_text(text);
 }
 
-void xd::text_decorator::push_text(char chr)
+void xd::text_decorator::push_text(utf8::uint32_t chr)
 {
 	push_text(formatted_char(chr));
 }
@@ -771,12 +773,14 @@ void xd::text_formatter::render(const std::string& text, xd::font& font, const x
 			}
 
 			// purge styles from the previous level if the new level is smaller
-			if (j->m_level < current_level)
+			if (j->m_level < current_level) {
 				style_stack.pop_level(j->m_level);
+			}
 
 			// add char to the current string and keep track of current level
 			current_level = j->m_level;
-			current_str += *j;
+			//current_str += *j;
+			utf8::append(j->m_chr, std::back_inserter(current_str));
 		}
 
 		// draw the rest of the string
@@ -808,13 +812,15 @@ void xd::text_formatter::parse(const std::string& text, detail::text_formatter::
 			}
 
 			// consume the delimiter
-			start += m_decorator_open_delim.length();
+			//start += m_decorator_open_delim.length();
+			utf8::advance(start, utf8::distance(m_decorator_open_delim.begin(), m_decorator_open_delim.end()), end);
 
 			// check is this opening or closing tag
 			bool open_decorator;
 			if (std::equal(m_decorator_terminate_delim.begin(), m_decorator_terminate_delim.end(), start)) {
 				// closing tag
-				start += m_decorator_terminate_delim.length();
+				//start += m_decorator_terminate_delim.length();
+				utf8::advance(start, utf8::distance(m_decorator_terminate_delim.begin(), m_decorator_terminate_delim.end()), end);
 				open_decorator = false;
 			} else {
 				open_decorator = true;
@@ -825,8 +831,9 @@ void xd::text_formatter::parse(const std::string& text, detail::text_formatter::
 			while (start != end && (*start != '=' || !open_decorator)
 				&& !std::equal(m_decorator_close_delim.begin(), m_decorator_close_delim.end(), start))
 			{
-				decorator_name += *start;
-				++start;
+				//decorator_name += *start;
+				//++start;
+				utf8::append(utf8::next(start, end), std::back_inserter(decorator_name));
 			}
 
 			// check if we have parameters
@@ -842,12 +849,14 @@ void xd::text_formatter::parse(const std::string& text, detail::text_formatter::
 						// push and reset the argument
 						args.m_args.push_back(arg);
 						arg = "";
+						++start;
 					} else {
 						// aggregate the argument
-						arg += *start;
+						// arg += *start;
+						utf8::append(utf8::next(start, end), std::back_inserter(arg));
 					}
 
-					++start;
+					//++start;
 				}
 
 				// push the last arg
@@ -866,7 +875,8 @@ void xd::text_formatter::parse(const std::string& text, detail::text_formatter::
 			}
 
 			// tag closed
-			start += m_decorator_close_delim.length();
+			//start += m_decorator_close_delim.length();
+			utf8::advance(start, utf8::distance(m_decorator_close_delim.begin(), m_decorator_close_delim.end()), end);
 
 			// push the tag in tokens
 			if (open_decorator) {
@@ -910,13 +920,15 @@ void xd::text_formatter::parse(const std::string& text, detail::text_formatter::
 			}
 
 			// consume the delimiter
-			start += m_variable_open_delim.length();
+			//start += m_variable_open_delim.length();
+			utf8::advance(start, utf8::distance(m_variable_open_delim.begin(), m_variable_open_delim.end()), end);
 
 			// get the tag name
 			std::string variable_name;
 			while (start != end && !std::equal(m_variable_close_delim.begin(), m_variable_close_delim.end(), start)) {
-				variable_name += *start;
-				++start;
+				//variable_name += *start;
+				//++start;
+				utf8::append(utf8::next(start, end), std::back_inserter(variable_name));
 			}
 
 			// closing delimiter not found
@@ -931,7 +943,8 @@ void xd::text_formatter::parse(const std::string& text, detail::text_formatter::
 			}
 
 			// tag closed
-			start += m_variable_close_delim.length();
+			//start += m_variable_close_delim.length();
+			utf8::advance(start, utf8::distance(m_variable_close_delim.begin(), m_variable_close_delim.end()), end);
 
 			// push the token
 			detail::text_formatter::token_variable tok;
@@ -942,8 +955,9 @@ void xd::text_formatter::parse(const std::string& text, detail::text_formatter::
 			continue;
 		}
 
-		current_text += *start;
-		++start;
+		//current_text += *start;
+		//++start;
+		utf8::append(utf8::next(start, end), std::back_inserter(current_text));
 	}
 
 	// check if any decorators were left open

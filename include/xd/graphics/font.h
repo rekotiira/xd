@@ -11,6 +11,7 @@
 #include <xd/graphics/vertex_batch.h>
 #include <xd/graphics/shader_program.h>
 #include <xd/graphics/transform_geometry.h>
+#include <xd/utf8.h>
 
 namespace xd
 {
@@ -90,7 +91,7 @@ namespace xd
 	private:
 		typedef boost::unordered_map<int, detail::font_glyph> glyph_map_t;
 		typedef boost::unordered_map<std::string, font_ptr> font_map_t;
-		const detail::font_glyph& load_glyph(size_t char_index);
+		const detail::font_glyph& load_glyph(utf8::uint32_t char_index);
 
 		detail::font_face *m_face;
 		std::string m_filename;

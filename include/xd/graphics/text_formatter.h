@@ -14,6 +14,7 @@
 #include <xd/graphics/exceptions.h>
 #include <xd/graphics/font.h>
 #include <xd/graphics/shader_program.h>
+#include <xd/utf8.h>
 
 namespace xd
 {
@@ -108,19 +109,19 @@ namespace xd
 	class formatted_char
 	{
 	public:
-		formatted_char(char chr)
+		formatted_char(utf8::uint32_t chr)
 			: m_chr(chr)
 			, m_level(0)
 		{
 		}
 
-		operator char() const
+		utf8::uint32_t get() const
 		{
 			return m_chr;
 		}
 
 	private:
-		char m_chr;
+		utf8::uint32_t m_chr;
 		detail::text_formatter::state_change_list m_state_changes;
 		int m_level;
 
@@ -160,7 +161,10 @@ namespace xd
 
 		formatted_text& operator+=(const std::string& text)
 		{
-			m_chars.insert(m_chars.end(), text.begin(), text.end());
+			std::string::const_iterator i = text.begin();
+			while (i != text.end()) {
+				m_chars.push_back(utf8::next(i, text.end()));
+			}
 			return *this;
 		}
 
@@ -206,7 +210,12 @@ namespace xd
 
 		std::string get_unformatted() const
 		{
-			return std::string(m_chars.begin(), m_chars.end());
+			//return std::string(m_chars.begin(), m_chars.end());
+			std::string unformatted;
+			for (const_iterator i = m_chars.begin(); i != m_chars.end(); ++i) {
+				utf8::append(i->get(), std::back_inserter(unformatted));
+			}
+			return unformatted;
 		}
 
 	private:
@@ -258,7 +267,7 @@ namespace xd
 		void push_text(const formatted_text& text);
 		void push_text(const std::string& text);
 		void push_text(const formatted_char& chr);
-		void push_text(char chr);
+		void push_text(utf8::uint32_t chr);
 
 		void push_color(const glm::vec4& color);
 		void push_alpha(float alpha);

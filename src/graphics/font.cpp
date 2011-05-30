@@ -1,5 +1,6 @@
 #include <xd/graphics/font.h>
 #include <xd/graphics/exceptions.h>
+#include <xd/utf8.h>
 #include <memory>
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -132,7 +133,7 @@ void xd::font::unlink_font(const std::string& type)
 	m_linked_fonts.erase(type);
 }
 
-const xd::detail::font_glyph& xd::font::load_glyph(size_t char_index)
+const xd::detail::font_glyph& xd::font::load_glyph(utf8::uint32_t char_index)
 {
 	// check if glyph is already loaded
 	glyph_map_t::iterator i = m_glyph_map.find(char_index);
@@ -215,9 +216,13 @@ void xd::font::render(const std::string& text, const font_style& style,
 		text_pos = *pos;
 
 	FT_UInt prev_glyph_index = 0;
-	for (size_t i = 0; i < text.length(); i++) {
-		// get the glyph
-		const detail::font_glyph& glyph = load_glyph(static_cast<unsigned char>(text[i]));
+	std::string::const_iterator i = text.begin();
+	while (i != text.end()) {
+		// get the unicode code point
+		utf8::uint32_t char_index = utf8::next(i, text.end());
+
+		// get the cached glyph, or cache if it is not yet cached
+		const detail::font_glyph& glyph = load_glyph(char_index);
 
 		// bind the texture
 		glBindTexture(GL_TEXTURE_2D, glyph.texture_id);
@@ -253,7 +258,7 @@ void xd::font::render(const std::string& text, const font_style& style,
 			shader.bind_uniform(m_position_uniform, shadow_pos);
 
 			// draw shadow
-			glyph.quad_ptr->draw();
+			glyph.quad_ptr->render();
 
 			// restore the text color
 			shader.bind_uniform(m_color_uniform, style.color);
@@ -274,7 +279,7 @@ void xd::font::render(const std::string& text, const font_style& style,
 					if (x == 0 && y == 0)
 						continue;
 					shader.bind_uniform(m_position_uniform, glyph_pos + glm::vec2(x, y));
-					glyph.quad_ptr->draw();
+					glyph.quad_ptr->render();
 				}
 			}
 
@@ -286,7 +291,7 @@ void xd::font::render(const std::string& text, const font_style& style,
 		shader.bind_uniform(m_position_uniform, glyph_pos);
 
 		// draw the glyph
-		glyph.quad_ptr->draw();
+		glyph.quad_ptr->render();
 		
 		// advance the position
 		text_pos += glyph.advance;

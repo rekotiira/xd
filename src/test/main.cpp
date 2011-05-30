@@ -1,8 +1,9 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <xd/common.h>
+#include <xd/utf8.h>
 #include "test.h"
-
-#include <xd/lua.h>
 
 int main(int argc, char *argv[])
 {
