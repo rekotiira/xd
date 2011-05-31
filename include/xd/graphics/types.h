@@ -5,9 +5,9 @@ namespace xd
 {
 	enum vertex_attr
 	{
-		vertex_attr_pos = 0,
+		vertex_attr_position = 0,
 		vertex_attr_color,
-		vertex_attr_tex
+		vertex_attr_texture
 	};
 }
 

@@ -12,7 +12,7 @@ namespace xd
 	void render(vertex_batch<V>& batch, S& shader)
 	{
 		BOOST_MPL_ASSERT((boost::is_base_of<shader_program, S>));
-		shader.use();
+		shader.setup();
 		batch.render();
 	}
 
@@ -20,7 +20,7 @@ namespace xd
 	void render(vertex_batch<V>& batch, S& shader, const T1& p1)
 	{
 		BOOST_MPL_ASSERT((boost::is_base_of<shader_program, S>));
-		shader.use(p1);
+		shader.setup(p1);
 		batch.render();
 	}
 
@@ -28,7 +28,7 @@ namespace xd
 	void render(vertex_batch<V>& batch, S& shader, const T1& p1, const T2& p2)
 	{
 		BOOST_MPL_ASSERT((boost::is_base_of<shader_program, S>));
-		shader.use(p1, p2);
+		shader.setup(p1, p2);
 		batch.render();
 	}
 
@@ -36,7 +36,7 @@ namespace xd
 	void render(vertex_batch<V>& batch, S& shader, const T1& p1, const T2& p2, const T3& p4)
 	{
 		BOOST_MPL_ASSERT((boost::is_base_of<shader_program, S>));
-		shader.use(p1, p2, p3);
+		shader.setup(p1, p2, p3);
 		batch.render();
 	}
 
@@ -44,7 +44,7 @@ namespace xd
 	void render(vertex_batch<V>& batch, S& shader, const T1& p1, const T2& p2, const T3& p3, const T4& p4)
 	{
 		BOOST_MPL_ASSERT((boost::is_base_of<shader_program, S>));
-		shader.use(p1, p2, p3, p4);
+		shader.setup(p1, p2, p3, p4);
 		batch.render();
 	}
 }

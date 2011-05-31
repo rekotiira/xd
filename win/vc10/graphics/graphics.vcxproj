@@ -67,7 +67,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -84,8 +84,10 @@
     <ClInclude Include="..\..\..\include\xd\graphics.h" />
     <ClInclude Include="..\..\..\include\xd\graphics\exceptions.h" />
     <ClInclude Include="..\..\..\include\xd\graphics\font.h" />
+    <ClInclude Include="..\..\..\include\xd\graphics\image.h" />
     <ClInclude Include="..\..\..\include\xd\graphics\shaders.h" />
     <ClInclude Include="..\..\..\include\xd\graphics\stock_text_formatter.h" />
+    <ClInclude Include="..\..\..\include\xd\graphics\texture.h" />
     <ClInclude Include="..\..\..\include\xd\graphics\text_formatter.h" />
     <ClInclude Include="..\..\..\include\xd\graphics\traits.h" />
     <ClInclude Include="..\..\..\include\xd\graphics\utility.h" />
@@ -97,9 +99,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\graphics\font.cpp" />
+    <ClCompile Include="..\..\..\src\graphics\image.cpp" />
     <ClCompile Include="..\..\..\src\graphics\shaders.cpp" />
     <ClCompile Include="..\..\..\src\graphics\shader_program.cpp" />
     <ClCompile Include="..\..\..\src\graphics\stock_text_formatter.cpp" />
+    <ClCompile Include="..\..\..\src\graphics\texture.cpp" />
     <ClCompile Include="..\..\..\src\graphics\text_formatter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

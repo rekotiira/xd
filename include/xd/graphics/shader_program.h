@@ -21,6 +21,7 @@ namespace xd
 
 		// use it
 		virtual void use();
+		virtual void setup();
 
 		// bind attrib
 		virtual void bind_attrib(const std::string& name, GLuint attr);

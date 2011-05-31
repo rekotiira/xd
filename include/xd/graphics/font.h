@@ -55,11 +55,11 @@ namespace xd
 		boost::optional<font_outline> outline;
 	};
 
-	namespace detail
-	{
-		struct font_glyph;
-		struct font_face;
-	}
+	namespace detail { namespace font {
+
+		struct glyph;
+		struct face;
+	} }
 
 	// smart pointer to font
 	class font;
@@ -89,11 +89,11 @@ namespace xd
 		void set_color_uniform(const std::string&);
 		void set_texture_uniform(const std::string&);
 	private:
-		typedef boost::unordered_map<int, detail::font_glyph> glyph_map_t;
+		typedef boost::unordered_map<int, detail::font::glyph> glyph_map_t;
 		typedef boost::unordered_map<std::string, font_ptr> font_map_t;
-		const detail::font_glyph& load_glyph(utf8::uint32_t char_index);
+		const detail::font::glyph& load_glyph(utf8::uint32_t char_index);
 
-		detail::font_face *m_face;
+		detail::font::face *m_face;
 		std::string m_filename;
 		int m_size;
 		glyph_map_t m_glyph_map;

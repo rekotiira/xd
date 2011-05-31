@@ -68,6 +68,11 @@ void xd::shader_program::use()
 	glUseProgram(m_program);
 }
 
+void xd::shader_program::setup()
+{
+	use();
+}
+
 void xd::shader_program::bind_attrib(const std::string& name, GLuint attr)
 {
 	glBindAttribLocation(m_program, attr, name.c_str());

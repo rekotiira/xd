@@ -5,6 +5,8 @@
 #include <xd/graphics.h>
 #include <xd/graphics/font.h>
 #include <xd/graphics/stock_text_formatter.h>
+#include <xd/graphics/image.h>
+#include <xd/graphics/texture.h>
 #include "types.h"
 
 class test : public xd::window
@@ -21,8 +23,10 @@ private:
 	xd::transform_geometry m_geometry;
 	xd::flat_shader m_flat_shader;
 	xd::shaded_shader m_shaded_shader;
+	xd::texture_shader m_texture_shader;
 	xd::text_shader m_text_shader;
 	xd::vertex_batch<my_vertex_traits> m_triangle, m_quad;
+	xd::texture m_texture;
 	xd::stock_text_formatter m_text_formatter;
 	xd::font m_font;
 };

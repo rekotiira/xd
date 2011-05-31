@@ -57,10 +57,11 @@ void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& tex
 }
 
 test::test()
-	: xd::window("test app", 500, 300)
+	: xd::window("test app", 800, 600)
 	, m_triangle(GL_TRIANGLES)
 	, m_quad(GL_QUADS)
 	, m_font("verdana.ttf", 16)
+	, m_texture("texture.jpg")
 {
 	// setup projection
 	m_geometry.projection().load(glm::ortho(0.0f, (float)width(), (float)height(), 0.0f, -1.0f, 1.0f));
@@ -101,10 +102,14 @@ test::test()
 		data[1].pos = glm::vec2(1, -1);
 		data[2].pos = glm::vec2(1, 1);
 		data[3].pos = glm::vec2(-1, 1);
-		data[0].color = glm::vec4(1, 1, 1, 1);
-		data[1].color = glm::vec4(1, 1, 1, 1);
+		data[0].color = glm::vec4(1, 0, 0, 1);
+		data[1].color = glm::vec4(0, 1, 0, 1);
+		data[2].color = glm::vec4(0, 0, 1, 1);
 		data[2].color = glm::vec4(1, 1, 1, 1);
-		data[3].color = glm::vec4(1, 1, 1, 1);
+		data[0].tex = glm::vec2(0, 1);
+		data[1].tex = glm::vec2(1, 1);
+		data[2].tex = glm::vec2(1, 0);
+		data[3].tex = glm::vec2(0, 0);
 		m_quad.load(&data[0], 4);
 	}
 
@@ -185,23 +190,26 @@ void test::run()
 		xd::matrix_stack& model_view = m_geometry.model_view();
 
 		// translate and scale
-		/*model_view.identity();
+		model_view.identity();
 		model_view.translate(400.0f, 300.0f, 0.0f);
 		model_view.scale(200.0f, -150.0f, 0.0f);
 
 		// draw the triangle with shaded shader (uses mvp matrix)
-		model_view.push();
+		/*model_view.push();
 			model_view.scale(0.5f, 0.5f, 0.0f);
 			model_view.translate(-1.5f, 0.0f, 0.0f);
 			xd::render(m_triangle, m_shaded_shader, m_geometry.mvp());
-		model_view.pop();
+		model_view.pop();*/
 
 		// draw the quad with flat shader (uses mvp matrix and a color)
 		model_view.push();
-			model_view.scale(0.5f, -0.5f, 0.0f);
+			float ratio = (float)height() / (float)width();
+			model_view.scale(0.5f, 0.5f, 0.0f);
 			model_view.translate(1.5f, 0.0f, 0.0f);
-			xd::render(m_quad, m_flat_shader, m_geometry.mvp(), glm::vec4(1, 0, 0, 1));
-		model_view.pop();*/
+			model_view.scale(ratio, 1.0f, 0.0f);
+			xd::render(m_quad, m_texture_shader, m_geometry.mvp(), m_texture);
+			//xd::render(m_quad, m_shaded_shader, m_geometry.mvp());
+		model_view.pop();
 
 		// enable blending
 		glEnable(GL_BLEND);

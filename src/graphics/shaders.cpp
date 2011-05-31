@@ -22,13 +22,13 @@ xd::flat_shader::flat_shader()
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
 	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
-	bind_attrib("vVertex", xd::vertex_attr_pos);
+	bind_attrib("vVertex", xd::vertex_attr_position);
 	link();
 }
 
-void xd::flat_shader::use(const glm::mat4& mvp, const glm::vec4& color)
+void xd::flat_shader::setup(const glm::mat4& mvp, const glm::vec4& color)
 {
-	glUseProgram(m_program);
+	use();
 	bind_uniform("mvpMatrix", mvp);
 	bind_uniform("vColor", color);
 }
@@ -57,16 +57,55 @@ xd::shaded_shader::shaded_shader()
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
 	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
-	bind_attrib("vVertex", xd::vertex_attr_pos);
+	bind_attrib("vVertex", xd::vertex_attr_position);
 	bind_attrib("vColor", xd::vertex_attr_color);
 	link();
 }
 
-void xd::shaded_shader::use(const glm::mat4& mvp)
+void xd::shaded_shader::setup(const glm::mat4& mvp)
 {
-	glUseProgram(m_program);
+	use();
 	bind_uniform("mvpMatrix", mvp);
 }
+
+xd::texture_shader::texture_shader()
+{
+	static const char *vertex_shader_src =
+		"#version 120\n"
+		"uniform mat4 mvpMatrix;"
+		"attribute vec4 vVertex;"
+		"attribute vec2 vTexCoords;"
+		"varying vec2 vVaryingTexCoords;"
+		"void main(void)"
+		"{"
+		"	vVaryingTexCoords = vTexCoords;"
+		"	gl_Position = mvpMatrix * vVertex;"
+		"}";
+
+	static const char *fragment_shader_src =
+		"#version 120\n"
+		"uniform sampler2D colorMap;"
+		"varying vec2 vVaryingTexCoords;"
+		"void main(void)"
+		"{"
+		"	gl_FragColor.rgba = texture2D(colorMap, vVaryingTexCoords.st);"
+		"}";
+
+	attach(GL_VERTEX_SHADER, vertex_shader_src);
+	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
+	bind_attrib("vVertex", xd::vertex_attr_position);
+	bind_attrib("vTexCoords", xd::vertex_attr_texture);
+	link();
+}
+
+void xd::texture_shader::setup(const glm::mat4& mvp, const texture& tex)
+{
+	use();
+	tex.bind(0);
+	bind_uniform("mvpMatrix", mvp);
+	bind_uniform("colorMap", 0);
+}
+
 
 xd::text_shader::text_shader()
 {
@@ -85,8 +124,8 @@ xd::text_shader::text_shader()
 
 	static const char *fragment_shader_src =
 		"#version 120\n"
-		"uniform sampler2D colorMap;"
 		"uniform vec4 vColor;"
+		"uniform sampler2D colorMap;"
 		"varying vec2 vVaryingTexCoords;"
 		"void main(void)"
 		"{"
@@ -96,7 +135,7 @@ xd::text_shader::text_shader()
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
 	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
-	bind_attrib("vVertex", xd::vertex_attr_pos);
-	bind_attrib("vTexCoords", xd::vertex_attr_tex);
+	bind_attrib("vVertex", xd::vertex_attr_position);
+	bind_attrib("vTexCoords", xd::vertex_attr_texture);
 	link();
 }

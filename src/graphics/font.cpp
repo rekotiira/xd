@@ -7,61 +7,60 @@
 
 #include <iostream>
 
-namespace xd { namespace detail {
+namespace xd { namespace detail { namespace font {
 
-	FT_Library *font_library = NULL;
+	FT_Library *library = NULL;
 
-	struct font_vertex
+	struct vertex
 	{
 		glm::vec2 pos;
 		glm::vec2 tex;
 	};
 
-	struct font_vertex_traits : public vertex_traits
+	struct vertex_traits : public xd::vertex_traits
 	{
-		font_vertex_traits();
+		vertex_traits()
+		{
+			// we have XY position
+			vertex_attr_traits pos;
+			pos.type = GL_FLOAT;
+			pos.size = 2;
+			pos.offset = 0;
+			pos.normalized = GL_FALSE;
+
+			// and texture coordinates
+			vertex_attr_traits tex;
+			tex.type = GL_FLOAT;
+			tex.size = 2;
+			tex.offset = sizeof(glm::vec2);
+			tex.normalized = GL_FALSE;
+
+			// add the traits to the vertex
+			add_attr_traits(vertex_attr_position, pos);
+			add_attr_traits(vertex_attr_texture, tex);
+
+			// set the size of the vertex
+			vertex_size = sizeof(vertex);
+		}
 	};
 
-	typedef vertex_batch<font_vertex_traits> font_vertex_batch_t;
-	typedef boost::shared_ptr<font_vertex_batch_t> font_vertex_batch_ptr_t;
+	typedef vertex_batch<vertex_traits> vertex_batch_t;
+	typedef boost::shared_ptr<vertex_batch_t> vertex_batch_ptr_t;
 
-	struct font_glyph
+	struct glyph
 	{
 		FT_UInt glyph_index;
 		GLuint texture_id;
-		font_vertex_batch_ptr_t quad_ptr;
+		vertex_batch_ptr_t quad_ptr;
 		glm::vec2 advance, offset;
 	};
 
-	struct font_face
+	struct face
 	{
-		FT_Face face;
+		FT_Face handle;
 	};
-} }
 
-xd::detail::font_vertex_traits::font_vertex_traits()
-{
-	// we have XY position
-	vertex_attr_traits pos;
-	pos.type = GL_FLOAT;
-	pos.size = 2;
-	pos.offset = 0;
-	pos.normalized = GL_FALSE;
-
-	// and texture coordinates
-	vertex_attr_traits tex;
-	tex.type = GL_FLOAT;
-	tex.size = 2;
-	tex.offset = sizeof(glm::vec2);
-	tex.normalized = GL_FALSE;
-
-	// add the traits to the vertex
-	add_attr_traits(vertex_attr_pos, pos);
-	add_attr_traits(vertex_attr_tex, tex);
-
-	// set the size of the vertex
-	vertex_size = sizeof(font_vertex);
-}
+} } }
 
 xd::font::font(const std::string& filename, int size)
 	: m_face(0)
@@ -73,25 +72,25 @@ xd::font::font(const std::string& filename, int size)
 	, m_texture_uniform("colorMap")
 {
 	int error;
-	if (!detail::font_library)
+	if (!detail::font::library)
 	{
-		detail::font_library = new FT_Library;
-		error = FT_Init_FreeType(detail::font_library);
+		detail::font::library = new FT_Library;
+		error = FT_Init_FreeType(detail::font::library);
 		if (error)
 			throw font_load_failed(filename);
 	}
 
 	// construct a new font face; make sure it gets deleted if exception is thrown
-	m_face = new detail::font_face;
-	std::auto_ptr<detail::font_face> face_ptr(m_face);
+	m_face = new detail::font::face;
+	std::auto_ptr<detail::font::face> face_ptr(m_face);
 
 	// load the font
-	error = FT_New_Face(*detail::font_library, filename.c_str(), 0, &m_face->face);
+	error = FT_New_Face(*detail::font::library, filename.c_str(), 0, &m_face->handle);
 	if (error)
 		throw font_load_failed(filename);
 
 	try {
-		error = FT_Set_Pixel_Sizes(m_face->face, 0, size);
+		error = FT_Set_Pixel_Sizes(m_face->handle, 0, size);
 		if (error)
 			throw font_load_failed(filename);
 
@@ -100,7 +99,7 @@ xd::font::font(const std::string& filename, int size)
 			load_glyph(i);
 		}
 	} catch (...) {
-		FT_Done_Face(m_face->face);
+		FT_Done_Face(m_face->handle);
 		throw;
 	}
 
@@ -113,7 +112,7 @@ xd::font::~font()
 	for (glyph_map_t::iterator i = m_glyph_map.begin(); i != m_glyph_map.end(); ++i) {
 		glDeleteTextures(1, &i->second.texture_id);
 	}
-	FT_Done_Face(m_face->face);
+	FT_Done_Face(m_face->handle);
 	delete m_face;
 }
 
@@ -133,30 +132,30 @@ void xd::font::unlink_font(const std::string& type)
 	m_linked_fonts.erase(type);
 }
 
-const xd::detail::font_glyph& xd::font::load_glyph(utf8::uint32_t char_index)
+const xd::detail::font::glyph& xd::font::load_glyph(utf8::uint32_t char_index)
 {
 	// check if glyph is already loaded
 	glyph_map_t::iterator i = m_glyph_map.find(char_index);
 	if (i != m_glyph_map.end())
 		return i->second;
 
-	FT_UInt glyph_index = FT_Get_Char_Index(m_face->face, char_index);
-	int error = FT_Load_Glyph(m_face->face, glyph_index, FT_LOAD_DEFAULT);
+	FT_UInt glyph_index = FT_Get_Char_Index(m_face->handle, char_index);
+	int error = FT_Load_Glyph(m_face->handle, glyph_index, FT_LOAD_DEFAULT);
 	if (error)
 		throw glyph_load_failed(m_filename, char_index);
 
-	error = FT_Render_Glyph(m_face->face->glyph, FT_RENDER_MODE_NORMAL);
+	error = FT_Render_Glyph(m_face->handle->glyph, FT_RENDER_MODE_NORMAL);
 	if (error)
 		throw glyph_load_failed(m_filename, char_index);
 
 	// create glyph
-	detail::font_glyph& glyph = m_glyph_map[char_index] = detail::font_glyph();
+	detail::font::glyph& glyph = m_glyph_map[char_index] = detail::font::glyph();
 	glyph.glyph_index = glyph_index;
-	glyph.advance.x = static_cast<float>(m_face->face->glyph->advance.x >> 6);
-	glyph.advance.y = static_cast<float>(m_face->face->glyph->advance.y >> 6);
+	glyph.advance.x = static_cast<float>(m_face->handle->glyph->advance.x >> 6);
+	glyph.advance.y = static_cast<float>(m_face->handle->glyph->advance.y >> 6);
 
 	// get the handle to the bitmap
-	FT_Bitmap bitmap = m_face->face->glyph->bitmap;
+	FT_Bitmap bitmap = m_face->handle->glyph->bitmap;
 	glGenTextures(1, &glyph.texture_id);
 	glBindTexture(GL_TEXTURE_2D, glyph.texture_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -168,7 +167,7 @@ const xd::detail::font_glyph& xd::font::load_glyph(utf8::uint32_t char_index)
 		0, GL_LUMINANCE, GL_UNSIGNED_BYTE, bitmap.buffer);
 
 	// create quad for it
-	detail::font_vertex data[4];
+	detail::font::vertex data[4];
 	data[0].pos = glm::vec2(0, 0);
 	data[1].pos = glm::vec2(0, bitmap.rows);
 	data[2].pos = glm::vec2(bitmap.width, bitmap.rows);
@@ -179,10 +178,10 @@ const xd::detail::font_glyph& xd::font::load_glyph(utf8::uint32_t char_index)
 	data[3].tex = glm::vec2(1, 1);
 
 	// create a batch
-	glyph.quad_ptr = detail::font_vertex_batch_ptr_t(new detail::font_vertex_batch_t(GL_QUADS));
+	glyph.quad_ptr = detail::font::vertex_batch_ptr_t(new detail::font::vertex_batch_t(GL_QUADS));
 	glyph.quad_ptr->load(data, 4);
-	glyph.offset.x = static_cast<float>(m_face->face->glyph->bitmap_left);
-	glyph.offset.y = static_cast<float>(m_face->face->glyph->bitmap_top - bitmap.rows);
+	glyph.offset.x = static_cast<float>(m_face->handle->glyph->bitmap_left);
+	glyph.offset.y = static_cast<float>(m_face->handle->glyph->bitmap_top - bitmap.rows);
 
 	return glyph;
 }
@@ -208,7 +207,7 @@ void xd::font::render(const std::string& text, const font_style& style,
 	shader.bind_uniform(m_texture_uniform, 0);
 
 	// is kerning supported
-	FT_Bool kerning = FT_HAS_KERNING(m_face->face);
+	FT_Bool kerning = FT_HAS_KERNING(m_face->handle);
 
 	// render each glyph in the string
 	glm::vec2 text_pos;
@@ -222,7 +221,7 @@ void xd::font::render(const std::string& text, const font_style& style,
 		utf8::uint32_t char_index = utf8::next(i, text.end());
 
 		// get the cached glyph, or cache if it is not yet cached
-		const detail::font_glyph& glyph = load_glyph(char_index);
+		const detail::font::glyph& glyph = load_glyph(char_index);
 
 		// bind the texture
 		glBindTexture(GL_TEXTURE_2D, glyph.texture_id);
@@ -230,7 +229,7 @@ void xd::font::render(const std::string& text, const font_style& style,
 		// check for kerning
 		if (kerning && glyph.glyph_index && prev_glyph_index) {
 			FT_Vector kerning_delta;
-			FT_Get_Kerning(m_face->face, prev_glyph_index, glyph.glyph_index, FT_KERNING_DEFAULT, &kerning_delta);
+			FT_Get_Kerning(m_face->handle, prev_glyph_index, glyph.glyph_index, FT_KERNING_DEFAULT, &kerning_delta);
 			text_pos.x += kerning_delta.x >> 6;
 		}
 
