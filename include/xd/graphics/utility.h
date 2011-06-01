@@ -33,7 +33,7 @@ namespace xd
 	}
 
 	template <typename V, typename S, typename T1, typename T2, typename T3>
-	void render(vertex_batch<V>& batch, S& shader, const T1& p1, const T2& p2, const T3& p4)
+	void render(vertex_batch<V>& batch, S& shader, const T1& p1, const T2& p2, const T3& p3)
 	{
 		BOOST_MPL_ASSERT((boost::is_base_of<shader_program, S>));
 		shader.setup(p1, p2, p3);

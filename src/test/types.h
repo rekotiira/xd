@@ -3,10 +3,10 @@
 
 #include <xd/graphics.h>
 
+// our vertex holds position and texture data
 struct my_vertex
 {
-	glm::vec2 pos;
-	glm::vec4 color;
+	glm::vec3 pos;
 	glm::vec2 tex;
 };
 
@@ -17,27 +17,19 @@ struct my_vertex_traits : public xd::vertex_traits
 		// we have XY position
 		xd::vertex_attr_traits pos;
 		pos.type = GL_FLOAT;
-		pos.size = 2;
+		pos.size = 3;
 		pos.offset = 0;
 		pos.normalized = GL_FALSE;
-
-		// and RGBA color
-		xd::vertex_attr_traits color;
-		color.type = GL_FLOAT;
-		color.size = 4;
-		color.offset = sizeof(glm::vec2);
-		color.normalized = GL_FALSE;
 
 		// and texture UV map
 		xd::vertex_attr_traits tex;
 		tex.type = GL_FLOAT;
 		tex.size = 2;
-		tex.offset = color.offset + sizeof(glm::vec4);
+		tex.offset = sizeof(glm::vec3);
 		tex.normalized = GL_FALSE;
 
 		// add the traits to the vertex
 		add_attr_traits(xd::vertex_attr_position, pos);
-		add_attr_traits(xd::vertex_attr_color, color);
 		add_attr_traits(xd::vertex_attr_texture, tex);
 
 		// set the size of the vertex

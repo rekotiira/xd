@@ -1,3 +1,4 @@
+#include <SDL/SDL.h>
 #include <xd/system.h>
 
 xd::window::window(const std::string& title, int width, int height)
@@ -15,6 +16,8 @@ xd::window::window(const std::string& title, int width, int height)
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
 	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         m_width, m_height, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
@@ -34,6 +37,10 @@ xd::window::window(const std::string& title, int width, int height)
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(1.0f);
+
+	// intialize ticks
+	m_current_ticks = m_last_ticks = m_last_fps_update = SDL_GetTicks();
+	m_fps = m_frame_count = 0;
 }
 
 xd::window::~window()
@@ -98,6 +105,29 @@ void xd::window::update()
 			}
 		}
 	}
+
+	// update ticks
+	m_last_ticks = m_current_ticks;
+	m_current_ticks = SDL_GetTicks();
+
+	// invoke tick handler if necessary
+	if (m_tick_handler) {
+		m_tick_handler_counter += delta_ticks();
+		while (m_tick_handler_counter >= m_tick_handler_interval) {
+			m_tick_handler();
+			m_tick_handler_counter -= m_tick_handler_interval;
+		}
+	}
+
+	// calculate fps
+	while (m_current_ticks >= (m_last_fps_update + 1000)) {
+		m_fps = m_frame_count;
+		m_frame_count = 0;
+		m_last_fps_update += 1000;
+	}
+
+	// increase frame count
+	m_frame_count++;
 }
 
 void xd::window::clear()
@@ -123,6 +153,38 @@ int xd::window::width() const
 int xd::window::height() const
 {
 	return m_height;
+}
+
+int xd::window::delta_ticks() const
+{
+	return m_current_ticks - m_last_ticks;
+}
+
+float xd::window::delta_time() const
+{
+	return static_cast<float>(delta_ticks()) / 1000.0f;
+}
+
+void xd::window::register_tick_handler(tick_callback_t callback, boost::uint32_t interval)
+{
+	m_tick_handler = callback;
+	m_tick_handler_interval = interval;
+	m_tick_handler_counter = 0;
+}
+
+void xd::window::unregister_tick_handler()
+{
+	m_tick_handler.swap(tick_callback_t());
+}
+
+int xd::window::fps() const
+{
+	return m_fps;
+}
+
+int xd::window::frame_count() const
+{
+	return m_frame_count;
 }
 
 void xd::window::bind_key(const xd::key& physical_key, const std::string& virtual_key)

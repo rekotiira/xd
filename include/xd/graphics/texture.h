@@ -12,9 +12,15 @@ namespace xd
 	class texture : public boost::noncopyable
 	{
 	public:
-		texture(const std::string& filename);
-		texture(const xd::image& image);
-		texture(int width, int height, const void *data = 0);
+		texture(int width, int height, const void *data = 0,
+			GLint wrap_s = GL_REPEAT, GLint wrap_t = GL_REPEAT,
+			GLint mag_filter = GL_LINEAR, GLint min_filter = GL_LINEAR);
+		texture(const std::string& filename,
+			GLint wrap_s = GL_REPEAT, GLint wrap_t = GL_REPEAT,
+			GLint mag_filter = GL_LINEAR, GLint min_filter = GL_LINEAR);
+		texture(const xd::image& image,
+			GLint wrap_s = GL_REPEAT, GLint wrap_t = GL_REPEAT,
+			GLint mag_filter = GL_LINEAR, GLint min_filter = GL_LINEAR);
 		virtual ~texture();
 
 		void bind() const;
@@ -23,7 +29,8 @@ namespace xd
 		void load(const std::string& filename);
 		void load(const xd::image& image);
 		void load(int width, int height, const void *data);
-		
+		void load(const void *data);
+
 		GLuint texture_id() const;
 		int width() const;
 		int height() const;

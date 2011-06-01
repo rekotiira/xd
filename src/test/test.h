@@ -12,23 +12,50 @@
 class test : public xd::window
 {
 public:
+	// cstr & dstr
 	test();
 	~test();
+
+	// run the game
 	void run();
-	bool on_fire(const xd::input_args& args);
-	bool on_key_down(const xd::input_args& args);
-	void draw_text(float x, float y, const std::string& text,
-		const glm::vec4& color = glm::vec4(1, 1, 1, 1), std::string type = "");
+
+	// process timed update
+	void frame_update();
+
+	// draws text
+	void draw_text(float x, float y, const std::string& text);
+	void draw_tile(int x, int y);
 private:
+	// vertex batch type using our traits
+	typedef xd::vertex_batch<my_vertex_traits> my_vertex_batch;
+
+	// geometry transformation
 	xd::transform_geometry m_geometry;
-	xd::flat_shader m_flat_shader;
-	xd::shaded_shader m_shaded_shader;
+	xd::matrix_stack* m_model_view;
+
+	// shaders for rendering textured quads and text
 	xd::texture_shader m_texture_shader;
+	xd::texture_mask_shader m_texture_mask_shader;
 	xd::text_shader m_text_shader;
-	xd::vertex_batch<my_vertex_traits> m_triangle, m_quad;
-	xd::texture m_texture;
+
+	// vertex batch for grass and edges
+	my_vertex_batch m_grass_batch, m_edge_batch;
+
+	// textures
+	xd::texture m_grass_texture;
+	xd::texture m_grass_edge_texture;
+	xd::texture m_edge_texture;
+	xd::texture m_mask_texture;
+
+	// text rendering stuff
 	xd::stock_text_formatter m_text_formatter;
 	xd::font m_font;
+
+	// game variables
+	bool m_animating;
+	float m_angle;
+	float m_target_angle;
+	float m_zoom;
 };
 
 #endif

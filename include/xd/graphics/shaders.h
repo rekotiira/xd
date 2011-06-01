@@ -27,6 +27,13 @@ namespace xd
 		virtual void setup(const glm::mat4& mvp, const texture& tex);
 	};
 
+	class texture_mask_shader : public shader_program
+	{
+	public:
+		texture_mask_shader();
+		virtual void setup(const glm::mat4& mvp, const texture& tex, const texture& mask);
+	};
+
 	class text_shader : public shader_program
 	{
 	public:

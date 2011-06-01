@@ -1,7 +1,6 @@
 #ifndef H_XD_SYSTEM_WINDOW
 #define H_XD_SYSTEM_WINDOW
 
-#include <SDL/SDL.h>
 #include <string>
 #include <xd/system/input.h>
 #include <xd/common/event_bus.h>
@@ -10,14 +9,18 @@
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
 #include <boost/function.hpp>
+#include <boost/cstdint.hpp>
+
+struct SDL_Window;
 
 namespace xd
 {
 	class window : public boost::noncopyable
 	{
 	public:
-		// event bus typedefs
+		// typedefs
 		typedef event_bus<input_args, input_filter>::callback_t input_event_callback_t;
+		typedef boost::function<void ()> tick_callback_t;
 
 		// public interface
 		window(const std::string& title, int width, int height);
@@ -30,6 +33,14 @@ namespace xd
 		bool closed() const;
 		int width() const;
 		int height() const;
+
+		// ticks stuff
+		int delta_ticks() const;
+		float delta_time() const;
+		void register_tick_handler(tick_callback_t callback, boost::uint32_t interval);
+		void unregister_tick_handler();
+		int fps() const;
+		int frame_count() const;
 
 		void bind_key(const key& physical_key, const std::string& virtual_key);
 		void unbind_key(const key& key);
@@ -57,7 +68,7 @@ namespace xd
 
 	private:
 		SDL_Window* m_window;
-		SDL_GLContext m_context;
+		void *m_context;
 
 		// was window closed
 		bool m_closed;
@@ -65,6 +76,18 @@ namespace xd
 		// window width/height
 		int m_width;
 		int m_height;
+
+		// keep track of ticks
+		boost::uint32_t m_current_ticks;
+		boost::uint32_t m_last_ticks;
+		boost::uint32_t m_tick_handler_counter;
+		boost::uint32_t m_tick_handler_interval;
+		tick_callback_t m_tick_handler;
+
+		// fps stuff
+		int m_fps;
+		int m_frame_count;
+		boost::uint32_t m_last_fps_update;
 
 		// internal typedefs
 		typedef boost::unordered_set<key> key_set_t;
