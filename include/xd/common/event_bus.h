@@ -88,7 +88,7 @@ namespace xd
 
 		void remove(event_link link)
 		{
-			for (callback_list_t::iterator i = m_callbacks.begin(); i != m_callbacks.end(); ++i) {
+			for (typename callback_list_t::iterator i = m_callbacks.begin(); i != m_callbacks.end(); ++i) {
 				if (i->first == link) {
 					m_callbacks.erase(i);
 					return;
@@ -102,7 +102,7 @@ namespace xd
 		void operator()(const Args& args)
 		{
 			// iterate through all callbacks
-			for (callback_list_t::iterator i = m_callbacks.begin(); i != m_callbacks.end(); ++i) {
+			for (typename callback_list_t::iterator i = m_callbacks.begin(); i != m_callbacks.end(); ++i) {
 				bool status = (i->second)(args); // call the callback
 				if (!status)
 					break;
@@ -119,23 +119,25 @@ namespace xd
 	class event_info : public event_info_base<Args, Filter>
 	{
 	public:
-		event_link add(typename event_callback_t::callback_t callback, event_placement placement = event_prepend)
+        typedef event_info_base<Args, Filter> base;
+        
+		event_link add(typename base::event_callback_t::callback_t callback, event_placement placement = event_prepend)
 		{
-			std::size_t link = m_counter++;
+			std::size_t link = base::m_counter++;
 			if (placement == event_prepend)
-				m_callbacks.push_front(std::make_pair(link, event_callback_t(callback)));
+				base::m_callbacks.push_front(std::make_pair(link, event_callback_t(callback)));
 			else
-				m_callbacks.push_back(std::make_pair(link, event_callback_t(callback)));
+				base::m_callbacks.push_back(std::make_pair(link, event_callback_t(callback)));
 			return link;
 		}
 
-		event_link add(typename event_callback_t::callback_t callback, Filter filter, event_placement placement = event_prepend)
+		event_link add(typename base::event_callback_t::callback_t callback, Filter filter, event_placement placement = event_prepend)
 		{
-			std::size_t link = m_counter++;
+			std::size_t link = base::m_counter++;
 			if (placement == event_prepend)
-				m_callbacks.push_front(std::make_pair(link, event_callback_t(callback, filter)));
+				base::m_callbacks.push_front(std::make_pair(link, typename base::event_callback_t(callback, filter)));
 			else
-				m_callbacks.push_back(std::make_pair(link, event_callback_t(callback, filter)));
+				base::m_callbacks.push_back(std::make_pair(link, typename base::event_callback_t(callback, filter)));
 			return link;
 		}
 	};
@@ -144,13 +146,15 @@ namespace xd
 	class event_info<Args, void> : public event_info_base<Args, void>
 	{
 	public:
-		event_link add(typename event_callback_t::callback_t callback, event_placement placement = event_prepend)
+        typedef event_info_base<Args, void> base;
+        
+		event_link add(typename base::event_callback_t::callback_t callback, event_placement placement = event_prepend)
 		{
-			std::size_t link = m_counter++;
+			std::size_t link = base::m_counter++;
 			if (placement == event_prepend)
-				m_callbacks.push_front(std::make_pair(link, event_callback_t(callback)));
+				base::m_callbacks.push_front(std::make_pair(link, event_callback_t(callback)));
 			else
-				m_callbacks.push_back(std::make_pair(link, event_callback_t(callback)));
+				base::m_callbacks.push_back(std::make_pair(link, event_callback_t(callback)));
 			return link;
 		}
 	};

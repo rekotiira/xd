@@ -1,7 +1,12 @@
 #ifndef H_XD_GRAPHICS_TEXTURE
 #define H_XD_GRAPHICS_TEXTURE
 
-#include <GL/glew.h>
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
+
 #include <string>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>

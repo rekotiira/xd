@@ -349,7 +349,7 @@ namespace xd { namespace detail { namespace text_formatter {
 		template <typename T>
 		void pop_level(std::list<T>& list, int level)
 		{
-			std::list<T>::iterator i = list.begin();
+			typename std::list<T>::iterator i = list.begin();
 			while (i != list.end()) {
 				if (i->level > level)
 					i = list.erase(i);

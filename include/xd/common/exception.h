@@ -22,7 +22,7 @@ namespace xd
 		{
 		}
 		
-		virtual const char *what() const
+		virtual const char *what() const throw()
 		{
 			if (m_message.length() != 0)
 				return m_message.c_str();

@@ -10,6 +10,7 @@
 #include <boost/unordered_set.hpp>
 #include <boost/function.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/bind.hpp>
 
 struct SDL_Window;
 

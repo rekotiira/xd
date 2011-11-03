@@ -47,7 +47,7 @@ namespace xd
 			m_draw_mode = draw_mode;
 		}
 
-		void load(const void *data, size_t count)
+		void load(const void *data, int count)
 		{
 			// bind the buffer
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -94,7 +94,7 @@ namespace xd
 		T m_traits;
 		GLenum m_draw_mode;
 		GLuint m_vbo;
-		size_t m_count;
+		int m_count;
 
 		void init()
 		{

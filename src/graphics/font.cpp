@@ -49,6 +49,14 @@ namespace xd { namespace detail { namespace font {
 
 	struct glyph
 	{
+        glyph() {}
+        glyph(const glyph& other)
+            : glyph_index(other.glyph_index)
+            , texture_id(other.texture_id)
+            , quad_ptr(other.quad_ptr)
+            , advance(other.advance)
+            , offset(other.offset)
+        {}
 		FT_UInt glyph_index;
 		GLuint texture_id;
 		vertex_batch_ptr_t quad_ptr;

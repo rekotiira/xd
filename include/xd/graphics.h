@@ -1,7 +1,11 @@
 #ifndef H_XD_GRAPHICS
 #define H_XD_GRAPHICS
 
-#include <GL/glew.h>
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
