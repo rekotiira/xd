@@ -1,7 +1,12 @@
 #ifndef H_XD_GRAPHICS_SHADER_PROGRAM
 #define H_XD_GRAPHICS_SHADER_PROGRAM
 
-#include <GL/glew.h>
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
+
 #include <glm/glm.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>

@@ -1,7 +1,7 @@
 #ifndef H_XD_GRAPHICS_FONT
 #define H_XD_GRAPHICS_FONT
 
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
@@ -59,6 +59,7 @@ namespace xd
 
 		struct glyph;
 		struct face;
+
 	} }
 
 	// smart pointer to font

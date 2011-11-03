@@ -26,12 +26,12 @@ xd::window::window(const std::string& title, int width, int height)
 	}
 	m_context = SDL_GL_CreateContext(m_window);
 
-	GLenum err = glewInit();
+	/*GLenum err = glewInit();
 	if (err != GLEW_OK) {
 		SDL_GL_DeleteContext(m_context);
 		SDL_DestroyWindow(m_window);
 		throw xd::window_creation_failed();
-	}
+	}*/
 
 	SDL_GL_SetSwapInterval(1);
 
@@ -174,7 +174,7 @@ void xd::window::register_tick_handler(tick_callback_t callback, boost::uint32_t
 
 void xd::window::unregister_tick_handler()
 {
-	m_tick_handler.swap(tick_callback_t());
+	m_tick_handler = 0;
 }
 
 int xd::window::fps() const
