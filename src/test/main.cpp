@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <GL/glew.h>
 #include <xd/common.h>
 #include <xd/utf8.h>
 #include "test.h"

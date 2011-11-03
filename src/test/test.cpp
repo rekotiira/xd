@@ -26,6 +26,8 @@
 	}
 }*/
 
+const float pi = 3.14159265f;
+const float isometric = static_cast<float>(atan(sin(pi/4)) / pi * 180);
 const float tile_size = 32;
 const int map_size = 10;
 
@@ -33,14 +35,17 @@ test::test()
 	: xd::window("3D Isometric Sample", 640, 480)
 	, m_grass_batch(GL_QUADS)
 	, m_edge_batch(GL_QUADS)
-	, m_font("verdana.ttf", 16)
+	, m_font("verdanab.ttf", 16)
 	, m_grass_texture("grass.png")
 	, m_grass_edge_texture("grass_edge.png")
 	, m_edge_texture("edge.png")
 	, m_mask_texture("mask.png", GL_CLAMP, GL_CLAMP)
-	, m_animating(false)
-	, m_angle(45.0f)
-	, m_target_angle(45.0f)
+	, m_hor_animating(false)
+	, m_ver_animating(false)
+	, m_hor_angle(45.0f)
+	, m_ver_angle(isometric)
+	, m_hor_target_angle(45.0f)
+	, m_ver_target_angle(isometric)
 	, m_zoom(1.0f)
 {
 	// store pointer to model view for ease of access
@@ -103,8 +108,10 @@ test::test()
 	// bind physical keys to virtual ones
 	bind_key(xd::key_left, "left");
 	bind_key(xd::key_right, "right");
-	bind_key(xd::key_up, "zoom_in");
-	bind_key(xd::key_down, "zoom_out");
+	//bind_key(xd::key_up, "up");
+	//bind_key(xd::key_down, "down");
+	bind_key(xd::key_a, "zoom_in");
+	bind_key(xd::key_z, "zoom_out");
 	bind_key(xd::key_esc, "quit");
 
 	// register our frame update function for timed updates, target for 30 FPS
@@ -150,25 +157,47 @@ void test::draw_tile(int x, int y)
 
 void test::frame_update()
 {
-	if (m_animating) {
-		if (m_angle < m_target_angle)
-			m_angle += 3.0f;
+	if (m_hor_animating) {
+		if (m_hor_angle < m_hor_target_angle)
+			m_hor_angle += 45.0f / 10.0f;
 		else
-			m_angle -= 3.0f;
-		if (fabs(m_target_angle - m_angle) < 1.0f) {
-			m_angle = m_target_angle;
-			m_animating = false;
+			m_hor_angle -= 45.0f / 10.0f;
+		if (fabs(m_hor_target_angle - m_hor_angle) < 1.0f) {
+			m_hor_angle = m_hor_target_angle;
+			m_hor_animating = false;
 		}
 	}
 
-	if (!m_animating) {
+	if (m_ver_animating) {
+		if (m_ver_angle < m_ver_target_angle)
+			m_ver_angle += 5.0f / 10.0f;
+		else
+			m_ver_angle -= 5.0f / 10.0f;
+		if (fabs(m_ver_target_angle - m_ver_angle) < 1.0f) {
+			m_ver_angle = m_ver_target_angle;
+			m_ver_animating = false;
+		}
+	}
+
+	if (!m_hor_animating) {
 		if (pressed("left")) {
-			m_animating = true;
-			m_target_angle -= 90.0f;
+			m_hor_animating = true;
+			m_hor_target_angle -= 90.0f;
 		}
 		if (pressed("right")) {
-			m_animating = true;
-			m_target_angle += 90.0f;
+			m_hor_animating = true;
+			m_hor_target_angle += 90.0f;
+		}
+	}
+
+	if (!m_ver_animating) {
+		if (pressed("up")) {
+			m_ver_animating = true;
+			m_ver_target_angle += 5.0f;
+		}
+		if (pressed("down")) {
+			m_ver_animating = true;
+			m_ver_target_angle -= 5.0f;
 		}
 	}
 		
@@ -212,9 +241,8 @@ void test::run()
 		m_model_view->identity();
 
 		// rotate to isometric view
-		float isometric = static_cast<float>(atan(sin(M_PI/4)) / M_PI * 180);
-		m_model_view->rotate(isometric, 1.0f, 0, 0.0f);
-		m_model_view->rotate(m_angle, 0.0f, 1.0f, 0.0f);
+		m_model_view->rotate(m_ver_angle, 1.0f, 0, 0.0f);
+		m_model_view->rotate(m_hor_angle, 0.0f, 1.0f, 0.0f);
 
 		// scale to tile size so we can deal with "tile units", take zoom into account
 		float scale = tile_size * m_zoom;
@@ -237,10 +265,15 @@ void test::run()
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
 
+		// alpha testing
+		glAlphaFunc(GL_GREATER, 0.5f);
+
 		// draw text
 		m_model_view->identity();
 		draw_text(10, 20, "{color=yellow}FPS:{/color} "+boost::lexical_cast<std::string>(fps()));
-		draw_text(10, 40, "{color=yellow}Rot:{/color} "+boost::lexical_cast<std::string>(m_angle));
+		draw_text(10, 40, "{color=yellow}Rot X:{/color} "+boost::lexical_cast<std::string>(m_hor_angle));
+		draw_text(10, 60, "{color=yellow}Rot Y:{/color} "+boost::lexical_cast<std::string>(m_ver_angle));
+		draw_text(10, 80, "{color=yellow}Zoom:{/color} "+boost::lexical_cast<std::string>(m_zoom));
 
 		swap();
 	}

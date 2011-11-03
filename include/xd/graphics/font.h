@@ -13,6 +13,16 @@
 #include <xd/graphics/transform_geometry.h>
 #include <xd/utf8.h>
 
+#ifndef XD_STATIC
+// disable warning about boost::noncopyable not being dll-exportable
+// as well as the private members that can't be accessed by client
+#pragma warning(disable: 4275 4251 4231)
+
+// export instantiantions of used stdlib classes
+XD_API_TEMPLATE template class XD_API std::allocator<char>;
+XD_API_TEMPLATE template class XD_API std::basic_string<char, std::char_traits<char>, std::allocator<char> >;
+#endif
+
 namespace xd
 {
 	struct font_shadow
@@ -59,6 +69,7 @@ namespace xd
 
 		struct glyph;
 		struct face;
+
 	} }
 
 	// smart pointer to font
@@ -66,7 +77,7 @@ namespace xd
 	typedef boost::shared_ptr<font> font_ptr;
 
 	// font class
-	class font : public boost::noncopyable
+	class XD_API font : public boost::noncopyable
 	{
 	public:
 		font(const std::string& filename, int size);

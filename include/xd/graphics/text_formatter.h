@@ -16,6 +16,15 @@
 #include <xd/graphics/shader_program.h>
 #include <xd/utf8.h>
 
+#ifndef XD_STATIC
+// disable warnings about nonstandard extension
+// see: http://support.microsoft.com/kb/168958
+#pragma warning(disable: 4231)
+
+XD_API_TEMPLATE template class XD_API std::allocator<char>;
+XD_API_TEMPLATE template class XD_API std::basic_string<char, std::char_traits<char>, std::allocator<char> >;
+#endif
+
 namespace xd
 {
 	class text_formatter;
@@ -258,7 +267,7 @@ namespace xd
 		friend class text_formatter;
 	};
 
-	class text_decorator
+	class XD_API text_decorator
 	{
 	public:
 		text_decorator(int level);
@@ -302,7 +311,7 @@ namespace xd
 		friend class detail::text_formatter::decorate_text;
 	};
 
-	class text_formatter
+	class XD_API text_formatter
 	{
 	public:
 		typedef boost::function<void (text_decorator&, const formatted_text&, const text_decorator_args&)> decorator_callback_t;

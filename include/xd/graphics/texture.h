@@ -9,7 +9,7 @@
 
 namespace xd
 {
-	class texture : public boost::noncopyable
+	class XD_API texture : public boost::noncopyable
 	{
 	public:
 		texture(int width, int height, const void *data = 0,

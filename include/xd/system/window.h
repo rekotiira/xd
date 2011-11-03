@@ -13,9 +13,15 @@
 
 struct SDL_Window;
 
+#ifndef XD_STATIC
+// disable warning about boost::noncopyable not being dll-exportable
+// as well as the private members that can't be accessed by client
+#pragma warning(disable: 4275 4251)
+#endif
+
 namespace xd
 {
-	class window : public boost::noncopyable
+	class XD_API window : public boost::noncopyable
 	{
 	public:
 		// typedefs

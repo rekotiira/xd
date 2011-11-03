@@ -9,7 +9,7 @@
 
 namespace xd
 {
-	class stock_text_formatter : public text_formatter
+	class XD_API stock_text_formatter : public text_formatter
 	{
 	public:
 		stock_text_formatter();

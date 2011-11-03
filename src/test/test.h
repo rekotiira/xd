@@ -52,9 +52,12 @@ private:
 	xd::font m_font;
 
 	// game variables
-	bool m_animating;
-	float m_angle;
-	float m_target_angle;
+	bool m_hor_animating;
+	bool m_ver_animating;
+	float m_hor_angle;
+	float m_ver_angle;
+	float m_hor_target_angle;
+	float m_ver_target_angle;
 	float m_zoom;
 };
 

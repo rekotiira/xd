@@ -4,6 +4,13 @@
 #include <string>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
+#include <xd/common.h>
+
+#ifndef XD_STATIC
+// disable warning about boost::noncopyable not being dll-exportable
+// as well as the private members that can't be accessed by client
+#pragma warning(disable: 4275 4251)
+#endif
 
 namespace xd
 {
@@ -14,7 +21,7 @@ namespace xd
 
 	} }
 
-	class image : public boost::noncopyable
+	class XD_API image : public boost::noncopyable
 	{
 	public:
 		image(const std::string& filename);

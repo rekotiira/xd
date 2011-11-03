@@ -4,7 +4,7 @@
 #include <boost/bind.hpp>
 #include <xd/system.h>
 #include <xd/common.h>
-#include <xd/graphics.h>
+//#include <xd/graphics.h>
 #include <luabind/operator.hpp>
 #include <boost/optional.hpp>
 

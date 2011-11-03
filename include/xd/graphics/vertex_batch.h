@@ -15,7 +15,7 @@ namespace xd
 			, m_traits(traits)
 			, m_count(0)
 		{
-			init_();
+			init();
 		}
 
 		vertex_batch(const void *data, size_t count, GLenum draw_mode = GL_TRIANGLES, const T& traits = T())
@@ -23,7 +23,7 @@ namespace xd
 			, m_traits(traits)
 			, m_count(0)
 		{
-			init_();
+			init();
 			load(data, count, traits);
 		}
 
@@ -96,7 +96,7 @@ namespace xd
 		GLuint m_vbo;
 		size_t m_count;
 
-		void init_()
+		void init()
 		{
 			// generate a VBO
 			glGenBuffers(1, &m_vbo);

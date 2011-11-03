@@ -5,10 +5,13 @@
 #include <glm/glm.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
+#include <xd/common.h>
+
+#pragma warning(disable: 4275)
 
 namespace xd
 {
-	class shader_program : boost::noncopyable
+	class XD_API shader_program : boost::noncopyable
 	{
 	public:
 		// constructors & destructors

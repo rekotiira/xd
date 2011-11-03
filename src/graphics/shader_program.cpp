@@ -1,5 +1,4 @@
 #include <xd/graphics.h>
-#include <boost/throw_exception.hpp>
 
 xd::shader_program::shader_program()
 {

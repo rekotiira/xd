@@ -51,8 +51,7 @@ void xd::image::load(const std::string& filename)
 	m_height = ilGetInteger(IL_IMAGE_HEIGHT);
 
 	// convert image to RGBA
-	if (ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE) == IL_FALSE)
-		throw failed_to_load_image(filename);
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 }
 
 void xd::image::save(const std::string& filename) const
