@@ -70,9 +70,9 @@ namespace xd
 		{
 			std::size_t link = m_counter++;
 			if (placement == EVENT_PREPEND)
-				m_callbacks.push_front(std::make_pair(link, typename event_callback_t(callback)));
+				m_callbacks.push_front(std::make_pair(link, event_callback_t(callback)));
 			else
-				m_callbacks.push_back(std::make_pair(link, typename  event_callback_t(callback)));
+				m_callbacks.push_back(std::make_pair(link, event_callback_t(callback)));
 			return link;
 		}
 
@@ -80,9 +80,9 @@ namespace xd
 		{
 			std::size_t link = m_counter++;
 			if (placement == EVENT_PREPEND)
-				m_callbacks.push_front(std::make_pair(link, typename  event_callback_t(callback, filter)));
+				m_callbacks.push_front(std::make_pair(link, event_callback_t(callback, filter)));
 			else
-				m_callbacks.push_back(std::make_pair(link, typename event_callback_t(callback, filter)));
+				m_callbacks.push_back(std::make_pair(link, event_callback_t(callback, filter)));
 			return link;
 		}
 

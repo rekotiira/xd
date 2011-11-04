@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
+#include <boost/unordered_map.hpp>
 #include <memory>
 #include <unordered_map>
 #include <xd/graphics/types.h>
@@ -98,11 +99,11 @@ namespace xd
 		void set_color_uniform(const std::string&);
 		void set_texture_uniform(const std::string&);
 	private:
-		typedef std::unordered_map<int, detail::font::glyph> glyph_map_t;
+		typedef std::unordered_map<int, std::unique_ptr<detail::font::glyph>> glyph_map_t;
 		typedef std::unordered_map<std::string, font::ptr> font_map_t;
 		const detail::font::glyph& load_glyph(utf8::uint32_t char_index);
 
-		detail::font::face *m_face;
+		std::unique_ptr<detail::font::face> m_face;
 		std::string m_filename;
 		int m_size;
 		glyph_map_t m_glyph_map;

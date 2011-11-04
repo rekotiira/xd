@@ -57,6 +57,7 @@ namespace xd { namespace detail { namespace font {
             , advance(other.advance)
             , offset(other.offset)
         {}
+
 		FT_UInt glyph_index;
 		GLuint texture_id;
 		vertex_batch_ptr_t quad_ptr;
@@ -71,8 +72,7 @@ namespace xd { namespace detail { namespace font {
 } } }
 
 xd::font::font(const std::string& filename, int size)
-	: m_face(0)
-	, m_filename(filename)
+    : m_filename(filename)
 	, m_size(size)
 	, m_mvp_uniform("mvpMatrix")
 	, m_position_uniform("vPosition")
@@ -89,8 +89,7 @@ xd::font::font(const std::string& filename, int size)
 	}
 
 	// construct a new font face; make sure it gets deleted if exception is thrown
-	m_face = new detail::font::face;
-	std::auto_ptr<detail::font::face> face_ptr(m_face);
+	m_face = std::unique_ptr<detail::font::face>(new detail::font::face);
 
 	// load the font
 	error = FT_New_Face(*detail::font::library, filename.c_str(), 0, &m_face->handle);
@@ -110,18 +109,14 @@ xd::font::font(const std::string& filename, int size)
 		FT_Done_Face(m_face->handle);
 		throw;
 	}
-
-	// all fine, release the auto ptr
-	face_ptr.release();
 }
 
 xd::font::~font()
 {
-	for (glyph_map_t::iterator i = m_glyph_map.begin(); i != m_glyph_map.end(); ++i) {
-		glDeleteTextures(1, &i->second.texture_id);
+	for (auto i = m_glyph_map.begin(); i != m_glyph_map.end(); ++i) {
+		glDeleteTextures(1, &i->second->texture_id);
 	}
 	FT_Done_Face(m_face->handle);
-	delete m_face;
 }
 
 void xd::font::link_font(const std::string& type, const std::string& filename)
@@ -145,7 +140,7 @@ const xd::detail::font::glyph& xd::font::load_glyph(utf8::uint32_t char_index)
 	// check if glyph is already loaded
 	glyph_map_t::iterator i = m_glyph_map.find(char_index);
 	if (i != m_glyph_map.end())
-		return i->second;
+		return *i->second;
 
 	FT_UInt glyph_index = FT_Get_Char_Index(m_face->handle, char_index);
 	int error = FT_Load_Glyph(m_face->handle, glyph_index, FT_LOAD_DEFAULT);
@@ -157,7 +152,8 @@ const xd::detail::font::glyph& xd::font::load_glyph(utf8::uint32_t char_index)
 		throw glyph_load_failed(m_filename, char_index);
 
 	// create glyph
-	detail::font::glyph& glyph = m_glyph_map[char_index] = detail::font::glyph();
+    m_glyph_map[char_index] = std::unique_ptr<detail::font::glyph>(new detail::font::glyph);
+	detail::font::glyph& glyph = *m_glyph_map[char_index];
 	glyph.glyph_index = glyph_index;
 	glyph.advance.x = static_cast<float>(m_face->handle->glyph->advance.x >> 6);
 	glyph.advance.y = static_cast<float>(m_face->handle->glyph->advance.y >> 6);
@@ -226,7 +222,7 @@ void xd::font::render(const std::string& text, const font_style& style,
 		text_pos = *pos;
 
 	FT_UInt prev_glyph_index = 0;
-	std::string::const_iterator i = text.begin();
+	auto i = text.begin();
 	while (i != text.end()) {
 		// get the unicode code point
 		utf8::uint32_t char_index = utf8::next(i, text.end());

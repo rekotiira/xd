@@ -7,21 +7,23 @@
 			#define XD_API extern
 		#else
 			#define XD_API __declspec(dllexport)
-			#define XD_API_TEMPLATE
 		#endif
+        #define XD_API_TEMPLATE
 	#else
 		#ifdef XD_STATIC
 			#define XD_API
 		#else
 			#define XD_API __declspec(dllimport)
-			#define XD_API_TEMPLATE extern
 		#endif
+        #define XD_API_TEMPLATE extern
 	#endif
 #else
 	#ifdef XD_EXPORT
 		#define XD_API extern
+        #define XD_API_TEMPLATE
 	#else
 		#define XD_API
+        #define XD_API_TEMPLATE extern
 	#endif
 #endif
 

@@ -17,6 +17,7 @@
 		BE85D9F3145AB80D00AC987F /* text_formatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE85D9EA145AB80D00AC987F /* text_formatter.cpp */; };
 		BE85D9F4145AB80D00AC987F /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE85D9EB145AB80D00AC987F /* texture.cpp */; };
 		BE85D9F6145AB83700AC987F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE85D9F5145AB83700AC987F /* OpenGL.framework */; };
+		BED0499214640504005A55D2 /* libGLEW.1.7.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BED0499114640504005A55D2 /* libGLEW.1.7.0.dylib */; };
 		BED93D88145C9527006E6510 /* libIL.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BED93D87145C9527006E6510 /* libIL.1.dylib */; };
 		BED93D8B145C9552006E6510 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BED93D8A145C9552006E6510 /* libfreetype.6.dylib */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 		BE85D9EA145AB80D00AC987F /* text_formatter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = text_formatter.cpp; path = /Users/reko/Projects/xd/osx/xcode/../../src/graphics/text_formatter.cpp; sourceTree = "<absolute>"; };
 		BE85D9EB145AB80D00AC987F /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = /Users/reko/Projects/xd/osx/xcode/../../src/graphics/texture.cpp; sourceTree = "<absolute>"; };
 		BE85D9F5145AB83700AC987F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		BED0499114640504005A55D2 /* libGLEW.1.7.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.7.0.dylib; path = ../../../../../../../opt/local/lib/libGLEW.1.7.0.dylib; sourceTree = "<group>"; };
 		BED93D87145C9527006E6510 /* libIL.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIL.1.dylib; path = ../../../../../../../opt/local/lib/libIL.1.dylib; sourceTree = "<group>"; };
 		BED93D8A145C9552006E6510 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../../../../opt/local/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -51,6 +53,7 @@
 				BE85D9F6145AB83700AC987F /* OpenGL.framework in Frameworks */,
 				BED93D88145C9527006E6510 /* libIL.1.dylib in Frameworks */,
 				BED93D8B145C9552006E6510 /* libfreetype.6.dylib in Frameworks */,
+				BED0499214640504005A55D2 /* libGLEW.1.7.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +90,7 @@
 		BE85D9A3145AB78F00AC987F /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BED0499114640504005A55D2 /* libGLEW.1.7.0.dylib */,
 				BED93D8A145C9552006E6510 /* libfreetype.6.dylib */,
 				BED93D87145C9527006E6510 /* libIL.1.dylib */,
 				BE85D9F5145AB83700AC987F /* OpenGL.framework */,
@@ -259,11 +263,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "graphics/graphics-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					/System/Library/Frameworks/OpenGL.framework/Headers,
 					/opt/local/include,
 					/opt/local/include/freetype2,
 					../../../include,
 				);
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
@@ -285,11 +289,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "graphics/graphics-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					/System/Library/Frameworks/OpenGL.framework/Headers,
 					/opt/local/include,
 					/opt/local/include/freetype2,
 					../../../include,
 				);
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
