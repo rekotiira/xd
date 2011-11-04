@@ -31,7 +31,7 @@ namespace xd
 		{
 		}
 	};
-
+	
 	struct glyph_load_failed : exception
 	{
 		glyph_load_failed(const std::string& font, int char_index)

@@ -6,7 +6,7 @@
 
 namespace xd
 {
-	template <typename T = vertex_traits>
+	template <typename T>
 	class vertex_batch : public boost::noncopyable
 	{
 	public:

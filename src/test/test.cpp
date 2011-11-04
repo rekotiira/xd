@@ -106,13 +106,11 @@ test::test()
 	}
 
 	// bind physical keys to virtual ones
-	bind_key(xd::key_left, "left");
-	bind_key(xd::key_right, "right");
-	//bind_key(xd::key_up, "up");
-	//bind_key(xd::key_down, "down");
-	bind_key(xd::key_a, "zoom_in");
-	bind_key(xd::key_z, "zoom_out");
-	bind_key(xd::key_esc, "quit");
+	bind_key(xd::KEY_LEFT, "left");
+	bind_key(xd::KEY_RIGHT, "right");
+	bind_key(xd::KEY_A, "zoom_in");
+	bind_key(xd::KEY_Z, "zoom_out");
+	bind_key(xd::KEY_ESC, "quit");
 
 	// register our frame update function for timed updates, target for 30 FPS
 	register_tick_handler(boost::bind(&test::frame_update, this), 1000/60);

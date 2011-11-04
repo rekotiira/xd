@@ -1,15 +1,10 @@
 #ifndef H_XD_GRAPHICS_TEXTURE
 #define H_XD_GRAPHICS_TEXTURE
 
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#else
-#include <GL/gl.h>
-#endif
-
-#include <string>
+#include <GL/glew.h>
 #include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+#include <string>
 #include <xd/graphics/image.h>
 
 namespace xd
@@ -17,6 +12,8 @@ namespace xd
 	class XD_API texture : public boost::noncopyable
 	{
 	public:
+		typedef std::shared_ptr<texture> ptr;
+
 		texture(int width, int height, const void *data = 0,
 			GLint wrap_s = GL_REPEAT, GLint wrap_t = GL_REPEAT,
 			GLint mag_filter = GL_LINEAR, GLint min_filter = GL_LINEAR);
@@ -50,8 +47,6 @@ namespace xd
 
 		void init();
 	};
-
-	typedef boost::shared_ptr<texture> texture_ptr;
 }
 
 #endif

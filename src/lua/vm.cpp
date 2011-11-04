@@ -4,7 +4,6 @@
 #include <boost/bind.hpp>
 #include <xd/system.h>
 #include <xd/common.h>
-//#include <xd/graphics.h>
 #include <luabind/operator.hpp>
 #include <boost/optional.hpp>
 
@@ -35,7 +34,7 @@ lua_State *xd::lua::vm::get_vm()
 	return m_vm;
 }
 
-xd::lua::script_handle xd::lua::vm::load(const std::string& code)
+xd::lua::script::ptr xd::lua::vm::load(const std::string& code)
 {
 	int status = luaL_loadbuffer(m_vm, code.c_str(), code.size(), "");
 	if (status != 0) {
@@ -48,10 +47,10 @@ xd::lua::script_handle xd::lua::vm::load(const std::string& code)
 	int ref = luaL_ref(m_vm, LUA_REGISTRYINDEX);
 
 	// return the handle
-	return script_handle(new script(m_vm, ref));
+	return script::ptr(new script(m_vm, ref));
 }
 
-xd::lua::script_handle xd::lua::vm::load_file(const std::string& filename)
+xd::lua::script::ptr xd::lua::vm::load_file(const std::string& filename)
 {
 	int status = luaL_loadfile(m_vm, filename.c_str());
 	if (status != 0) {
@@ -64,7 +63,7 @@ xd::lua::script_handle xd::lua::vm::load_file(const std::string& filename)
 	int ref = luaL_ref(m_vm, LUA_REGISTRYINDEX);
 
 	// return the handle
-	return script_handle(new script(m_vm, ref));
+	return script::ptr(new script(m_vm, ref));
 }
 
 /*
@@ -72,8 +71,6 @@ xd::lua::script_handle xd::lua::vm::load_file(const std::string& filename)
 ** binding the default xd stuff into
 ** lua
 */
-
-#include <iostream>
 
 namespace xd { namespace lua { namespace wrapper {
 
@@ -145,12 +142,12 @@ namespace xd { namespace lua { namespace wrapper {
 		return input_filter();
 	}
 
-	input_filter input_filter_constructor2(input type)
+	input_filter input_filter_constructor2(input_type type)
 	{
 		return input_filter(type);
 	}
 
-	input_filter input_filter_constructor3(input type, int modifiers)
+	input_filter input_filter_constructor3(input_type type, int modifiers)
 	{
 		return input_filter(type, modifiers);
 	}
@@ -177,7 +174,7 @@ namespace xd { namespace lua { namespace wrapper {
 
 	// typedefs for optional parameters
 	typedef optional_property<input_args, std::string, &input_args::virtual_key> input_args_virtual_key;
-	typedef optional_property<input_filter, input, &input_filter::type> input_filter_type;
+	typedef optional_property<input_filter, input_type, &input_filter::type> input_filter_type;
 	typedef optional_property<input_filter, key, &input_filter::physical_key> input_filter_physical_key;
 	typedef optional_property<input_filter, std::string, &input_filter::virtual_key> input_filter_virtual_key;
 	typedef optional_property<input_filter, int, &input_filter::modifiers> input_filter_modifiers;
@@ -189,9 +186,9 @@ namespace xd { namespace lua { namespace wrapper {
 	}
 
 	// events
-	typedef xd::event_callback<luabind::object, function<bool> > event_callback;
-	typedef xd::event_info<luabind::object, function<bool> > event_info;
-	typedef xd::event_bus<luabind::object, function<bool> > event_bus;
+	typedef xd::event_callback<luabind::object> event_callback;
+	typedef xd::event_info<luabind::object> event_info;
+	typedef xd::event_bus<luabind::object> event_bus;
 
 	event_link event_info_add1(event_info& info, const luabind::object& val)
 	{
@@ -205,12 +202,17 @@ namespace xd { namespace lua { namespace wrapper {
 
 	event_link event_info_add3(event_info& info, const luabind::object& val, const luabind::object& filter)
 	{
-		return info.add(function<bool>(val, true), filter);
+		return info.add(function<bool>(val, true), function<bool>(filter));
 	}
 
 	event_link event_info_add4(event_info& info, const luabind::object& val, const luabind::object& filter, event_placement placement)
 	{
-		return info.add(function<bool>(val, true), filter, placement);
+		return info.add(function<bool>(val, true), function<bool>(filter), placement);
+	}
+
+	event_info& event_bus_get(event_bus& bus, const std::string& key)
+	{
+		return bus[key];
 	}
 }}}
 
@@ -291,7 +293,7 @@ void xd::lua::vm::load_library(const std::string& module_name)
 		// bind event_bus
 		class_<wrapper::event_bus>("event_bus")
 			.def(constructor<>())
-			.def("get", &wrapper::event_bus::operator[]),
+			.def("get", &wrapper::event_bus_get),
 
 		// global functions
 		def("test", &wrapper::test)
@@ -301,23 +303,30 @@ void xd::lua::vm::load_library(const std::string& module_name)
 	object xd_table = globals(m_vm)["xd"];
 
 	// bind constants
-	xd_table["keyboard"] = keyboard;
-	xd_table["mouse"] = mouse;
+	xd_table["INPUT_KEYBOARD"] = INPUT_KEYBOARD;
+	xd_table["INPUT_MOUSE"] = INPUT_MOUSE;
 
-	xd_table["key_down"] = key_down;
-	xd_table["key_left"] = key_left;
-	xd_table["key_up"] = key_up;
-	xd_table["key_right"] = key_right;
-	xd_table["key_space"] = key_space;
-	xd_table["key_esc"] = key_esc;
+	xd_table["KEY_DOWN"] = KEY_DOWN;
+	xd_table["KEY_LEFT"] = KEY_LEFT;
+	xd_table["KEY_UP"] = KEY_UP;
+	xd_table["KEY_RIGHT"] = KEY_RIGHT;
+	xd_table["KEY_ENTER"] = KEY_ENTER;
+	xd_table["KEY_SPACE"] = KEY_SPACE;
+	xd_table["KEY_ESC"] = KEY_ESC;
 
-	xd_table["mouse_left"] = mouse_left;
-	xd_table["mouse_middle"] = mouse_middle;
-	xd_table["mouse_right"] = mouse_right;
-	xd_table["mouse_extra1"] = mouse_extra1;
-	xd_table["mouse_extra2"] = mouse_extra2;
+	xd_table["MOUSE_LEFT"] = MOUSE_LEFT;
+	xd_table["MOUSE_RIGHT"] = MOUSE_RIGHT;
+	xd_table["MOUSE_MIDDLE"] = MOUSE_MIDDLE;
+	xd_table["MOUSE_1"] = MOUSE_1;
+	xd_table["MOUSE_2"] = MOUSE_2;
+	xd_table["MOUSE_3"] = MOUSE_3;
+	xd_table["MOUSE_4"] = MOUSE_4;
+	xd_table["MOUSE_5"] = MOUSE_5;
+	xd_table["MOUSE_6"] = MOUSE_6;
+	xd_table["MOUSE_7"] = MOUSE_7;
+	xd_table["MOUSE_8"] = MOUSE_8;
 
-	xd_table["mod_none"] = mod_none;
+	/*xd_table["mod_none"] = mod_none;
 	xd_table["mod_lshift"] = mod_lshift;
 	xd_table["mod_rshift"] = mod_rshift;
 	xd_table["mod_lctrl"] = mod_lctrl;
@@ -328,8 +337,8 @@ void xd::lua::vm::load_library(const std::string& module_name)
 	xd_table["mod_rmeta"] = mod_rmeta;
 	xd_table["mod_num"] = mod_num;
 	xd_table["mod_caps"] = mod_caps;
-	xd_table["mod_mode"] = mod_mode;
+	xd_table["mod_mode"] = mod_mode;*/
 
-	xd_table["event_prepend"] = event_prepend;
-	xd_table["event_append"] = event_append;
+	xd_table["EVENT_PREPEND"] = EVENT_PREPEND;
+	xd_table["EVENT_APPEND"] = EVENT_APPEND;
 }

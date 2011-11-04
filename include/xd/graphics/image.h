@@ -1,9 +1,9 @@
 #ifndef H_XD_GRAPHICS_IMAGE
 #define H_XD_GRAPHICS_IMAGE
 
-#include <string>
 #include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
+#include <string>
+#include <memory>
 #include <xd/common.h>
 
 #ifndef XD_STATIC
@@ -17,13 +17,15 @@ namespace xd
 	namespace detail { namespace image {
 
 		struct handle;
-		typedef boost::shared_ptr<handle> handle_ptr;
+		typedef std::shared_ptr<handle> handle_ptr;
 
 	} }
 
 	class XD_API image : public boost::noncopyable
 	{
 	public:
+		typedef std::shared_ptr<image> ptr;
+
 		image(const std::string& filename);
 		virtual ~image();
 
@@ -43,8 +45,6 @@ namespace xd
 
 		void init();
 	};
-
-	typedef boost::shared_ptr<image> image_ptr;
 }
 
 #endif

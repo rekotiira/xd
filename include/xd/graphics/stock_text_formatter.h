@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <ctime>
-#include <boost/unordered_map.hpp>
+#include <unordered_map>
 #include <xd/graphics/text_formatter.h>
 
 namespace xd
@@ -22,8 +22,8 @@ namespace xd
 		void reset_typewriter(int timer = 0);
 
 	private:
-		typedef boost::unordered_map<std::string, glm::vec4> color_map_t;
-		typedef boost::unordered_map<int, std::clock_t> typewriter_timer_map_t;
+		typedef std::unordered_map<std::string, glm::vec4> color_map_t;
+		typedef std::unordered_map<int, std::clock_t> typewriter_timer_map_t;
 
 		void type_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
 		void bold_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);

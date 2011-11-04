@@ -22,7 +22,7 @@ xd::flat_shader::flat_shader()
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
 	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
-	bind_attrib("vVertex", xd::vertex_attr_position);
+	bind_attrib("vVertex", xd::VERTEX_ATTR_POSITION);
 	link();
 }
 
@@ -57,8 +57,8 @@ xd::shaded_shader::shaded_shader()
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
 	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
-	bind_attrib("vVertex", xd::vertex_attr_position);
-	bind_attrib("vColor", xd::vertex_attr_color);
+	bind_attrib("vVertex", xd::VERTEX_ATTR_POSITION);
+	bind_attrib("vColor", xd::VERTEX_ATTR_COLOR);
 	link();
 }
 
@@ -93,8 +93,8 @@ xd::texture_shader::texture_shader()
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
 	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
-	bind_attrib("vVertex", xd::vertex_attr_position);
-	bind_attrib("vTexCoords", xd::vertex_attr_texture);
+	bind_attrib("vVertex", xd::VERTEX_ATTR_POSITION);
+	bind_attrib("vTexCoords", xd::VERTEX_ATTR_TEXTURE);
 	link();
 }
 
@@ -133,8 +133,8 @@ xd::texture_mask_shader::texture_mask_shader()
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
 	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
-	bind_attrib("vVertex", xd::vertex_attr_position);
-	bind_attrib("vTexCoords", xd::vertex_attr_texture);
+	bind_attrib("vVertex", xd::VERTEX_ATTR_POSITION);
+	bind_attrib("vTexCoords", xd::VERTEX_ATTR_TEXTURE);
 	link();
 }
 
@@ -176,7 +176,7 @@ xd::text_shader::text_shader()
 
 	attach(GL_VERTEX_SHADER, vertex_shader_src);
 	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
-	bind_attrib("vVertex", xd::vertex_attr_position);
-	bind_attrib("vTexCoords", xd::vertex_attr_texture);
+	bind_attrib("vVertex", xd::VERTEX_ATTR_POSITION);
+	bind_attrib("vTexCoords", xd::VERTEX_ATTR_TEXTURE);
 	link();
 }

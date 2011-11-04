@@ -1,54 +1,111 @@
-#include <SDL/SDL.h>
+//#include <SDL/SDL.h>
+#include <GL/glew.h>
+#include <GL/glfw.h>
 #include <xd/system.h>
 
+// detail stuff, hidden from user
+namespace
+{
+	xd::window *window_instance = nullptr;
+
+	void on_key_proxy(int key, int action)
+	{
+		window_instance->on_input(xd::INPUT_KEYBOARD, key, action);
+	}
+
+	void on_mouse_proxy(int key, int action)
+	{
+		window_instance->on_input(xd::INPUT_MOUSE, key, action);
+	}
+};
+
 xd::window::window(const std::string& title, int width, int height)
-	: m_closed(false)
-	, m_width(width)
+	: m_width(width)
 	, m_height(height)
 {
-	SDL_Init(SDL_INIT_EVERYTHING);
-
-	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	//SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-
-	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        m_width, m_height, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
-	if (!m_window) {
+	// check if there's already a window alive
+	if (window_instance) {
 		throw xd::window_creation_failed();
 	}
-	m_context = SDL_GL_CreateContext(m_window);
 
-	/*GLenum err = glewInit();
-	if (err != GLEW_OK) {
-		SDL_GL_DeleteContext(m_context);
-		SDL_DestroyWindow(m_window);
+	// initialize glfw
+	if (glfwInit() == GL_FALSE) {
 		throw xd::window_creation_failed();
-	}*/
+	}
+	
+	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
+	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
+	
+	if (glfwOpenWindow(m_width, m_height, 8, 8, 8, 8, 24, 0, GLFW_WINDOW) == GL_FALSE) {
+		glfwTerminate();
+		throw xd::window_creation_failed();
+	}
 
-	SDL_GL_SetSwapInterval(1);
+	glfwSetWindowTitle(title.c_str());
+
+	glfwEnable(GLFW_SYSTEM_KEYS);
+	glfwEnable(GLFW_MOUSE_CURSOR);
+
+	glfwDisable(GLFW_AUTO_POLL_EVENTS);
+	glfwDisable(GLFW_STICKY_KEYS);
+	glfwDisable(GLFW_STICKY_MOUSE_BUTTONS);
+	glfwDisable(GLFW_KEY_REPEAT);
+
+	GLenum err = glewInit();
+	if (err != GLEW_OK) {
+		glfwCloseWindow();
+		glfwTerminate();
+		throw xd::window_creation_failed();
+	}
+
+	glfwSwapInterval(1);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(1.0f);
 
 	// intialize ticks
-	m_current_ticks = m_last_ticks = m_last_fps_update = SDL_GetTicks();
+	m_current_ticks = m_last_ticks = m_last_fps_update = static_cast<boost::uint32_t>(glfwGetTime() * 1000);
 	m_fps = m_frame_count = 0;
+
+	// register input callbacks
+	glfwSetKeyCallback(&on_key_proxy);
+	glfwSetMouseButtonCallback(&on_mouse_proxy);
+
+	window_instance = this;
 }
 
 xd::window::~window()
 {
-	SDL_GL_DeleteContext(m_context);
-	SDL_DestroyWindow(m_window);
+	glfwCloseWindow();
+	glfwTerminate();
+	window_instance = nullptr;
+}
 
-	SDL_Quit();
+void xd::window::on_input(input_type type, int key, int action)
+{
+	// construct event arguments
+	input_args args;
+	if (type == INPUT_KEYBOARD)
+		args.physical_key = KEY(key);
+	else
+		args.physical_key = MOUSE(key);
+	args.modifiers = 0;
+
+	// find associated virtual key
+	xd::window::key_table_t::iterator i = m_key_to_virtual.find(args.physical_key);
+	if (i != m_key_to_virtual.end()) {
+		args.virtual_key = i->second;
+	}
+
+	// add to triggered keys if keydown event and launch the event
+	if (action == GLFW_PRESS) {
+		m_triggered_keys.insert(args.physical_key);
+		m_input_events["key_down"](args);
+	} else {
+		m_input_events["key_up"](args);
+	}
 }
 
 void xd::window::update()
@@ -56,59 +113,12 @@ void xd::window::update()
 	// clear the triggered keys
 	m_triggered_keys.clear();
 
-	// clear closed flag
-	m_closed = false;
-
-	// check all events
-	SDL_Event evt;
-	while (SDL_PollEvent(&evt)) {
-		switch (evt.type) {
-			case SDL_QUIT:
-			{
-				// window was closed
-				m_closed = true;
-				break;
-			}
-			case SDL_KEYDOWN:
-			case SDL_KEYUP:
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-			{
-				// don't process key repeats (at least for now)
-				if (evt.type == SDL_KEYDOWN && evt.key.repeat) {
-					break;
-				}
-
-				// construct event arguments
-				input_args args;
-				if (evt.type == SDL_KEYDOWN || evt.type == SDL_KEYUP) {
-					args.physical_key = keyb(evt.key.keysym.sym);
-				} else {
-					args.physical_key = mouseb(evt.button.button);
-				}
-				args.modifiers = SDL_GetModState();
-
-				// find associated virtual key
-				xd::window::key_table_t::iterator i = m_key_to_virtual.find(args.physical_key);
-				if (i != m_key_to_virtual.end()) {
-					args.virtual_key = i->second;
-				}
-
-				// add to triggered keys if keydown event and launch the event
-				if (evt.type == SDL_KEYDOWN || evt.type == SDL_MOUSEBUTTONDOWN) {
-					m_triggered_keys.insert(args.physical_key);
-					m_input_events["key_down"](args);
-				} else {
-					m_input_events["key_up"](args);
-				}
-				break;
-			}
-		}
-	}
+	// trigger input callbacks
+	glfwPollEvents();
 
 	// update ticks
 	m_last_ticks = m_current_ticks;
-	m_current_ticks = SDL_GetTicks();
+	m_current_ticks = static_cast<boost::uint32_t>(glfwGetTime() * 1000);
 
 	// invoke tick handler if necessary
 	if (m_tick_handler) {
@@ -137,12 +147,12 @@ void xd::window::clear()
 
 void xd::window::swap()
 {
-	SDL_GL_SwapWindow(m_window);
+	glfwSwapBuffers();
 }
 
 bool xd::window::closed() const
 {
-	return m_closed;
+	return (glfwGetWindowParam(GLFW_OPENED) == GL_FALSE);
 }
 
 int xd::window::width() const
@@ -226,14 +236,18 @@ void xd::window::unbind_key(const std::string& virtual_key)
 
 bool xd::window::pressed(const xd::key& key, int modifiers) const
 {
-	if (key.type == xd::keyboard) {
-		Uint8 *state = SDL_GetKeyboardState(0);
+	if (key.type == xd::INPUT_KEYBOARD) {
+		if (glfwGetKey(key.code))
+			return true;
+		/*Uint8 *state = SDL_GetKeyboardState(0);
 		if (state[SDL_GetScancodeFromKey(key.code)] && modifier(modifiers))
-			return true;
+			return true;*/
 	}
-	if (key.type == xd::mouse) {
-		if ((SDL_GetMouseState(0, 0) & SDL_BUTTON(key.code)) != 0 && modifier(modifiers))
-			return true;
+	if (key.type == xd::INPUT_MOUSE) {
+		if (glfwGetMouseButton(key.code))
+				return true;
+		/*if ((SDL_GetMouseState(0, 0) & SDL_BUTTON(key.code)) != 0 && modifier(modifiers))
+			return true;*/
 	}
 	return false;
 }
@@ -243,8 +257,6 @@ bool xd::window::pressed(const std::string& key, int modifiers) const
 	// find if this virtual key is bound
 	xd::window::virtual_table_t::const_iterator i = m_virtual_to_key.find(key);
 	if (i != m_virtual_to_key.end()) {
-		// get keystate
-		Uint8 *state = SDL_GetKeyboardState(0);
 		// iterate through each physical key
 		for (xd::window::key_set_t::iterator j = i->second.begin(); j != i->second.end(); ++j) {
 			if (pressed(*j, modifiers))
@@ -275,7 +287,8 @@ bool xd::window::triggered(const std::string& key, int modifiers) const
 
 bool xd::window::modifier(int modifiers) const
 {
-	return ((modifiers & SDL_GetModState()) == modifiers);
+	//return ((modifiers & SDL_GetModState()) == modifiers);
+	return (modifiers == 0);
 }
 
 xd::event_link xd::window::bind_input_event(const std::string& event_name, input_event_callback_t callback,

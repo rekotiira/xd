@@ -1,8 +1,11 @@
 #include <xd/graphics/stock_text_formatter.h>
-#include <boost/bind.hpp>
+#include <functional>
 
 xd::stock_text_formatter::stock_text_formatter()
 {
+	// shortcut for using _1 _2 etc
+	using namespace std::placeholders;
+
 	// register default colors
 	m_colors["white"]  = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_colors["black"]  = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -15,15 +18,15 @@ xd::stock_text_formatter::stock_text_formatter()
 	m_colors["cyan"]   = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
 	// register default decorators
-	register_decorator("type", boost::bind(&stock_text_formatter::type_decorator, this, _1, _2, _3));
-	register_decorator("bold", boost::bind(&stock_text_formatter::bold_decorator, this, _1, _2, _3));
-	register_decorator("italic", boost::bind(&stock_text_formatter::italic_decorator, this, _1, _2, _3));
-	register_decorator("color", boost::bind(&stock_text_formatter::color_decorator, this, _1, _2, _3));
-	register_decorator("shadow", boost::bind(&stock_text_formatter::shadow_decorator, this, _1, _2, _3));
-	register_decorator("outline", boost::bind(&stock_text_formatter::outline_decorator, this, _1, _2, _3));
-	register_decorator("spacing", boost::bind(&stock_text_formatter::spacing_decorator, this, _1, _2, _3));
-	register_decorator("rainbow", boost::bind(&stock_text_formatter::rainbow_decorator, this, _1, _2, _3));
-	register_decorator("typewriter", boost::bind(&stock_text_formatter::typewriter_decorator, this, _1, _2, _3));
+	register_decorator("type", std::bind(&stock_text_formatter::type_decorator, this, _1, _2, _3));
+	register_decorator("bold", std::bind(&stock_text_formatter::bold_decorator, this, _1, _2, _3));
+	register_decorator("italic", std::bind(&stock_text_formatter::italic_decorator, this, _1, _2, _3));
+	register_decorator("color", std::bind(&stock_text_formatter::color_decorator, this, _1, _2, _3));
+	register_decorator("shadow", std::bind(&stock_text_formatter::shadow_decorator, this, _1, _2, _3));
+	register_decorator("outline", std::bind(&stock_text_formatter::outline_decorator, this, _1, _2, _3));
+	register_decorator("spacing", std::bind(&stock_text_formatter::spacing_decorator, this, _1, _2, _3));
+	register_decorator("rainbow", std::bind(&stock_text_formatter::rainbow_decorator, this, _1, _2, _3));
+	register_decorator("typewriter", std::bind(&stock_text_formatter::typewriter_decorator, this, _1, _2, _3));
 }
 
 xd::stock_text_formatter::~stock_text_formatter()

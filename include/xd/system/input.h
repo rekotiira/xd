@@ -8,15 +8,15 @@
 
 namespace xd
 {
-	enum input
+	enum input_type
 	{
-		keyboard,
-		mouse
+		INPUT_KEYBOARD,
+		INPUT_MOUSE
 	};
 
 	struct key
 	{
-		input type;
+		input_type type;
 		int code;
 	};
 
@@ -48,11 +48,11 @@ namespace xd
 	struct input_filter
 	{
 		input_filter() {}
-		input_filter(input itype, boost::optional<int> mod = any) : type(itype), modifiers(mod) {}
+		input_filter(input_type type, boost::optional<int> mod = any) : type(type), modifiers(mod) {}
 		input_filter(const key& pkey, boost::optional<int> mod = any) : physical_key(pkey), modifiers(mod) {}
 		input_filter(std::string vkey, boost::optional<int> mod = any) : virtual_key(vkey), modifiers(mod) {}
 
-		boost::optional<input> type;
+		boost::optional<input_type> type;
 		boost::optional<key> physical_key;
 		boost::optional<std::string> virtual_key;
 		boost::optional<int> modifiers;
@@ -72,54 +72,83 @@ namespace xd
 	};
 
 	// utility function to create key
-	inline key keyb(int code)
+	inline key KEY(int code)
 	{
 		key k;
-		k.type = keyboard;
+		k.type = INPUT_KEYBOARD;
 		k.code = code;
 		return k;
 	}
 
 	// utility function to create mouse
-	inline key mouseb(int code)
+	inline key MOUSE(int code)
 	{
 		key k;
-		k.type = mouse;
+		k.type = INPUT_MOUSE;
 		k.code = code;
 		return k;
 	}
 
 	// pre-defined keyboard keys
-	extern XD_API const key key_left;
-	extern XD_API const key key_right;
-	extern XD_API const key key_up;
-	extern XD_API const key key_down;
-	extern XD_API const key key_space;
-	extern XD_API const key key_esc;
-	extern XD_API const key key_a;
-	extern XD_API const key key_b;
-	// ...
-	extern XD_API const key key_z;
-	extern XD_API const key key_0;
-	extern XD_API const key key_1;
-	extern XD_API const key key_2;
-	extern XD_API const key key_3;
-	extern XD_API const key key_4;
-	extern XD_API const key key_5;
-	extern XD_API const key key_6;
-	extern XD_API const key key_7;
-	extern XD_API const key key_8;
-	extern XD_API const key key_9;
+	extern XD_API const key KEY_LEFT;
+	extern XD_API const key KEY_RIGHT;
+	extern XD_API const key KEY_UP;
+	extern XD_API const key KEY_DOWN;
+	extern XD_API const key KEY_ENTER;
+	extern XD_API const key KEY_SPACE;
+	extern XD_API const key KEY_ESC;
+	extern XD_API const key KEY_A;
+	extern XD_API const key KEY_B;
+	extern XD_API const key KEY_C;
+	extern XD_API const key KEY_D;
+	extern XD_API const key KEY_E;
+	extern XD_API const key KEY_F;
+	extern XD_API const key KEY_G;
+	extern XD_API const key KEY_H;
+	extern XD_API const key KEY_I;
+	extern XD_API const key KEY_J;
+	extern XD_API const key KEY_K;
+	extern XD_API const key KEY_L;
+	extern XD_API const key KEY_M;
+	extern XD_API const key KEY_N;
+	extern XD_API const key KEY_O;
+	extern XD_API const key KEY_P;
+	extern XD_API const key KEY_Q;
+	extern XD_API const key KEY_R;
+	extern XD_API const key KEY_S;
+	extern XD_API const key KEY_T;
+	extern XD_API const key KEY_U;
+	extern XD_API const key KEY_V;
+	extern XD_API const key KEY_W;
+	extern XD_API const key KEY_X;
+	extern XD_API const key KEY_Y;
+	extern XD_API const key KEY_Z;
+	extern XD_API const key KEY_0;
+	extern XD_API const key KEY_1;
+	extern XD_API const key KEY_2;
+	extern XD_API const key KEY_3;
+	extern XD_API const key KEY_4;
+	extern XD_API const key KEY_5;
+	extern XD_API const key KEY_6;
+	extern XD_API const key KEY_7;
+	extern XD_API const key KEY_8;
+	extern XD_API const key KEY_9;
 
 	// pre-defined mouse keys
-	extern XD_API const key mouse_left;
-	extern XD_API const key mouse_right;
-	extern XD_API const key mouse_middle;
-	extern XD_API const key mouse_extra1;
-	extern XD_API const key mouse_extra2;
+	extern XD_API const key MOUSE_LEFT;
+	extern XD_API const key MOUSE_RIGHT;
+	extern XD_API const key MOUSE_MIDDLE;
+	extern XD_API const key MOUSE_1;
+	extern XD_API const key MOUSE_2;
+	extern XD_API const key MOUSE_3;
+	extern XD_API const key MOUSE_4;
+	extern XD_API const key MOUSE_5;
+	extern XD_API const key MOUSE_6;
+	extern XD_API const key MOUSE_7;
+	extern XD_API const key MOUSE_8;
 
 	// modifiers
-	extern XD_API const int mod_none;
+	/*extern XD_API const int mod_none;
 	extern XD_API const int mod_lshift;
 	extern XD_API const int mod_rshift;
 	extern XD_API const int mod_lctrl;
@@ -130,7 +159,23 @@ namespace xd
 	extern XD_API const int mod_rmeta;
 	extern XD_API const int mod_num;
 	extern XD_API const int mod_caps;
-	extern XD_API const int mod_mode;
+	extern XD_API const int mod_mode;*/
+}
+
+// specialize hash<> for xd::key
+namespace std
+{
+	template <>
+	struct hash<xd::key>
+	{
+		size_t operator()(const xd::key& k) const
+		{
+			std::size_t seed = 0;
+			boost::hash_combine(seed, k.type);
+			boost::hash_combine(seed, k.code);
+			return seed;
+		}
+	};
 }
 
 #endif

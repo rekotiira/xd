@@ -1,12 +1,12 @@
 #ifndef H_XD_GRAPHICS_FONT
 #define H_XD_GRAPHICS_FONT
 
-//#include <GL/glew.h>
+#include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/unordered_map.hpp>
 #include <boost/optional.hpp>
+#include <memory>
+#include <unordered_map>
 #include <xd/graphics/types.h>
 #include <xd/graphics/vertex_batch.h>
 #include <xd/graphics/shader_program.h>
@@ -72,19 +72,17 @@ namespace xd
 
 	} }
 
-	// smart pointer to font
-	class font;
-	typedef boost::shared_ptr<font> font_ptr;
-
 	// font class
 	class XD_API font : public boost::noncopyable
 	{
 	public:
+		typedef std::shared_ptr<font> ptr;
+
 		font(const std::string& filename, int size);
 		~font();
 
 		void link_font(const std::string& type, const std::string& filename);
-		void link_font(const std::string& type, font_ptr font);
+		void link_font(const std::string& type, font::ptr font);
 		void unlink_font(const std::string& type);
 
 		void render(const std::string& text, const font_style& style,
@@ -100,8 +98,8 @@ namespace xd
 		void set_color_uniform(const std::string&);
 		void set_texture_uniform(const std::string&);
 	private:
-		typedef boost::unordered_map<int, detail::font::glyph> glyph_map_t;
-		typedef boost::unordered_map<std::string, font_ptr> font_map_t;
+		typedef std::unordered_map<int, detail::font::glyph> glyph_map_t;
+		typedef std::unordered_map<std::string, font::ptr> font_map_t;
 		const detail::font::glyph& load_glyph(utf8::uint32_t char_index);
 
 		detail::font::face *m_face;

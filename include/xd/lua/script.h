@@ -1,9 +1,9 @@
 #ifndef H_XD_LUA_SCRIPT
 #define H_XD_LUA_SCRIPT
 
-#include <string>
 #include <boost/noncopyable.hpp>
-#include <boost/smart_ptr.hpp>
+#include <string>
+#include <memory>
 #include <xd/common.h>
 #include <xd/lua/common.h>
 #include <lua.hpp>
@@ -22,6 +22,8 @@ namespace xd
 		class XD_LUA_API script : public boost::noncopyable
 		{
 		public:
+			typedef std::shared_ptr<script> ptr;
+
 			virtual ~script();
 
 			void run();
@@ -37,8 +39,6 @@ namespace xd
 			// friends
 			friend class vm;
 		};
-
-		typedef boost::shared_ptr<script> script_handle;
 	}
 }
 

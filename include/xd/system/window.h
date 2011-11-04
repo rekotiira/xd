@@ -6,15 +6,12 @@
 #include <xd/common/event_bus.h>
 #include <xd/graphics/transform_geometry.h>
 #include <boost/noncopyable.hpp>
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/function.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/bind.hpp>
+#include <unordered_map>
+#include <unordered_set>
+#include <functional>
 
-struct SDL_Window;
-
-#ifndef XD_STATIC
+#if defined(_MSC_VER) && !defined(XD_STATIC)
 // disable warning about boost::noncopyable not being dll-exportable
 // as well as the private members that can't be accessed by client
 #pragma warning(disable: 4275 4251)
@@ -26,8 +23,8 @@ namespace xd
 	{
 	public:
 		// typedefs
-		typedef event_bus<input_args, input_filter>::callback_t input_event_callback_t;
-		typedef boost::function<void ()> tick_callback_t;
+		typedef event_bus<input_args>::callback_t input_event_callback_t;
+		typedef std::function<void ()> tick_callback_t;
 
 		// public interface
 		window(const std::string& title, int width, int height);
@@ -62,24 +59,21 @@ namespace xd
 		bool modifier(int modifiers) const;
 
 		event_link bind_input_event(const std::string& event_name, input_event_callback_t callback,
-			const input_filter& filter = input_filter(), event_placement place = event_prepend);
+			const input_filter& filter = input_filter(), event_placement place = EVENT_PREPEND);
 		void unbind_input_event(const std::string& event_name, event_link link);
 
-		// an utility template function for member function callbacks, so user doesn't have to use boost::bind directly
+		// an utility template function for member function callbacks, so user doesn't have to use std::bind directly
 		template <typename T>
 		event_link bind_input_event(const std::string& event_name, bool (T::*callback)(const input_args&), T* instance,
 			const input_filter& filter = input_filter(), event_placement place = event_prepend)
 		{
-			return bind_input_event(event_name, boost::bind(callback, instance, _1), filter, place);
+			return bind_input_event(event_name, std::bind(callback, instance, _1), filter, place);
 		}
 
+		// input event handler, for internal use
+		void on_input(input_type type, int key, int action);
+
 	private:
-		SDL_Window* m_window;
-		void *m_context;
-
-		// was window closed
-		bool m_closed;
-
 		// window width/height
 		int m_width;
 		int m_height;
@@ -97,10 +91,10 @@ namespace xd
 		boost::uint32_t m_last_fps_update;
 
 		// internal typedefs
-		typedef boost::unordered_set<key> key_set_t;
-		typedef boost::unordered_map<key, std::string> key_table_t;
-		typedef boost::unordered_map<std::string, key_set_t> virtual_table_t;
-		typedef boost::unordered_set<key> trigger_keys_t;
+		typedef std::unordered_set<key> key_set_t;
+		typedef std::unordered_map<key, std::string> key_table_t;
+		typedef std::unordered_map<std::string, key_set_t> virtual_table_t;
+		typedef std::unordered_set<key> trigger_keys_t;
 
 		// virtual key conversions
 		key_table_t m_key_to_virtual;
@@ -110,7 +104,7 @@ namespace xd
 		trigger_keys_t m_triggered_keys;
 
 		// event busses
-		event_bus<input_args, input_filter> m_input_events;
+		event_bus<input_args> m_input_events;
 	};
 }
 

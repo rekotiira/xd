@@ -1,15 +1,15 @@
 #ifndef H_XD_GRAPHICS_TEXT_FORMATTER
 #define H_XD_GRAPHICS_TEXT_FORMATTER
 
-#include <list>
-#include <vector>
-#include <string>
-#include <boost/function.hpp>
-#include <boost/unordered_map.hpp>
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/lexical_cast.hpp>
+#include <list>
+#include <vector>
+#include <string>
+#include <functional>
+#include <unordered_map>
 #include <glm/glm.hpp>
 #include <xd/graphics/exceptions.h>
 #include <xd/graphics/font.h>
@@ -314,8 +314,8 @@ namespace xd
 	class XD_API text_formatter
 	{
 	public:
-		typedef boost::function<void (text_decorator&, const formatted_text&, const text_decorator_args&)> decorator_callback_t;
-		typedef boost::function<std::string (const std::string&)> variable_callback_t;
+		typedef std::function<void (text_decorator&, const formatted_text&, const text_decorator_args&)> decorator_callback_t;
+		typedef std::function<std::string (const std::string&)> variable_callback_t;
 
 		text_formatter();
 		virtual ~text_formatter();
@@ -344,8 +344,8 @@ namespace xd
 
 	private:
 		//typedef std::list<detail::text_formatter_token> token_list_t;
-		typedef boost::unordered_map<std::string, decorator_callback_t> decorator_list_t;
-		typedef boost::unordered_map<std::string, variable_callback_t> variable_list_t;
+		typedef std::unordered_map<std::string, decorator_callback_t> decorator_list_t;
+		typedef std::unordered_map<std::string, variable_callback_t> variable_list_t;
 
 		// parse
 		void parse(const std::string& text, detail::text_formatter::token_list& tokens);

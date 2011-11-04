@@ -5,7 +5,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include <iostream>
+#include <memory>
 
 namespace xd { namespace detail { namespace font {
 
@@ -36,8 +36,8 @@ namespace xd { namespace detail { namespace font {
 			tex.normalized = GL_FALSE;
 
 			// add the traits to the vertex
-			add_attr_traits(vertex_attr_position, pos);
-			add_attr_traits(vertex_attr_texture, tex);
+			add_attr_traits(VERTEX_ATTR_POSITION, pos);
+			add_attr_traits(VERTEX_ATTR_TEXTURE, tex);
 
 			// set the size of the vertex
 			vertex_size = sizeof(vertex);
@@ -45,7 +45,7 @@ namespace xd { namespace detail { namespace font {
 	};
 
 	typedef vertex_batch<vertex_traits> vertex_batch_t;
-	typedef boost::shared_ptr<vertex_batch_t> vertex_batch_ptr_t;
+	typedef std::shared_ptr<vertex_batch_t> vertex_batch_ptr_t;
 
 	struct glyph
 	{
@@ -126,11 +126,11 @@ xd::font::~font()
 
 void xd::font::link_font(const std::string& type, const std::string& filename)
 {
-	font_ptr linked_font = font_ptr(new font(filename, m_size));
+	font::ptr linked_font = font::ptr(new font(filename, m_size));
 	m_linked_fonts[type] = linked_font;
 }
 
-void xd::font::link_font(const std::string& type, font_ptr font)
+void xd::font::link_font(const std::string& type, font::ptr font)
 {
 	m_linked_fonts[type] = font;
 }

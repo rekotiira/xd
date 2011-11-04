@@ -29,8 +29,8 @@ struct my_vertex_traits : public xd::vertex_traits
 		tex.normalized = GL_FALSE;
 
 		// add the traits to the vertex
-		add_attr_traits(xd::vertex_attr_position, pos);
-		add_attr_traits(xd::vertex_attr_texture, tex);
+		add_attr_traits(xd::VERTEX_ATTR_POSITION, pos);
+		add_attr_traits(xd::VERTEX_ATTR_TEXTURE, tex);
 
 		// set the size of the vertex
 		vertex_size = sizeof(my_vertex);

@@ -26,8 +26,8 @@ namespace xd
 
 			lua_State *get_vm();
 
-			script_handle load(const std::string& code);
-			script_handle load_file(const std::string& filename);
+			script::ptr load(const std::string& code);
+			script::ptr load_file(const std::string& filename);
 
 			void load_library(const std::string& module_name = "xd");
 
