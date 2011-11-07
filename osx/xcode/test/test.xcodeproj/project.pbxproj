@@ -48,6 +48,7 @@
 		BE0FED911463FF710095185E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		BE0FED921463FF710095185E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		BE0FED951463FF710095185E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		BEB631F11467CC7000B04B9D /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = ../../../src/test/test.h; sourceTree = "<group>"; };
 		BED04996146406A9005A55D2 /* xd_graphics.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = xd_graphics.dylib; path = "../../../../../Library/Developer/Xcode/DerivedData/xd-apmepgeukrlokmgriawfzevkdmoc/Build/Products/Debug/xd_graphics.dylib"; sourceTree = "<group>"; };
 		BED04999146406AD005A55D2 /* xd_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = xd_system.dylib; path = "../../../../../Library/Developer/Xcode/DerivedData/xd-apmepgeukrlokmgriawfzevkdmoc/Build/Products/Debug/xd_system.dylib"; sourceTree = "<group>"; };
 		BED0499B146406D5005A55D2 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -75,6 +76,7 @@
 		BE0FED701463FF700095185E = {
 			isa = PBXGroup;
 			children = (
+				BEB631F31467CC7700B04B9D /* include */,
 				BEE2A0DD14640070008C263F /* src */,
 				BE0FED851463FF710095185E /* test */,
 				BE0FED7E1463FF710095185E /* Frameworks */,
@@ -132,6 +134,14 @@
 				BE0FED8D1463FF710095185E /* test-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BEB631F31467CC7700B04B9D /* include */ = {
+			isa = PBXGroup;
+			children = (
+				BEB631F11467CC7000B04B9D /* test.h */,
+			);
+			name = include;
 			sourceTree = "<group>";
 		};
 		BEE2A0DD14640070008C263F /* src */ = {

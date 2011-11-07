@@ -33,7 +33,8 @@ const int map_size = 10;
 
 test::test()
 	: xd::window("3D Isometric Sample", 640, 480)
-	, m_grass_batch(GL_QUADS)
+    , m_font("verdanab.ttf", 16)
+	/*, m_grass_batch(GL_QUADS)
 	, m_edge_batch(GL_QUADS)
 	, m_font("verdanab.ttf", 16)
 	, m_grass_texture("grass.png")
@@ -46,7 +47,7 @@ test::test()
 	, m_ver_angle(isometric)
 	, m_hor_target_angle(45.0f)
 	, m_ver_target_angle(isometric)
-	, m_zoom(1.0f)
+	, m_zoom(1.0f)*/
 {
 	// store pointer to model view for ease of access
 	m_model_view = &m_geometry.model_view();
@@ -66,6 +67,7 @@ test::test()
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	glClearDepth(999.0f);
 
+    /*
 	// create a grass batch (a quad)
 	{
 		my_vertex data[4];
@@ -104,6 +106,7 @@ test::test()
 		
 		m_edge_batch.load(&data[0], 16);
 	}
+    */
 
 	// bind physical keys to virtual ones
 	bind_key(xd::KEY_LEFT, "left");
@@ -133,7 +136,7 @@ void test::draw_text(float x, float y, const std::string& text)
 	m_model_view->pop();
 }
 
-void test::draw_tile(int x, int y)
+/*void test::draw_tile(int x, int y)
 {
 	m_model_view->push();
 		// translate to the center of the tile
@@ -151,11 +154,11 @@ void test::draw_tile(int x, int y)
 		m_model_view->translate(0, -1, 0);
 		xd::render(m_edge_batch, m_texture_mask_shader, m_geometry.mvp(), m_edge_texture, m_mask_texture);
 	m_model_view->pop();
-}
+}*/
 
 void test::frame_update()
 {
-	if (m_hor_animating) {
+	/*if (m_hor_animating) {
 		if (m_hor_angle < m_hor_target_angle)
 			m_hor_angle += 45.0f / 10.0f;
 		else
@@ -203,7 +206,7 @@ void test::frame_update()
 	if (pressed("zoom_in") && m_zoom < 2.0f)
 		m_zoom += 0.05f;
 	if (pressed("zoom_out") && m_zoom > 0.5f)
-		m_zoom -= 0.05f;
+		m_zoom -= 0.05f;*/
 }
 
 void test::run()
@@ -239,7 +242,7 @@ void test::run()
 		m_model_view->identity();
 
 		// rotate to isometric view
-		m_model_view->rotate(m_ver_angle, 1.0f, 0, 0.0f);
+		/*m_model_view->rotate(m_ver_angle, 1.0f, 0, 0.0f);
 		m_model_view->rotate(m_hor_angle, 0.0f, 1.0f, 0.0f);
 
 		// scale to tile size so we can deal with "tile units", take zoom into account
@@ -254,7 +257,7 @@ void test::run()
 			for (int z = 0; z < map_size; z++) {
 				draw_tile(x, z);
 			}
-		}
+		}*/
 
 		// setup orthographic projection for text rendering
 		m_geometry.projection().load(glm::ortho(0.0f, (float)width(), (float)height(), 0.0f, -1.0f, 1.0f));
@@ -269,9 +272,9 @@ void test::run()
 		// draw text
 		m_model_view->identity();
 		draw_text(10, 20, "{color=yellow}FPS:{/color} "+boost::lexical_cast<std::string>(fps()));
-		draw_text(10, 40, "{color=yellow}Rot X:{/color} "+boost::lexical_cast<std::string>(m_hor_angle));
+		/*draw_text(10, 40, "{color=yellow}Rot X:{/color} "+boost::lexical_cast<std::string>(m_hor_angle));
 		draw_text(10, 60, "{color=yellow}Rot Y:{/color} "+boost::lexical_cast<std::string>(m_ver_angle));
-		draw_text(10, 80, "{color=yellow}Zoom:{/color} "+boost::lexical_cast<std::string>(m_zoom));
+		draw_text(10, 80, "{color=yellow}Zoom:{/color} "+boost::lexical_cast<std::string>(m_zoom));*/
 
 		swap();
 	}
