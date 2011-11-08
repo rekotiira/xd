@@ -27,18 +27,18 @@ struct test_args
 
 class life_component : public xd::logic_component<my_entity>
 {
-    void init(my_entity& e)
-    {
+	void init(my_entity& e)
+	{
 		// register event with a lambda filter
 		e.on("test", &life_component::on_test, this, [](const test_args& args) {
 			return args.x == 1337;
 		});
-    }
+	}
 
-    void update(my_entity& e)
-    {
-        std::cout << "life_component::update() - " << e.get<std::string>("name") << std::endl;
-    }
+	void update(my_entity& e)
+	{
+		std::cout << "life_component::update() - " << e.get<std::string>("name") << std::endl;
+	}
 
 	bool on_test(const test_args& args)
 	{
