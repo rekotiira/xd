@@ -21,8 +21,8 @@
 // see: http://support.microsoft.com/kb/168958
 #pragma warning(disable: 4231)
 
-XD_API_TEMPLATE template class XD_API std::allocator<char>;
-XD_API_TEMPLATE template class XD_API std::basic_string<char, std::char_traits<char>, std::allocator<char> >;
+//XD_API_TEMPLATE template class XD_API std::allocator<char>;
+//XD_API_TEMPLATE template class XD_API std::basic_string<char, std::char_traits<char>, std::allocator<char> >;
 #endif
 
 namespace xd

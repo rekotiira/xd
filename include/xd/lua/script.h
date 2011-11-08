@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <xd/common.h>
+#include <xd/common/ref_counted.h>
 #include <xd/lua/common.h>
 #include <lua.hpp>
 
@@ -19,10 +20,10 @@ namespace xd
 	namespace lua
 	{
 		class vm;
-		class XD_LUA_API script : public boost::noncopyable
+		class XD_LUA_API script : public xd::ref_counted, public boost::noncopyable
 		{
 		public:
-			typedef std::shared_ptr<script> ptr;
+			typedef boost::intrusive_ptr<script> ptr;
 
 			virtual ~script();
 

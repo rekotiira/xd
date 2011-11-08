@@ -80,8 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\xd\common.h" />
+    <ClInclude Include="..\..\..\include\xd\common\entity.h" />
     <ClInclude Include="..\..\..\include\xd\common\event_bus.h" />
     <ClInclude Include="..\..\..\include\xd\common\exception.h" />
+    <ClInclude Include="..\..\..\include\xd\common\ref_counted.h" />
+    <ClInclude Include="..\..\..\include\xd\common\type.h" />
     <ClInclude Include="..\..\..\include\xd\common\types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

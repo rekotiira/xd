@@ -8,6 +8,7 @@
 #include <boost/unordered_map.hpp>
 #include <memory>
 #include <unordered_map>
+#include <xd/common/ref_counted.h>
 #include <xd/graphics/types.h>
 #include <xd/graphics/vertex_batch.h>
 #include <xd/graphics/shader_program.h>
@@ -20,8 +21,8 @@
 #pragma warning(disable: 4275 4251 4231)
 
 // export instantiantions of used stdlib classes
-XD_API_TEMPLATE template class XD_API std::allocator<char>;
-XD_API_TEMPLATE template class XD_API std::basic_string<char, std::char_traits<char>, std::allocator<char> >;
+//XD_API_TEMPLATE template class XD_API std::allocator<char>;
+//XD_API_TEMPLATE template class XD_API std::basic_string<char, std::char_traits<char>, std::allocator<char> >;
 #endif
 
 namespace xd
@@ -74,10 +75,10 @@ namespace xd
 	} }
 
 	// font class
-	class XD_API font : public boost::noncopyable
+	class XD_API font : public xd::ref_counted, public boost::noncopyable
 	{
 	public:
-		typedef std::shared_ptr<font> ptr;
+		typedef boost::intrusive_ptr<font> ptr;
 
 		font(const std::string& filename, int size);
 		~font();

@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include <xd/common.h>
+#include <xd/common/ref_counted.h>
 
 #ifndef XD_STATIC
 // disable warning about boost::noncopyable not being dll-exportable
@@ -21,10 +22,10 @@ namespace xd
 
 	} }
 
-	class XD_API image : public boost::noncopyable
+	class XD_API image : public xd::ref_counted, public boost::noncopyable
 	{
 	public:
-		typedef std::shared_ptr<image> ptr;
+		typedef boost::intrusive_ptr<image> ptr;
 
 		image(const std::string& filename);
 		virtual ~image();

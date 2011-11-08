@@ -5,14 +5,15 @@
 #include <boost/noncopyable.hpp>
 #include <memory>
 #include <string>
+#include <xd/common/ref_counted.h>
 #include <xd/graphics/image.h>
 
 namespace xd
 {
-	class XD_API texture : public boost::noncopyable
+	class XD_API texture : public xd::ref_counted, public boost::noncopyable
 	{
 	public:
-		typedef std::shared_ptr<texture> ptr;
+		typedef boost::intrusive_ptr<texture> ptr;
 
 		texture(int width, int height, const void *data = 0,
 			GLint wrap_s = GL_REPEAT, GLint wrap_t = GL_REPEAT,

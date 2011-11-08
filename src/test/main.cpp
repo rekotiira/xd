@@ -11,9 +11,7 @@
 
 struct my_data
 {
-    my_data() : health(10) {}
-    std::string name;
-    int health;
+    my_data() {}
 };
 
 typedef xd::entity<my_data> my_entity;
@@ -26,28 +24,33 @@ struct test_args
     int x;
 };
 
-struct life_component : xd::logic_component<my_entity>
+class life_component : xd::logic_component<my_entity>
 {
     void init(my_entity& e)
     {
-        std::cout << "life_component::init() - " << e.name << std::endl;
-        //e.on("test", std::    bind(&life_component::on_test, this, std::placeholders::_1));
-        //std::function<bool (const test_args&)> func = std::bind(&life_component::on_test, this, std::placeholders::_1);
-        [](){};
-        //e.on("test", func);
+		// register event with a lambda filter
+		e.on("test", &life_component::on_test, this, [](const test_args& args) {
+			return args.x == 1337;
+		});
     }
-    
+
     void update(my_entity& e)
     {
-        std::cout << "life_component::update() - " << e.name << std::endl;
+        std::cout << "life_component::update() - " << e.get<std::string>("name") << std::endl;
     }
+
+	bool on_test(const test_args& args)
+	{
+		std::cout << "foo: " << args.x << std::endl;
+		return true;
+	}
 };
 
 int main(int argc, char *argv[])
 {
     my_entity e;
-    e.name = "test";
-    e.add_component(logic_component::ptr(new life_component));
+    e.get<std::string>("name") = "foo";
+	e.add_component(logic_component::ptr(new life_component));
     e.update();
     
     test_args args;
@@ -70,13 +73,13 @@ int main(int argc, char *argv[])
 	return 0;
 	*/
 
-	/*try {
+	try {
 		test my_app;
 		my_app.run();
 	} catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;
 	} catch(...) {
 		std::cerr << "unknown exception" << std::endl;
-	}*/
+	}
 	return 0;
 }
