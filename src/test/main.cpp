@@ -9,9 +9,12 @@
 #include <xd/common/entity.h>
 #include <iostream>
 
-struct my_data
+class my_data
 {
-    my_data() {}
+public:
+    my_data(test& app) : m_app(app) {}
+private:
+	test& m_app;
 };
 
 typedef xd::entity<my_data> my_entity;
@@ -48,15 +51,6 @@ class life_component : xd::logic_component<my_entity>
 
 int main(int argc, char *argv[])
 {
-    my_entity e;
-    e.get<std::string>("name") = "foo";
-	e.add_component(logic_component::ptr(new life_component));
-    e.update();
-    
-    test_args args;
-    args.x = 1337;
-    e.trigger("test", args);
-
 	/*
 	try
 	{
@@ -75,6 +69,16 @@ int main(int argc, char *argv[])
 
 	try {
 		test my_app;
+		
+		my_entity e(my_app);
+		e.get<std::string>("name") = "foo";
+		e.add_component(logic_component::ptr(new life_component));
+		e.update();
+    
+		test_args args;
+		args.x = 1337;
+		e.trigger("test", args);
+
 		my_app.run();
 	} catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;

@@ -86,8 +86,14 @@ namespace xd {
 	{
 		typedef boost::intrusive_ptr<detail::component<T>> ptr;
 	};
+	
+	class entity_base
+	{
+	protected:
+		~entity_base() {}
+	};
     
-	template <typename Base>
+	template <typename Base = entity_base>
 	class entity : public Base, public xd::ref_counted
 	{
 	public:
@@ -97,6 +103,19 @@ namespace xd {
 		typedef typename component<entity<Base>>::ptr component_ptr;
 		typedef typename logic_component<entity<Base>>::ptr logic_component_ptr;
 		typedef typename render_component<entity<Base>>::ptr render_component_ptr;
+
+		entity()
+		{
+		}
+
+		entity(const Base& base)
+			: Base(base)
+		{
+		}
+
+		virtual ~entity()
+		{
+		}
 
 		template <typename T>
 		T& get()
