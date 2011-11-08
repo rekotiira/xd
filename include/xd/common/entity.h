@@ -18,17 +18,17 @@ namespace xd {
 
 	namespace detail
 	{
-        template <typename T>
-        class component_base : public xd::ref_counted
-        {
+		template <typename T>
+		class component_base : public xd::ref_counted
+		{
 		public:
-            virtual ~component_base() {}
+			virtual ~component_base() {}
 		private:
 			template <typename> friend class entity;
-            virtual void init(T&) {}
-        };
+			virtual void init(T&) {}
+		};
 
-        template <typename T>
+		template <typename T>
 		class logic_component : public virtual component_base<T>
 		{
 		private:
@@ -36,7 +36,7 @@ namespace xd {
 			virtual void update(T&) = 0;
 		};
         
-        template <typename T>
+		template <typename T>
 		class render_component : public virtual component_base<T>
 		{
 		private:
@@ -44,7 +44,7 @@ namespace xd {
 			virtual void render(T&) = 0;
 		};
         
-        template <typename T>
+		template <typename T>
 		class component : public logic_component<T>, public render_component<T>
 		{
 		};
@@ -69,19 +69,19 @@ namespace xd {
 		};
 	}
     
-    template <typename T>
+	template <typename T>
 	struct logic_component : detail::logic_component<T>
 	{
 		typedef boost::intrusive_ptr<detail::logic_component<T>> ptr;
 	};
 
-    template <typename T>
+	template <typename T>
 	struct render_component : detail::render_component<T>
 	{
 		typedef boost::intrusive_ptr<detail::render_component<T>> ptr;
 	};
     
-    template <typename T>
+	template <typename T>
 	struct component : detail::component<T>
 	{
 		typedef boost::intrusive_ptr<detail::component<T>> ptr;
