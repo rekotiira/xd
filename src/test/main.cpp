@@ -25,7 +25,7 @@ struct test_args
     int x;
 };
 
-class life_component : xd::logic_component<my_entity>
+class life_component : public xd::logic_component<my_entity>
 {
     void init(my_entity& e)
     {
@@ -67,10 +67,10 @@ int main(int argc, char *argv[])
 
 	try {
 		test my_app;
-		
+
 		my_entity e(my_app);
 		e.get<std::string>("name") = "foo";
-		e.add_component(logic_component::ptr(new life_component));
+		e.add_component(new life_component);
 		e.update();
     
 		test_args args;

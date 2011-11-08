@@ -31,6 +31,8 @@ namespace xd {
 		template <typename T>
 		class logic_component : public virtual component_base<T>
 		{
+		public:
+			typedef boost::intrusive_ptr<detail::logic_component<T>> ptr;
 		private:
 			template <typename> friend class entity;
 			virtual void update(T&) = 0;
@@ -39,6 +41,8 @@ namespace xd {
 		template <typename T>
 		class render_component : public virtual component_base<T>
 		{
+		public:
+			typedef boost::intrusive_ptr<detail::render_component<T>> ptr;
 		private:
 			template <typename> friend class entity;
 			virtual void render(T&) = 0;
@@ -47,6 +51,8 @@ namespace xd {
 		template <typename T>
 		class component : public logic_component<T>, public render_component<T>
 		{
+		public:
+			typedef boost::intrusive_ptr<detail::component<T>> ptr;
 		};
 
 		/*template <typename C, typename T>
@@ -70,21 +76,18 @@ namespace xd {
 	}
     
 	template <typename T>
-	struct logic_component : detail::logic_component<T>
+	class logic_component : public detail::logic_component<T>
 	{
-		typedef boost::intrusive_ptr<detail::logic_component<T>> ptr;
 	};
 
 	template <typename T>
-	struct render_component : detail::render_component<T>
+	class render_component : public detail::render_component<T>
 	{
-		typedef boost::intrusive_ptr<detail::render_component<T>> ptr;
 	};
     
 	template <typename T>
-	struct component : detail::component<T>
+	class component : public detail::component<T>
 	{
-		typedef boost::intrusive_ptr<detail::component<T>> ptr;
 	};
 	
 	class entity_base
