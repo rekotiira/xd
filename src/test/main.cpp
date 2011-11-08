@@ -12,15 +12,13 @@
 class my_data
 {
 public:
-    my_data(test& app) : m_app(app) {}
+	my_data(test& app) : m_app(app) {}
+	test& get_app() { return m_app; }
 private:
 	test& m_app;
 };
 
 typedef xd::entity<my_data> my_entity;
-typedef xd::logic_component<my_entity> logic_component;
-typedef xd::render_component<my_entity> render_component;
-typedef xd::component<my_entity> component;
 
 struct test_args
 {
