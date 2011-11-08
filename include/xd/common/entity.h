@@ -190,7 +190,7 @@ namespace xd {
 		template <typename T>
 		void trigger(const std::string& name, const T& args)
 		{
-            get_event_bus<T>()[name](args);
+			get_event_bus<T>()[name](args);
 		}
         
 		void add_component(const logic_component_ptr& component, int priority = 0)
@@ -312,21 +312,21 @@ namespace xd {
 		// the bound events
 		std::unordered_map<std::size_t, boost::any> m_events;
         
-        // utility function to return event_bus for given arg type
-        template <typename T>
-        event_bus<T>& get_event_bus()
-        {
+		// utility function to return event_bus for given arg type
+		template <typename T>
+		event_bus<T>& get_event_bus()
+		{
 			// calculate hash of the argument type
 			std::size_t hash = typeid(T).hash_code();
-            // find from the events
-            auto i = m_events.find(hash);
-            if (i == m_events.end()) {
-                // not found, insert an empty event_bus
-                m_events[hash] = event_bus<T>();
-            }
+			// find from the events
+			auto i = m_events.find(hash);
+			if (i == m_events.end()) {
+				// not found, insert an empty event_bus
+				m_events[hash] = event_bus<T>();
+			}
 			// return the event bus
-            return *boost::any_cast<event_bus<T>>(&m_events[hash]);
-        }
+			return *boost::any_cast<event_bus<T>>(&m_events[hash]);
+		}
 	};
 }
 
