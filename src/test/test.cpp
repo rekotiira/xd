@@ -10,12 +10,13 @@
 #include <cmath>
 #include "test.h"
 
-/*void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& text, const xd::text_decorator_args& args)
+void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& text, const xd::text_decorator_args& args);
+void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& text, const xd::text_decorator_args& args)
 {
 	const float pi = 3.14159265f;
 	float step = pi / 4;
 	float height = 2;
-	float start = (float)(clock() % 1000) / 1000.0f * 2*pi;
+	float start = (float)(clock()/1000 % 1000) / 1000.0f * 2*pi;
 	for (xd::formatted_text::const_iterator i = text.begin(); i != text.end(); ++i) {
 		float pos = sin(start)*height;
 		decorator.push_position(glm::vec2(0, pos));
@@ -24,7 +25,7 @@
 		decorator.pop_position();
 		start += step;
 	}
-}*/
+}
 
 const float pi = 3.14159265f;
 const float isometric = static_cast<float>(atan(sin(pi/4)) / pi * 180);
@@ -52,7 +53,7 @@ test::test()
 	m_model_view = &m_geometry.model_view();
 
 	// register variable and decorator
-	//m_text_formatter.register_decorator("wave", &wave_decorator);
+	m_text_formatter.register_decorator("wave", &wave_decorator);
 
 	// enable multisampling, texturing and depth test
 	glEnable(GL_MULTISAMPLE);
@@ -268,7 +269,7 @@ void test::run()
 
 		// draw text
 		m_model_view->identity();
-		draw_text(10, 20, "{color=yellow}FPS:{/color} "+boost::lexical_cast<std::string>(fps()));
+		draw_text(10, 20, "{color=yellow}{wave}FPS:{/wave}{/color} "+boost::lexical_cast<std::string>(fps()));
 		draw_text(10, 40, "{color=yellow}Rot X:{/color} "+boost::lexical_cast<std::string>(m_hor_angle));
 		draw_text(10, 60, "{color=yellow}Rot Y:{/color} "+boost::lexical_cast<std::string>(m_ver_angle));
 		draw_text(10, 80, "{color=yellow}Zoom:{/color} "+boost::lexical_cast<std::string>(m_zoom));

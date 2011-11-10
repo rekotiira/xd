@@ -1,5 +1,5 @@
-#include <xd/graphics/font.h>
-#include <xd/graphics/exceptions.h>
+#include <xd/graphics/font.hpp>
+#include <xd/graphics/exceptions.hpp>
 #include <xd/utf8.h>
 #include <memory>
 #include <ft2build.h>

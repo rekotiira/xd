@@ -1,4 +1,4 @@
-#include <xd/system/input.h>
+#include <xd/system/input.hpp>
 #include <GL/glfw.h>
 
 namespace xd

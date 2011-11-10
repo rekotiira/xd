@@ -1,7 +1,7 @@
 #ifndef H_TRAITS
 #define H_TRAITS
 
-#include <xd/graphics.h>
+#include <xd/graphics.hpp>
 
 // our vertex holds position and texture data
 struct my_vertex

@@ -1,12 +1,8 @@
 #ifndef H_TEST
 #define H_TEST
 
-#include <xd/system.h>
-#include <xd/graphics.h>
-#include <xd/graphics/font.h>
-#include <xd/graphics/stock_text_formatter.h>
-#include <xd/graphics/image.h>
-#include <xd/graphics/texture.h>
+#include <xd/system.hpp>
+#include <xd/graphics.hpp>
 #include "types.h"
 
 class test : public xd::window

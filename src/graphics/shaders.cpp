@@ -1,5 +1,5 @@
-#include <xd/graphics/types.h>
-#include <xd/graphics/shaders.h>
+#include <xd/graphics/types.hpp>
+#include <xd/graphics/shaders.hpp>
 
 xd::flat_shader::flat_shader()
 {

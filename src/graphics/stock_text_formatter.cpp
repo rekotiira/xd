@@ -1,4 +1,4 @@
-#include <xd/graphics/stock_text_formatter.h>
+#include <xd/graphics/stock_text_formatter.hpp>
 #include <functional>
 
 xd::stock_text_formatter::stock_text_formatter()

@@ -6,8 +6,8 @@
 #include <list>
 #include <cctype>
 #include <boost/lexical_cast.hpp>
-#include <xd/graphics/exceptions.h>
-#include <xd/graphics/text_formatter.h>
+#include <xd/graphics/exceptions.hpp>
+#include <xd/graphics/text_formatter.hpp>
 #include <xd/utf8.h>
 #include <iostream>
 

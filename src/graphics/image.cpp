@@ -1,6 +1,6 @@
 #include <IL/il.h>
-#include <xd/graphics/exceptions.h>
-#include <xd/graphics/image.h>
+#include <xd/graphics/exceptions.hpp>
+#include <xd/graphics/image.hpp>
 
 namespace xd { namespace detail { namespace image {
 

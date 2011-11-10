@@ -3,7 +3,6 @@ TODO:
 - Add support for modifier key filtering in xd::window
 - Create xd::factory and xd::create (Boost PP iteration magic since MSVC doesn't support variadic templates)
 - C++ lua scheduler to allow scheduling of co-routines created by xd
-- Implement xd::entity and the component system
 - Implement xd::scene_graph based on xd::entity
 - Improve xd::vertex_traits to support less versatile syntax for standard-layout types, but also support eg. float arrays
 - Audio stuff (streaming bgm/loading sfx, possibly some simple effect stuff)
@@ -13,3 +12,4 @@ TODO:
 - Write documentation/tutorials (ugh)
 - *POSSIBLY* Add support for operator[] for bound classes in luabind
 - *POSSIBLY* Add support for Python via Boost.Python
+- *POSSIBLY* Add support for signed distance field fonts (fonts can be rendered at any size accurately + enables more effects)

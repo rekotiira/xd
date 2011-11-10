@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
-#include <xd/system.h>
+#include <xd/system/window.hpp>
+#include <xd/system/exceptions.hpp>
 
 // detail stuff, hidden from user
 namespace

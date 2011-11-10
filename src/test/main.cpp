@@ -1,12 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <GL/glew.h>
-#include <xd/common.h>
-#include <xd/utf8.h>
+#include <xd/common.hpp>
 #include "test.h"
 
-#include <xd/common/entity.h>
+#include <xd/entity.hpp>
 #include <iostream>
 
 class my_data
@@ -30,9 +28,7 @@ class life_component : public xd::logic_component<my_entity>
 	void init(my_entity& e)
 	{
 		// register event with a lambda filter
-		e.on("test", &life_component::on_test, this, [](const test_args& args) {
-			return args.x == 1337;
-		});
+		e.on("test", &life_component::on_test, this);
 	}
 
 	void update(my_entity& e)

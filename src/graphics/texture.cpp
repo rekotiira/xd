@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include <xd/graphics/texture.h>
+#include <xd/graphics/texture.hpp>
 
 namespace xd { namespace detail { namespace texture {
 

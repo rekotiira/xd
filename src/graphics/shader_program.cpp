@@ -1,4 +1,6 @@
-#include <xd/graphics.h>
+#include <xd/vendor/glm/gtc/type_ptr.hpp>
+#include <xd/graphics/shader_program.hpp>
+#include <xd/graphics/exceptions.hpp>
 
 xd::shader_program::shader_program()
 {
