@@ -8,7 +8,7 @@
 #include <boost/lexical_cast.hpp>
 #include <xd/graphics/exceptions.hpp>
 #include <xd/graphics/text_formatter.hpp>
-#include <xd/utf8.h>
+#include <xd/vendor/utf8.h>
 #include <iostream>
 
 namespace xd { namespace detail { namespace text_formatter {

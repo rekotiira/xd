@@ -1,0 +1,42 @@
+body {
+	font-family: "Trebuchet MS", sans-serif;
+	font-size: 12px;
+}
+
+h1 {
+	font-size: 2em;
+	background: #eaeaea;
+	border-bottom: 1px solid #bbb;
+	padding: 2px 5px;
+	margin: 20px 0;
+}
+
+h2 {
+	font-size: 1.5em;
+	background: #eaeaea;
+	border-bottom: 1px solid #bbb;
+	padding: 2px 5px;
+	margin: 10px 0;
+}
+
+h3 {
+	font-size: 1em;
+	background: #eaeaea;
+	border-bottom: 1px solid #bbb;
+	padding: 2px 5px;
+	margin: 5px 0;
+}
+
+a {
+	color: #3370C9;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: #00508C;
+}
+
+#toc ol {
+	margin: 10px 0;
+	padding: 0 30px;
+}

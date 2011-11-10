@@ -213,14 +213,14 @@
 /* Begin PBXShellScriptBuildPhase section */
 		BE2E861A146AF81900E0E1CF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd \"$BUILT_PRODUCTS_DIR/test.app/Contents/MacOS/\"\ninstall_name_tool -change /usr/lib/libc++.1.dylib @executable_path/../Frameworks/xd.framework/Versions/A/Frameworks/libc++.1.dylib test";
 		};

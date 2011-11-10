@@ -1,6 +1,6 @@
 #include <xd/graphics/font.hpp>
 #include <xd/graphics/exceptions.hpp>
-#include <xd/utf8.h>
+#include <xd/vendor/utf8.h>
 #include <memory>
 #include <ft2build.h>
 #include FT_FREETYPE_H

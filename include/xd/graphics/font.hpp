@@ -13,7 +13,7 @@
 #include <xd/graphics/vertex_batch.hpp>
 #include <xd/graphics/shader_program.hpp>
 #include <xd/graphics/transform_geometry.hpp>
-#include <xd/utf8.h>
+#include <xd/vendor/utf8.h>
 
 #ifndef XD_STATIC
 // disable warning about boost::noncopyable not being dll-exportable

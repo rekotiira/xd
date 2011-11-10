@@ -14,7 +14,7 @@
 #include <xd/graphics/exceptions.hpp>
 #include <xd/graphics/font.hpp>
 #include <xd/graphics/shader_program.hpp>
-#include <xd/utf8.h>
+#include <xd/vendor/utf8.h>
 
 #ifndef XD_STATIC
 // disable warnings about nonstandard extension
