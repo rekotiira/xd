@@ -1,7 +1,7 @@
 #ifndef H_XD_LUA_EXCEPTIONS
 #define H_XD_LUA_EXCEPTIONS
 
-#include <xd/common/exception.h>
+#include <xd/exception.hpp>
 #include <string>
 
 namespace xd

@@ -4,9 +4,9 @@
 #include <boost/noncopyable.hpp>
 #include <string>
 #include <memory>
-#include <xd/common.h>
-#include <xd/common/ref_counted.h>
-#include <xd/lua/common.h>
+#include <xd/common.hpp>
+#include <xd/ref_counted.hpp>
+#include <xd/lua/common.hpp>
 #include <lua.hpp>
 
 #ifndef XD_STATIC

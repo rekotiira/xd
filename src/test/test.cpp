@@ -10,7 +10,6 @@
 #include <cmath>
 #include "test.h"
 
-void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& text, const xd::text_decorator_args& args);
 void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& text, const xd::text_decorator_args& args)
 {
 	const float pi = 3.14159265f;
@@ -36,7 +35,7 @@ test::test()
 	: xd::window("3D Isometric Sample", 640, 480)
 	, m_grass_batch(GL_QUADS)
 	, m_edge_batch(GL_QUADS)
-	, m_font("verdanab.ttf", 16)
+	, m_font("verdanab.ttf", 12)
 	, m_grass_texture("grass.png")
 	, m_grass_edge_texture("grass_edge.png")
 	, m_edge_texture("edge.png")
@@ -269,7 +268,7 @@ void test::run()
 
 		// draw text
 		m_model_view->identity();
-		draw_text(10, 20, "{color=yellow}{wave}FPS:{/wave}{/color} "+boost::lexical_cast<std::string>(fps()));
+		draw_text(10, 20, "{color=yellow}FPS:{/color} "+boost::lexical_cast<std::string>(fps()));
 		draw_text(10, 40, "{color=yellow}Rot X:{/color} "+boost::lexical_cast<std::string>(m_hor_angle));
 		draw_text(10, 60, "{color=yellow}Rot Y:{/color} "+boost::lexical_cast<std::string>(m_ver_angle));
 		draw_text(10, 80, "{color=yellow}Zoom:{/color} "+boost::lexical_cast<std::string>(m_zoom));

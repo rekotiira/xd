@@ -22,16 +22,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\xd\system.h">
+    <ClInclude Include="..\..\..\include\xd\system\exceptions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\system\exceptions.h">
+    <ClInclude Include="..\..\..\include\xd\system\input.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\system\window.h">
+    <ClInclude Include="..\..\..\include\xd\system\utility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\system\input.h">
+    <ClInclude Include="..\..\..\include\xd\system\window.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\system\window_options.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

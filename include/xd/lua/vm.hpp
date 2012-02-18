@@ -3,9 +3,9 @@
 
 #include <string>
 #include <boost/noncopyable.hpp>
-#include <xd/common.h>
-#include <xd/lua/common.h>
-#include <xd/lua/script.h>
+#include <xd/common.hpp>
+#include <xd/lua/common.hpp>
+#include <xd/lua/script.hpp>
 #include <lua.hpp>
 
 #ifndef XD_STATIC

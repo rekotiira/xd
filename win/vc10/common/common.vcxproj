@@ -79,13 +79,15 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\xd\common.h" />
-    <ClInclude Include="..\..\..\include\xd\common\entity.h" />
-    <ClInclude Include="..\..\..\include\xd\common\event_bus.h" />
-    <ClInclude Include="..\..\..\include\xd\common\exception.h" />
-    <ClInclude Include="..\..\..\include\xd\common\ref_counted.h" />
-    <ClInclude Include="..\..\..\include\xd\common\type.h" />
-    <ClInclude Include="..\..\..\include\xd\common\types.h" />
+    <ClInclude Include="..\..\..\include\xd\common.hpp" />
+    <ClInclude Include="..\..\..\include\xd\entity.hpp" />
+    <ClInclude Include="..\..\..\include\xd\event_bus.hpp" />
+    <ClInclude Include="..\..\..\include\xd\exception.hpp" />
+    <ClInclude Include="..\..\..\include\xd\graphics.hpp" />
+    <ClInclude Include="..\..\..\include\xd\lua.hpp" />
+    <ClInclude Include="..\..\..\include\xd\ref_counted.hpp" />
+    <ClInclude Include="..\..\..\include\xd\system.hpp" />
+    <ClInclude Include="..\..\..\include\xd\types.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

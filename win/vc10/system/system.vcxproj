@@ -88,10 +88,11 @@
     <ClCompile Include="..\..\..\src\system\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\xd\system.h" />
-    <ClInclude Include="..\..\..\include\xd\system\exceptions.h" />
-    <ClInclude Include="..\..\..\include\xd\system\input.h" />
-    <ClInclude Include="..\..\..\include\xd\system\window.h" />
+    <ClInclude Include="..\..\..\include\xd\system\exceptions.hpp" />
+    <ClInclude Include="..\..\..\include\xd\system\input.hpp" />
+    <ClInclude Include="..\..\..\include\xd\system\utility.hpp" />
+    <ClInclude Include="..\..\..\include\xd\system\window.hpp" />
+    <ClInclude Include="..\..\..\include\xd\system\window_options.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

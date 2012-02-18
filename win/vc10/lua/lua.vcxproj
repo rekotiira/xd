@@ -82,16 +82,15 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\xd\lua.h" />
-    <ClInclude Include="..\..\..\include\xd\lua\common.h" />
-    <ClInclude Include="..\..\..\include\xd\lua\exceptions.h" />
-    <ClInclude Include="..\..\..\include\xd\lua\script.h" />
-    <ClInclude Include="..\..\..\include\xd\lua\types.h" />
-    <ClInclude Include="..\..\..\include\xd\lua\vm.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\src\lua\script.cpp" />
     <ClCompile Include="..\..\..\src\lua\vm.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\xd\lua\common.hpp" />
+    <ClInclude Include="..\..\..\include\xd\lua\exceptions.hpp" />
+    <ClInclude Include="..\..\..\include\xd\lua\script.hpp" />
+    <ClInclude Include="..\..\..\include\xd\lua\types.hpp" />
+    <ClInclude Include="..\..\..\include\xd\lua\vm.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

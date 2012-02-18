@@ -1,9 +1,9 @@
-#include <xd/lua.h>
+#include <xd/lua.hpp>
 #include <fstream>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
-#include <xd/system.h>
-#include <xd/common.h>
+#include <xd/system.hpp>
+#include <xd/common.hpp>
 #include <luabind/operator.hpp>
 #include <boost/optional.hpp>
 

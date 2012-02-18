@@ -14,25 +14,31 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\xd\common.h">
+    <ClInclude Include="..\..\..\include\xd\common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\common\exception.h">
+    <ClInclude Include="..\..\..\include\xd\entity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\common\event_bus.h">
+    <ClInclude Include="..\..\..\include\xd\event_bus.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\common\types.h">
+    <ClInclude Include="..\..\..\include\xd\exception.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\common\entity.h">
+    <ClInclude Include="..\..\..\include\xd\graphics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\common\type.h">
+    <ClInclude Include="..\..\..\include\xd\lua.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\common\ref_counted.h">
+    <ClInclude Include="..\..\..\include\xd\ref_counted.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\system.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,10 +4,10 @@
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 
-#include <xd/lua/common.h>
-#include <xd/lua/types.h>
-#include <xd/lua/exceptions.h>
-#include <xd/lua/vm.h>
-#include <xd/lua/script.h>
+#include <xd/lua/common.hpp>
+#include <xd/lua/types.hpp>
+#include <xd/lua/exceptions.hpp>
+#include <xd/lua/vm.hpp>
+#include <xd/lua/script.hpp>
 
 #endif
