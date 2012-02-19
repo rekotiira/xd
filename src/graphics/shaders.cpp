@@ -4,7 +4,7 @@
 xd::flat_shader::flat_shader()
 {
 	static const char *vertex_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform mat4 mvpMatrix;"
 		"attribute vec4 vVertex;"
 		"void main(void)"
@@ -13,7 +13,7 @@ xd::flat_shader::flat_shader()
 		"}";
 
 	static const char *fragment_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform vec4 vColor;"
 		"void main(void)"
 		"{"
@@ -36,7 +36,7 @@ void xd::flat_shader::setup(const glm::mat4& mvp, const glm::vec4& color)
 xd::shaded_shader::shaded_shader()
 {
 	static const char *vertex_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform mat4 mvpMatrix;"
 		"attribute vec4 vVertex;"
 		"attribute vec4 vColor;"
@@ -48,7 +48,7 @@ xd::shaded_shader::shaded_shader()
 		"}";
 
 	static const char *fragment_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"varying vec4 vVaryingColor;"
 		"void main(void)"
 		"{"
@@ -71,7 +71,7 @@ void xd::shaded_shader::setup(const glm::mat4& mvp)
 xd::texture_shader::texture_shader()
 {
 	static const char *vertex_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform mat4 mvpMatrix;"
 		"attribute vec4 vVertex;"
 		"attribute vec2 vTexCoords;"
@@ -83,7 +83,7 @@ xd::texture_shader::texture_shader()
 		"}";
 
 	static const char *fragment_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform sampler2D colorMap;"
 		"varying vec2 vVaryingTexCoords;"
 		"void main(void)"
@@ -109,7 +109,7 @@ void xd::texture_shader::setup(const glm::mat4& mvp, const texture& tex)
 xd::texture_mask_shader::texture_mask_shader()
 {
 	static const char *vertex_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform mat4 mvpMatrix;"
 		"attribute vec4 vVertex;"
 		"attribute vec2 vTexCoords;"
@@ -121,7 +121,7 @@ xd::texture_mask_shader::texture_mask_shader()
 		"}";
 
 	static const char *fragment_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform sampler2D colorMap;"
 		"uniform sampler2D maskMap;"
 		"varying vec2 vVaryingTexCoords;"
@@ -151,7 +151,7 @@ void xd::texture_mask_shader::setup(const glm::mat4& mvp, const texture& tex, co
 xd::text_shader::text_shader()
 {
 	static const char *vertex_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform mat4 mvpMatrix;"
 		"uniform vec2 vPosition;"
 		"attribute vec4 vVertex;"
@@ -164,7 +164,7 @@ xd::text_shader::text_shader()
 		"}";
 
 	static const char *fragment_shader_src =
-		"#version 120\n"
+		"#version 110\n"
 		"uniform vec4 vColor;"
 		"uniform sampler2D colorMap;"
 		"varying vec2 vVaryingTexCoords;"

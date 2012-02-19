@@ -47,7 +47,7 @@ class life_component : public xd::logic_component<my_entity>
 
 int main(int argc, char *argv[])
 {
-	try
+	/*try
 	{
 		xd::lua::vm vm;
 		vm.load_library();
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 		std::cout << e.what() << std::endl;
 	} catch (...) {
 	}
-	return 0;
+	return 0;*/
 
 	try {
 		test my_app;

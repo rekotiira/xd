@@ -40,7 +40,7 @@ function wait(secs)
 	coroutine.yield(function() return (os.difftime(os.time(), begin) >= secs) end)
 end
 
-win = xd.window("test window")
+win = xd.window("test window", 640, 480)
 win:bind_key(xd.KEY_SPACE, "fire")
 win:bind_key(xd.MOUSE_LEFT, "fire")
 win:bind_key(xd.KEY_ESC, "quit")

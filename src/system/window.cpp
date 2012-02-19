@@ -36,7 +36,7 @@ xd::window::window(const std::string& title, int width, int height)
 	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
 	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 0);
 	
 	if (glfwOpenWindow(m_width, m_height, 8, 8, 8, 8, 24, 0, GLFW_WINDOW) == GL_FALSE) {
 		glfwTerminate();
