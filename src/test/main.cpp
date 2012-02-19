@@ -7,6 +7,8 @@
 #include <xd/entity.hpp>
 #include <iostream>
 
+#include <xd/lua.hpp>
+
 class my_data
 {
 public:
@@ -45,21 +47,19 @@ class life_component : public xd::logic_component<my_entity>
 
 int main(int argc, char *argv[])
 {
-	/*
 	try
 	{
 		xd::lua::vm vm;
 		vm.load_library();
-		xd::lua::script_handle script = vm.load_file("test.lua");
+		xd::lua::script::ptr script = vm.load_file("test.lua");
 		script->run();
 	} catch (xd::lua::script_load_failed& e) {
-		std::cout << "failed to load script:\n" << e.error_message() << std::endl;
+		std::cout << e.what() << std::endl;
 	} catch (std::exception& e) {
 		std::cout << e.what() << std::endl;
 	} catch (...) {
 	}
 	return 0;
-	*/
 
 	try {
 		test my_app;

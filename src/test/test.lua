@@ -41,9 +41,9 @@ function wait(secs)
 end
 
 win = xd.window("test window")
-win:bind_key(xd.key_space, "fire")
-win:bind_key(xd.mouse_left, "fire")
-win:bind_key(xd.key_esc, "quit")
+win:bind_key(xd.KEY_SPACE, "fire")
+win:bind_key(xd.MOUSE_LEFT, "fire")
+win:bind_key(xd.KEY_ESC, "quit")
 
 scheduler = xd.scheduler()
 
