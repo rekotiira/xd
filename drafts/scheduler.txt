@@ -1,0 +1,100 @@
+/* test.lua: */
+print("foo")
+wait(5)
+print("bar")
+
+/* C++ */
+xd::lua::scheduler scheduler;
+xd::lua::script::ptr foo = xd::script::load("test.lua");
+scheduler.start(foo);
+
+// in the game loop somewhere
+scheduler.run();
+
+// the scheduler task
+class wait_task : xd::lua::scheduler_task
+{
+public:
+	wait_task(int secs)
+		: m_secs(secs)
+		, m_start(std::clock())
+	{
+	}
+
+	bool is_complete()
+	{
+		return (((std::clock() - m_start) / CLOCKS_PER_SEC) >= m_secs);
+	}
+private:
+	int m_secs;
+	std::clock_t m_start;
+};
+
+// how to write a C++ function that yields
+void wait(lua_State *thread, int secs)
+{
+	return scheduler.yield(thread, wait_task());
+}
+
+// how to bind it, the key is to use the luabind::yield policy
+luabind::module(m_vm, "xd")
+[
+	luabind::def("wait", &wait, luabind::yield)
+];
+
+
+
+// a more sophisticated example
+
+/* test.lua */
+local name = game:input("What's your name?")
+print("Hello "+name)
+
+/* C++ */
+class script_input_task : xd::lua::scheduler_task
+{
+public:
+	script_input_task(my_game& game, const std::string& message)
+		: m_complete(false)
+	{
+		// my_game::input is a function that will make the engine ask for an input from the
+		// player, and launch the specified callback when the player finishes giving input
+		game.input(message, std::bind(&script_input_task::input_complete, this));
+	}
+
+	bool is_complete()
+	{
+		return m_complete;
+	}
+private:
+	bool m_complete;
+	std::string m_result;
+
+	void input_complete(std::string input)
+	{
+		// set a result for the function call; this will be returned to lua once
+		// the scheduler determines the task is complete and passes control back to lua
+		set_result(input);
+		// mark the task as complete, next time the scheduler runs is_complete()
+		// the thread will be continued
+		m_complete = true;
+	}
+};
+
+void input(lua_State *thread, my_game& game, std::string message)
+{
+	return scheduler.yield(thread, script_input_task(game, message));
+}
+
+
+// I also plan to add support for more convenient result-less yielding C++ functions
+// for example the wait() could be implemented like following instead:
+void wait(lua_State *thread, int secs)
+{
+	// the start time
+	std::clock_t start = std::clock();
+	// bind the secs and the start time to a lambda
+	return scheduler.yield(thread, [secs, start]() {
+		return (((std::clock() - start) / CLOCKS_PER_SEC) >= secs);
+	});
+}
