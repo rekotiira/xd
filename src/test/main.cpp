@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include <xd/lua.hpp>
+#include <luabind/tag_function.hpp>
 
 class my_data
 {
@@ -45,21 +46,76 @@ class life_component : public xd::logic_component<my_entity>
 	}
 };
 
+class wait_task : public xd::lua::scheduler_task
+{
+public:
+	wait_task(int secs) : m_secs(secs), m_start(std::time(0)) {}
+	bool is_complete() { return ((std::time(0) - m_start) >= m_secs); }
+private:
+	int m_secs;
+	std::time_t m_start;
+};
+
+struct wait
+{
+	xd::lua::scheduler& scheduler;
+	wait(xd::lua::scheduler& scheduler) : scheduler(scheduler) {}
+	void operator()(int secs) const
+	{
+		std::time_t start = std::time(0);
+		return scheduler.yield([secs, start](xd::lua::scheduler_task_result& result) {
+			return ((std::time(0) - start) >= secs);
+		});
+		//return scheduler.yield(wait_task(secs));
+	}
+};
+
+void wait(xd::lua::scheduler& scheduler, int secs)
+{
+	std::time_t start = std::time(0);
+	return scheduler.yield([secs, start]() {
+		return ((std::time(0) - start) >= secs);
+	});
+}
+
+/*
+void input(std::string message)
+{
+	bool complete = false;
+	std::string line;
+	game.wait_for_input([&](std::string input) {
+		complete = true;
+		line = input;
+	});
+	return scheduler.yield([&](xd::lua::scheduler_task_result& result) -> bool {
+		if (complete)
+			result.set_value(input);
+		return complete;
+	});
+}
+*/
+
 int main(int argc, char *argv[])
 {
-	/*try
+	try
 	{
-		xd::lua::vm vm;
+		xd::lua::virtual_machine vm;
 		vm.load_library();
-		xd::lua::script::ptr script = vm.load_file("test.lua");
-		script->run();
+
+		xd::lua::scheduler scheduler(vm);
+		//scheduler.register_function<void (int)>("wait", wait(scheduler));
+
+		scheduler.start(vm.load_file("test.lua"));
+		while (scheduler.pending_tasks() > 0) {
+			scheduler.run();
+		}
 	} catch (xd::lua::script_load_failed& e) {
 		std::cout << e.what() << std::endl;
 	} catch (std::exception& e) {
 		std::cout << e.what() << std::endl;
 	} catch (...) {
 	}
-	return 0;*/
+	return 0;
 
 	try {
 		test my_app;

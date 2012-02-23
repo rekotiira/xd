@@ -1,7 +1,9 @@
+#include <xd/lua/types.hpp>
 #include <xd/lua/script.hpp>
 #include <xd/lua/vm.hpp>
-
-xd::lua::script::script(lua_State *vm, int ref)
+#include <luabind/luabind.hpp>
+/*
+xd::lua::script::script(vm& vm, int ref)
 	: m_vm(vm)
 	, m_script_ref(ref)
 {
@@ -9,14 +11,18 @@ xd::lua::script::script(lua_State *vm, int ref)
 
 xd::lua::script::~script()
 {
-	luaL_unref(m_vm, LUA_REGISTRYINDEX, m_script_ref);
+	luaL_unref(m_vm.lua_state(), LUA_REGISTRYINDEX, m_script_ref);
 }
 
 void xd::lua::script::run()
 {
 	// push the function at the top of the stack
-	lua_rawgeti(m_vm, LUA_REGISTRYINDEX, m_script_ref);
+	lua_rawgeti(m_vm.lua_state(), LUA_REGISTRYINDEX, m_script_ref);
+
+	// get the function from registry
+	luabind::object func(m_vm.registry(m_script_ref));
 
 	// call it
-	lua_call(m_vm, 0, 0);
+	luabind::call_function<void>(func);
 }
+*/

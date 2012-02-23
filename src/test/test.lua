@@ -1,3 +1,24 @@
+function wait(secs)
+	local start = os.time()
+	--local time = coroutine.yield(function(result)
+	coroutine.yield(function(result)
+		--[[if ((os.time() - start) >= secs) then
+			result:set_value(os.time())
+			return true
+		else
+			return false
+		end
+		--]]
+		return ((os.time() - start) >= secs)
+	end)
+	--print("Current time: " .. time)
+end
+
+print("foo")
+wait(2)
+print("bar")
+
+--[[
 xd.scheduler = function()
 	return {
 		threads = {},
@@ -64,3 +85,4 @@ while true do
 	win:clear()
 	win:swap()
 end
+--]]

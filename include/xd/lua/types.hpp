@@ -1,7 +1,8 @@
 #ifndef H_XD_LUA_TYPES
 #define H_XD_LUA_TYPES
 
-#include <lua.h>
+#include <xd/lua/common.hpp>
+#include <lua.hpp>
 #include <luabind/luabind.hpp>
 #include <boost/optional.hpp>
 #include <boost/type_traits/is_void.hpp>
@@ -23,6 +24,11 @@ namespace xd
 				: m_func(obj)
 				, m_default(default)
 			{
+			}
+
+			luabind::object object()
+			{
+				return m_func;
 			}
 
 			T operator()()
@@ -80,6 +86,11 @@ namespace xd
 			function(const luabind::object& obj)
 				: m_func(obj)
 			{
+			}
+
+			luabind::object object()
+			{
+				return m_func;
 			}
 
 			void operator()()

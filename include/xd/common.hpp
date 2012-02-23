@@ -8,22 +8,22 @@
 		#else
 			#define XD_API __declspec(dllexport)
 		#endif
-        #define XD_API_TEMPLATE
+		#define XD_API_TEMPLATE
 	#else
 		#ifdef XD_STATIC
 			#define XD_API
 		#else
 			#define XD_API __declspec(dllimport)
 		#endif
-        #define XD_API_TEMPLATE extern
+		#define XD_API_TEMPLATE extern
 	#endif
 #else
 	#ifdef XD_EXPORT
 		#define XD_API extern
-        #define XD_API_TEMPLATE
+		#define XD_API_TEMPLATE
 	#else
 		#define XD_API
-        #define XD_API_TEMPLATE extern
+		#define XD_API_TEMPLATE extern
 	#endif
 #endif
 

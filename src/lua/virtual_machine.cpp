@@ -1,11 +1,12 @@
-#include <xd/lua.hpp>
-#include <fstream>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 #include <xd/system.hpp>
 #include <xd/common.hpp>
-#include <luabind/operator.hpp>
+#include <xd/lua.hpp>
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
 #include <boost/optional.hpp>
+#include <lua.hpp>
+#include <luabind/operator.hpp>
+#include <fstream>
 
 namespace xd { namespace lua { namespace detail {
 
@@ -16,54 +17,70 @@ namespace xd { namespace lua { namespace detail {
 
 } } }
 
-xd::lua::vm::vm()
+xd::lua::virtual_machine::virtual_machine()
 {
-	m_vm = luaL_newstate();
-	luaL_openlibs(m_vm);
-	luabind::open(m_vm);
-	lua_atpanic(m_vm, &detail::on_panic);
+	m_lua_state = luaL_newstate();
+	luaL_openlibs(m_lua_state);
+	luabind::open(m_lua_state);
+	lua_atpanic(m_lua_state, &detail::on_panic);
 }
 
-xd::lua::vm::~vm()
+xd::lua::virtual_machine::~virtual_machine()
 {
-	lua_close(m_vm);
+	lua_close(m_lua_state);
 }
 
-lua_State *xd::lua::vm::get_vm()
+lua_State *xd::lua::virtual_machine::lua_state()
 {
-	return m_vm;
+	return m_lua_state;
 }
 
-xd::lua::script::ptr xd::lua::vm::load(const std::string& code)
+xd::lua::function<void> xd::lua::virtual_machine::load(const std::string& code)
 {
-	int status = luaL_loadbuffer(m_vm, code.c_str(), code.size(), "");
+	int status = luaL_loadbuffer(m_lua_state, code.c_str(), code.size(), "");
 	if (status != 0) {
-		std::string error_message = lua_tostring(m_vm, -1);
-		lua_pop(m_vm, 1);
+		std::string error_message = lua_tostring(m_lua_state, -1);
+		lua_pop(m_lua_state, 1);
 		throw new script_load_failed(error_message);
 	}
 
-	// register the loaded function in the registry
-	int ref = luaL_ref(m_vm, LUA_REGISTRYINDEX);
-
-	// return the handle
-	return script::ptr(new script(m_vm, ref));
+	// create a luabind object from the function in stack
+	luabind::object func(luabind::from_stack(m_lua_state, -1));
+	// pop the function from stack
+	lua_pop(m_lua_state, 1);
+	// return the function
+	return func;
 }
 
-xd::lua::script::ptr xd::lua::vm::load_file(const std::string& filename)
+xd::lua::function<void> xd::lua::virtual_machine::load_file(const std::string& filename)
 {
-	int status = luaL_loadfile(m_vm, filename.c_str());
+	int status = luaL_loadfile(m_lua_state, filename.c_str());
 	if (status != 0) {
-		std::string error_message = lua_tostring(m_vm, -1);
-		lua_pop(m_vm, 1);
+		std::string error_message = lua_tostring(m_lua_state, -1);
+		lua_pop(m_lua_state, 1);
 		throw script_load_failed(error_message);
 	}
 
-	// register the loaded function in the registry
-	int ref = luaL_ref(m_vm, LUA_REGISTRYINDEX);
+	// create a luabind object from the function in stack
+	luabind::object func(luabind::from_stack(m_lua_state, -1));
+	// pop the function from stack
+	lua_pop(m_lua_state, 1);
+	// return the function
+	return func;
+}
 
-	// return the handle
-	return script::ptr(new script(m_vm, ref));
+void xd::lua::virtual_machine::exec(const std::string& code)
+{
+	// execute the function
+	xd::lua::function<void> func(load(code));
+	func();
+}
+
+void xd::lua::virtual_machine::exec_file(const std::string& filename)
+{
+	// execute the function
+	xd::lua::function<void> func(load_file(filename));
+	func();
 }
 
 /*
@@ -216,11 +233,11 @@ namespace xd { namespace lua { namespace wrapper {
 	}
 }}}
 
-void xd::lua::vm::load_library(const std::string& module_name)
+void xd::lua::virtual_machine::load_library(const std::string& module_name)
 {
 	using namespace luabind;
 
-	module(m_vm, module_name.size() ? module_name.c_str() : 0)
+	module(m_lua_state, module_name.size() ? module_name.c_str() : 0)
 	[
 		// key struct
 		class_<key>("key")
@@ -300,7 +317,7 @@ void xd::lua::vm::load_library(const std::string& module_name)
 	];
 
 	// get the xd namespace table
-	object xd_table = globals(m_vm)["xd"];
+	object xd_table = globals()["xd"];
 
 	// bind constants
 	xd_table["INPUT_KEYBOARD"] = INPUT_KEYBOARD;

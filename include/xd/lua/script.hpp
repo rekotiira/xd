@@ -11,10 +11,9 @@
 
 #ifndef XD_STATIC
 // disable warning about boost::noncopyable not being dll-exportable
-// as well as the private members that can't be accessed by client
 #pragma warning(disable: 4275)
 #endif
-
+/*
 namespace xd
 {
 	namespace lua
@@ -26,15 +25,14 @@ namespace xd
 			typedef boost::intrusive_ptr<script> ptr;
 
 			virtual ~script();
-
 			void run();
 		
 		private:
 			// private constructor to be used by vm
-			script(lua_State *vm, int ref);
+			script(vm& vm, int ref);
 
 			// member vars
-			lua_State *m_vm;
+			vm& m_vm;
 			int m_script_ref;
 
 			// friends
@@ -42,5 +40,5 @@ namespace xd
 		};
 	}
 }
-
+*/
 #endif
