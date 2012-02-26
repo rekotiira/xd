@@ -140,7 +140,7 @@ namespace xd {
 		bool has()
 		{
 			std::size_t hash = typeid(T).hash_code();
-			return m_key_to_data.find(hash) != m_type_to_data.end();
+			return m_type_to_data.find(hash) != m_type_to_data.end();
 		}
 
 		template <typename T>

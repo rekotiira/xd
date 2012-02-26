@@ -81,7 +81,7 @@ namespace xd
 		typedef boost::intrusive_ptr<font> ptr;
 
 		font(const std::string& filename, int size);
-		~font();
+		virtual ~font();
 
 		void link_font(const std::string& type, const std::string& filename);
 		void link_font(const std::string& type, font::ptr font);

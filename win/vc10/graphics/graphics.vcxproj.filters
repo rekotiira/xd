@@ -35,6 +35,9 @@
     <ClCompile Include="..\..\..\src\graphics\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\graphics\sprite_batch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\xd\graphics\exceptions.hpp">
@@ -77,6 +80,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\xd\graphics\vertex_batch.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\graphics\sprite_batch.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

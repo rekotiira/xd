@@ -97,7 +97,7 @@ void input(std::string message)
 
 int main(int argc, char *argv[])
 {
-	try
+	/*try
 	{
 		xd::lua::virtual_machine vm;
 		vm.load_library();
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 		std::cout << e.what() << std::endl;
 	} catch (...) {
 	}
-	return 0;
+	return 0;*/
 
 	try {
 		test my_app;

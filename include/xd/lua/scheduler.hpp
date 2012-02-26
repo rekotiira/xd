@@ -1,5 +1,5 @@
-#ifndef H_XD_LUA_SCHEDULER_SCHEDULER
-#define H_XD_LUA_SCHEDULER_SCHEDULER
+#ifndef H_XD_LUA_SCHEDULER
+#define H_XD_LUA_SCHEDULER
 
 #include <xd/lua/common.hpp>
 #include <xd/lua/types.hpp>

@@ -271,7 +271,7 @@ namespace xd
 	{
 	public:
 		text_decorator(int level);
-		~text_decorator();
+		virtual ~text_decorator();
 
 		void push_text(const formatted_text& text);
 		void push_text(const std::string& text);

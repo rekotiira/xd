@@ -257,20 +257,31 @@ void test::run()
 		}
 
 		// setup orthographic projection for text rendering
-		m_geometry.projection().load(glm::ortho(0.0f, (float)width(), (float)height(), 0.0f, -1.0f, 1.0f));
+		m_geometry.projection().load(glm::ortho(0.0f, (float)width(), (float)height(), 0.0f, -100.0f, 100.0f));
 
 		// disable depth testing and face culling
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
 
 		// alpha testing
-		glAlphaFunc(GL_GREATER, 0.5f);
+		//glAlphaFunc(GL_GREATER, 0.5f);
 
 		// draw text
 		m_model_view->identity();
+		m_model_view->translate(50, 20, 0);
+		m_model_view->rotate(10, 0, 0, 1);
+		m_model_view->scale(1.2f);
 		draw_text(10, 20, "{color=yellow}FPS:{/color} "+boost::lexical_cast<std::string>(fps()));
+		m_model_view->translate(0, 20, 0);
+		m_model_view->rotate(-15, 0, 0, 1);
+		m_model_view->scale(0.9f);
 		draw_text(10, 40, "{color=yellow}Rot X:{/color} "+boost::lexical_cast<std::string>(m_hor_angle));
+		m_model_view->rotate(22, 0, 0, 1);
+		m_model_view->scale(0.8f);
 		draw_text(10, 60, "{color=yellow}Rot Y:{/color} "+boost::lexical_cast<std::string>(m_ver_angle));
+		m_model_view->translate(0, 10, 0);
+		m_model_view->rotate(-15, 0, 0, 1);
+		m_model_view->scale(1.1f);
 		draw_text(10, 80, "{color=yellow}Zoom:{/color} "+boost::lexical_cast<std::string>(m_zoom));
 
 		swap();

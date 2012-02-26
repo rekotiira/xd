@@ -77,6 +77,10 @@ namespace xd
 			scale(glm::vec3(x, y, z));
 		}
 		
+		void scale(float s)
+		{
+			scale(glm::vec3(s, s, s));
+		}
 		void rotate(float a, const glm::vec3& vec)
 		{
 			m_stack.top() = glm::rotate(m_stack.top(), a, vec);
