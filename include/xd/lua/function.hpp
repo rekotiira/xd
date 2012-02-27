@@ -20,9 +20,9 @@ namespace xd
 			{
 			}
 
-			function(const luabind::object& obj, const T& default)
+			function(const luabind::object& obj, const T& default_)
 				: m_func(obj)
-				, m_default(default)
+				, m_default(default_)
 			{
 			}
 
