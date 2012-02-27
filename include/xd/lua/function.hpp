@@ -2,7 +2,7 @@
 #define H_XD_LUA_FUNCTION
 
 #include <xd/config.hpp>
-#include <xd/lua/common.hpp>
+#include <xd/lua/config.hpp>
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 #include <boost/optional.hpp>

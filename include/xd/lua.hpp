@@ -1,7 +1,7 @@
 #ifndef H_XD_LUA
 #define H_XD_LUA
 
-#include <xd/lua/common.hpp>
+#include <xd/lua/config.hpp>
 #include <xd/lua/types.hpp>
 #include <xd/lua/exceptions.hpp>
 #include <xd/lua/virtual_machine.hpp>

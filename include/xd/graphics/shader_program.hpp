@@ -1,11 +1,11 @@
 #ifndef H_XD_GRAPHICS_SHADER_PROGRAM
 #define H_XD_GRAPHICS_SHADER_PROGRAM
 
+#include <xd/config.hpp>
 #include <xd/vendor/glew/glew.h>
 #include <xd/vendor/glm/glm.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
-#include <xd/common.hpp>
 
 #pragma warning(disable: 4275)
 

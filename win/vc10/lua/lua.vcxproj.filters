@@ -56,5 +56,8 @@
     <ClInclude Include="..\..\..\include\xd\lua\detail\iterate_function_call.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\lua\config.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

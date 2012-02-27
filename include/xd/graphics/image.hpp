@@ -1,11 +1,11 @@
 #ifndef H_XD_GRAPHICS_IMAGE
 #define H_XD_GRAPHICS_IMAGE
 
+#include <xd/config.hpp>
+#include <xd/ref_counted.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
 #include <memory>
-#include <xd/common.hpp>
-#include <xd/ref_counted.hpp>
 
 #ifndef XD_STATIC
 // disable warning about boost::noncopyable not being dll-exportable

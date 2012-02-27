@@ -1,15 +1,14 @@
 #ifndef H_XD_LUA_VIRTUAL_MACHINE
 #define H_XD_LUA_VIRTUAL_MACHINE
 
-#include <string>
-#include <boost/noncopyable.hpp>
-#include <xd/common.hpp>
-#include <xd/lua/common.hpp>
-#include <xd/lua/script.hpp>
+#include <xd/config.hpp>
+#include <xd/lua/config.hpp>
 #include <xd/lua/types.hpp>
 #include <xd/lua/exceptions.hpp>
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
+#include <boost/noncopyable.hpp>
+#include <string>
 
 namespace xd
 {

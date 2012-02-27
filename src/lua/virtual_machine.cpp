@@ -1,5 +1,5 @@
+#include <xd/config.hpp>
 #include <xd/system.hpp>
-#include <xd/common.hpp>
 #include <xd/lua.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>

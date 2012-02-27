@@ -1,11 +1,11 @@
 #ifndef H_XD_SYSTEM_INPUT
 #define H_XD_SYSTEM_INPUT
 
-#include <string>
+#include <xd/config.hpp>
+#include <xd/types.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/optional.hpp>
-#include <xd/common.hpp>
-#include <xd/types.hpp>
+#include <string>
 
 namespace xd
 {

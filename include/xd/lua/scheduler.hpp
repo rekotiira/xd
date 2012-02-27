@@ -2,9 +2,8 @@
 #define H_XD_LUA_SCHEDULER
 
 #include <xd/config.hpp>
-#include <xd/lua/common.hpp>
+#include <xd/lua/config.hpp>
 #include <xd/lua/types.hpp>
-#include <xd/lua/script.hpp>
 #include <xd/lua/virtual_machine.hpp>
 #include <xd/lua/scheduler_task.hpp>
 #include <boost/noncopyable.hpp>

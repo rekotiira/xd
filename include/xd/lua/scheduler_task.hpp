@@ -1,9 +1,9 @@
 #ifndef H_XD_LUA_SCHEDULER_TASK
 #define H_XD_LUA_SCHEDULER_TASK
 
-#include <xd/common.hpp>
+#include <xd/config.hpp>
 #include <xd/ref_counted.hpp>
-#include <xd/lua/common.hpp>
+#include <xd/lua/config.hpp>
 #include <xd/lua/scheduler_task.hpp>
 #include <boost/any.hpp>
 #include <memory>

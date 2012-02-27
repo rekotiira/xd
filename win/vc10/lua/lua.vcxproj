@@ -93,6 +93,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\xd\lua.hpp" />
     <ClInclude Include="..\..\..\include\xd\lua\common.hpp" />
+    <ClInclude Include="..\..\..\include\xd\lua\config.hpp" />
     <ClInclude Include="..\..\..\include\xd\lua\detail\iterate_function_call.hpp" />
     <ClInclude Include="..\..\..\include\xd\lua\detail\iterate_scheduler_yield.hpp" />
     <ClInclude Include="..\..\..\include\xd\lua\exceptions.hpp" />

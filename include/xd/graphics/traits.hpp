@@ -1,8 +1,8 @@
 #ifndef H_XD_GRAPHICS_TRAITS
 #define H_XD_GRAPHICS_TRAITS
 
+#include <xd/config.hpp>
 #include <xd/vendor/glew/glew.h>
-#include <xd/common.hpp>
 #include <boost/noncopyable.hpp>
 #include <unordered_map>
 #include <string>
