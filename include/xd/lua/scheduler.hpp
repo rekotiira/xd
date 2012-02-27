@@ -6,12 +6,16 @@
 #include <xd/lua/types.hpp>
 #include <xd/lua/virtual_machine.hpp>
 #include <xd/lua/scheduler_task.hpp>
+#include <boost/config.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/ref.hpp>
-#include <boost/preprocessor/iteration/iterate.hpp>
 #include <lua.hpp>
 #include <list>
 #include <type_traits>
+
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#include <boost/preprocessor/iteration/iterate.hpp>
+#endif
 
 namespace xd
 {
@@ -157,11 +161,19 @@ namespace xd
 				yield(new detail::callback_task_result(f));
 			}
 
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+			template <typename Task, typename... Args>
+			void yield(Args&&... args)
+			{
+				yield(xd::lua::scheduler_task::ptr(new Task(std::forward<Args>(args)...)));
+			}
+#else
 			// generate convenience yield functions that allow to construct task in-place
 			// i.e. scheduler.yield<my_task>(param1, param2)
 			// maximum of XD_MAX_ARITY parameters supported
 			#define BOOST_PP_ITERATION_PARAMS_1 (3, (0, XD_MAX_ARITY, <xd/lua/detail/iterate_scheduler_yield.hpp>))
 			#include BOOST_PP_ITERATE()
+#endif
 
 			// a convenience function for registering a yielding, optionally stateful,
 			// C++ function to lua. By specifying module you can export the function
