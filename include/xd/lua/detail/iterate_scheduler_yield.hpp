@@ -1,5 +1,5 @@
 #if !BOOST_PP_IS_ITERATING
-#	error Do not include factory_call.hpp directly
+#	error "do not include this file directly"
 #endif
 
 #include <utility>
