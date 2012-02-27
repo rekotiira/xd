@@ -10,16 +10,14 @@ the code is being tested on Visual C++ 2011, LLVM Clang 3.0 and G++ 4.6. Some fe
 templates are used when available, but alternative code is provided for platforms that do not yet support them.
 
 For graphics XD uses OpenGL. It is designed towards the new programmable OpenGL 3.x API, and does not use the
-deprecated fixed-function OpenGL API. However XD does not require OpenGL 3, you can use it with OpenGL 2
-applications as well. However some features of the framework might require features that are not available
-in older OpenGL versions, but the framework will use corresponding extensions on older hardware if possible.
+deprecated fixed-function OpenGL API. However XD does not require OpenGL 3, you can use it with OpenGL 2 applications as well. However some features of the framework might require features that are not available in older OpenGL versions, but the framework will use corresponding extensions on older hardware if possible.
 
 Currently XD has the following libraries: system, graphics, audio, lua.
 
 Additionally there's also a plenty of header-only tools that can be found in the include folder.
 
 Some of the features XD supports:
-- Window handling (window creation, specifying ogl context)
+- Window handling (window creation, closing, etc.)
 - Input handling (keyboard and mouse is supported at the moment, supports querying and callbacks)
 - Input filtering (can register callbacks based on filter such as the input device used, or modifier keys)
 - Virtual keys (maps physical key to a name, making it easy to remap keys or assign multiple keys per action)
@@ -63,6 +61,8 @@ or build XD yourself, you will require these libraries:
 - utf8-cpp (this is header-only library that is included in the vendor folder of xd)
 - sfml_audio (and its dependancies if linking statically)
 - DevIL (and its dependancies if linking statically)
-- freetype2 
 - glew
 - glfw
+- freetype2
+- lua
+- luabind
