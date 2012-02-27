@@ -1,16 +1,10 @@
-XD is a framework/library specifically aimed for writing games, and hence goes beyond most multimedia libraries
-like SDL and SFML and provides you tools that makes writing games easier and faster.
+XD is a framework/library specifically aimed for writing games, and hence goes beyond most multimedia libraries like SDL and SFML and provides you tools that makes writing games easier and faster.
 
-It is cross-platform and is developed on Windows and OS X, but it'll also compile on variety of UNIX systems.
-The officially supported platforms will at least be Windows, OS X and Linux. Due to the modular design of the
-framework you can easily just use parts of the framework if you don't need the whole thing.
+It is cross-platform and is developed on Windows and OS X, but it'll also compile on variety of UNIX systems. The officially supported platforms will at least be Windows, OS X and Linux. Due to the modular design of the framework you can easily just use parts of the framework if you don't need the whole thing.
 
-XD is written in C++11, but only uses C++11 features that are available in recent major compilers. Currently
-the code is being tested on Visual C++ 2011, LLVM Clang 3.0 and G++ 4.6. Some features such as variadic
-templates are used when available, but alternative code is provided for platforms that do not yet support them.
+XD is written in C++11, but only uses C++11 features that are available in recent major compilers. Currently the code is being tested on Visual C++ 2011, LLVM Clang 3.0 and G++ 4.6. Some features such as variadic templates are used when available, but alternative code is provided for platforms that do not yet support them.
 
-For graphics XD uses OpenGL. It is designed towards the new programmable OpenGL 3.x API, and does not use the
-deprecated fixed-function OpenGL API. However XD does not require OpenGL 3, you can use it with OpenGL 2 applications as well. However some features of the framework might require features that are not available in older OpenGL versions, but the framework will use corresponding extensions on older hardware if possible.
+For graphics XD uses OpenGL. It is designed towards the new programmable OpenGL 3.x API, and does not use the deprecated fixed-function OpenGL API. However XD does not require OpenGL 3, you can use it with OpenGL 2 applications as well. However some features of the framework might require features that are not available in older OpenGL versions, but the framework will use corresponding extensions on older hardware if possible.
 
 Currently XD has the following libraries: system, graphics, audio, lua.
 
