@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\xd\common.hpp" />
+    <ClInclude Include="..\..\..\include\xd\config.hpp" />
     <ClInclude Include="..\..\..\include\xd\detail\iterate_create.hpp" />
     <ClInclude Include="..\..\..\include\xd\detail\iterate_factory_create.hpp" />
     <ClInclude Include="..\..\..\include\xd\entity.hpp" />

@@ -1,6 +1,7 @@
 #ifndef H_XD_LUA_SCHEDULER
 #define H_XD_LUA_SCHEDULER
 
+#include <xd/config.hpp>
 #include <xd/lua/common.hpp>
 #include <xd/lua/types.hpp>
 #include <xd/lua/script.hpp>
@@ -8,6 +9,7 @@
 #include <xd/lua/scheduler_task.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/ref.hpp>
+#include <boost/preprocessor/iteration/iterate.hpp>
 #include <lua.hpp>
 #include <list>
 #include <type_traits>
@@ -158,8 +160,8 @@ namespace xd
 
 			// generate convenience yield functions that allow to construct task in-place
 			// i.e. scheduler.yield<my_task>(param1, param2)
-			// maximum of 10 parameters supported
-			#define BOOST_PP_ITERATION_PARAMS_1 (3, (0, 10, <xd/lua/detail/iterate_scheduler_yield.hpp>))
+			// maximum of XD_MAX_ARITY parameters supported
+			#define BOOST_PP_ITERATION_PARAMS_1 (3, (0, XD_MAX_ARITY, <xd/lua/detail/iterate_scheduler_yield.hpp>))
 			#include BOOST_PP_ITERATE()
 
 			// a convenience function for registering a yielding, optionally stateful,

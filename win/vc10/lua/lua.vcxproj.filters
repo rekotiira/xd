@@ -50,5 +50,11 @@
     <ClInclude Include="..\..\..\include\xd\lua\detail\iterate_scheduler_yield.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\lua\function.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\lua\detail\iterate_function_call.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

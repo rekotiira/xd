@@ -53,5 +53,8 @@
     <ClInclude Include="..\..\..\include\xd\detail\iterate_create.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\config.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
