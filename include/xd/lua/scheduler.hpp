@@ -156,6 +156,12 @@ namespace xd
 				yield(new detail::callback_task_result(f));
 			}
 
+			// generate convenience yield functions that allow to construct task in-place
+			// i.e. scheduler.yield<my_task>(param1, param2)
+			// maximum of 10 parameters supported
+			#define BOOST_PP_ITERATION_PARAMS_1 (3, (0, 10, <xd/lua/detail/iterate_scheduler_yield.hpp>))
+			#include BOOST_PP_ITERATE()
+
 			// a convenience function for registering a yielding, optionally stateful,
 			// C++ function to lua. By specifying module you can export the function
 			// in a given lua table

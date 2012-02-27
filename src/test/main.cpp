@@ -63,13 +63,14 @@ struct wait
 	void operator()(int secs) const
 	{
 		std::time_t start = std::time(0);
-		return scheduler.yield([secs, start](xd::lua::scheduler_task_result& result) {
+		/*return scheduler.yield([secs, start](xd::lua::scheduler_task_result& result) {
 			return ((std::time(0) - start) >= secs);
-		});
-		//return scheduler.yield(wait_task(secs));
+		});*/
+		return scheduler.yield<wait_task>(secs);
 	}
 };
 
+/*
 void wait(xd::lua::scheduler& scheduler, int secs)
 {
 	std::time_t start = std::time(0);
@@ -77,6 +78,7 @@ void wait(xd::lua::scheduler& scheduler, int secs)
 		return ((std::time(0) - start) >= secs);
 	});
 }
+*/
 
 /*
 void input(std::string message)
@@ -95,15 +97,24 @@ void input(std::string message)
 }
 */
 
+#include <xd/factory.hpp>
+
+struct foo
+{
+	typedef std::shared_ptr<foo> ptr;
+};
+
 int main(int argc, char *argv[])
 {
-	/*try
+	auto x = xd::create<foo>();
+
+	try
 	{
 		xd::lua::virtual_machine vm;
 		vm.load_library();
 
 		xd::lua::scheduler scheduler(vm);
-		//scheduler.register_function<void (int)>("wait", wait(scheduler));
+		scheduler.register_function<void (int)>("wait", wait(scheduler));
 
 		scheduler.start(vm.load_file("test.lua"));
 		while (scheduler.pending_tasks() > 0) {
@@ -115,7 +126,7 @@ int main(int argc, char *argv[])
 		std::cout << e.what() << std::endl;
 	} catch (...) {
 	}
-	return 0;*/
+	return 0;
 
 	try {
 		test my_app;

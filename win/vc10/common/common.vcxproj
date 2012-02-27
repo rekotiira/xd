@@ -80,9 +80,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\xd\common.hpp" />
+    <ClInclude Include="..\..\..\include\xd\detail\iterate_create.hpp" />
+    <ClInclude Include="..\..\..\include\xd\detail\iterate_factory_create.hpp" />
     <ClInclude Include="..\..\..\include\xd\entity.hpp" />
     <ClInclude Include="..\..\..\include\xd\event_bus.hpp" />
     <ClInclude Include="..\..\..\include\xd\exception.hpp" />
+    <ClInclude Include="..\..\..\include\xd\factory.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics.hpp" />
     <ClInclude Include="..\..\..\include\xd\lua.hpp" />
     <ClInclude Include="..\..\..\include\xd\ref_counted.hpp" />

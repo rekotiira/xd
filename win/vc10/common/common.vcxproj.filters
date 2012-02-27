@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Header Files\detail">
+      <UniqueIdentifier>{819a0cd9-2a89-4638-a34b-73952c034924}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -40,6 +43,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\xd\types.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\factory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\detail\iterate_factory_create.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\detail\iterate_create.hpp">
+      <Filter>Header Files\detail</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
