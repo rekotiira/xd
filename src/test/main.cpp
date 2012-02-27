@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <xd/common.hpp>
 #include "test.h"
 
 #include <xd/entity.hpp>
