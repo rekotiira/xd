@@ -98,9 +98,13 @@ void input(std::string message)
 
 #include <xd/factory.hpp>
 
-struct foo
+class foo
 {
+public:
 	typedef std::shared_ptr<foo> ptr;
+private:
+	foo() {}
+	friend class xd::factory;
 };
 
 int main(int argc, char *argv[])
