@@ -7,3 +7,10 @@
 /win/vc10/system/Release
 /win/vc10/lua/Release
 /win/vc10/test/test.lua
+/win/vc10/audio/Release
+/win/vc10/graphics/Debug
+/win/vc10/audio/Debug
+/win/vc10/lua/Debug
+/win/vc10/test/Debug
+/win/vc10/common/Debug
+/win/vc10/system/Debug

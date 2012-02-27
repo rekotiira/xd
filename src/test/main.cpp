@@ -1,13 +1,12 @@
+#include "test.h"
+#include <xd/factory.hpp>
+#include <xd/entity.hpp>
+#include <xd/audio/music.hpp>
+#include <xd/lua.hpp>
+#include <luabind/tag_function.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "test.h"
-
-#include <xd/entity.hpp>
-#include <iostream>
-
-#include <xd/lua.hpp>
-#include <luabind/tag_function.hpp>
 
 class my_data
 {
@@ -107,11 +106,14 @@ private:
 	friend class xd::factory;
 };
 
+struct bar : xd::ref_counted
+{
+	typedef boost::intrusive_ptr<bar> ptr;
+};
+
 int main(int argc, char *argv[])
 {
-	auto x = xd::create<foo>();
-
-	try
+	/*try
 	{
 		xd::lua::virtual_machine vm;
 		vm.load_library();
@@ -129,9 +131,13 @@ int main(int argc, char *argv[])
 		std::cout << e.what() << std::endl;
 	} catch (...) {
 	}
-	return 0;
+	return 0;*/
 
 	try {
+		auto song = xd::create<xd::music>("song.ogg");
+		song->play();
+		song->set_volume(50);
+
 		test my_app;
 
 		my_entity e(my_app);

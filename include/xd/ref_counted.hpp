@@ -1,6 +1,7 @@
 #ifndef H_XD_REF_COUNTED
 #define H_XD_REF_COUNTED
 
+#include <xd/config.hpp>
 #include <boost/intrusive_ptr.hpp>
 
 namespace xd
@@ -9,6 +10,11 @@ namespace xd
 	{
 	public:
 		ref_counted()
+			: m_ref_count(0)
+		{
+		}
+
+		ref_counted(const ref_counted&)
 			: m_ref_count(0)
 		{
 		}

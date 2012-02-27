@@ -17,9 +17,6 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\xd\common.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\xd\entity.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,6 +51,9 @@
       <Filter>Header Files\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\xd\config.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\audio.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

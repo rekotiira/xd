@@ -11,14 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C5EAE7BE-E161-48B8-9D3F-EBFC7D8AC75A}</ProjectGuid>
+    <ProjectGuid>{468BB425-EF63-4FE2-805F-DBBF96C943A1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>lua</RootNamespace>
-    <ProjectName>lua</ProjectName>
+    <RootNamespace>audio</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -39,15 +38,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>xd_$(ProjectName)</TargetName>
-    <IncludePath>$(SolutionDir)..\..\include;$(IncludePath)</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
     <TargetName>xd_$(ProjectName)</TargetName>
     <IncludePath>$(SolutionDir)..\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
-    <LinkIncremental>
-    </LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,7 +51,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;AUDIO_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -70,37 +66,24 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;XD_LUA_EXPORT;LUA_LIB;LUA_BUILD_AS_DLL;LUABIND_DYNAMIC_LINK;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalOptions>/wd4251 /wd4275 %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XD_EXPORT;SFML_STATIC</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>lua.lib;luabind.lib;xd_system.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
+      <AdditionalDependencies>sfml-audio-s.lib;sfml-system-s.lib;OpenAL32.lib;sndfile.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="exports.def" />
-    <None Include="ReadMe.txt" />
+    <ClInclude Include="..\..\..\include\xd\audio\exceptions.hpp" />
+    <ClInclude Include="..\..\..\include\xd\audio\music.hpp" />
+    <ClInclude Include="..\..\..\include\xd\audio\sound.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\lua\scheduler.cpp" />
-    <ClCompile Include="..\..\..\src\lua\virtual_machine.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\include\xd\lua.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\config.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\detail\iterate_function_call.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\detail\iterate_scheduler_yield.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\exceptions.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\function.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\scheduler.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\scheduler_task.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\types.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua\virtual_machine.hpp" />
+    <ClCompile Include="..\..\..\src\audio\music.cpp" />
+    <ClCompile Include="..\..\..\src\audio\sound.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

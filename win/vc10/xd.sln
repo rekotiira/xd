@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "system", "system\system.vcxproj", "{7CD9E711-43D4-4D5C-B53C-1FBD82816BFE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphics", "graphics\graphics.vcxproj", "{31797ADA-202D-4664-904E-AD94832A98FB}"
@@ -16,6 +16,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "common\common.vcxproj", "{B959AC85-FA1A-42C4-9F90-61A1901A9915}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "lua\lua.vcxproj", "{C5EAE7BE-E161-48B8-9D3F-EBFC7D8AC75A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio", "audio\audio.vcxproj", "{468BB425-EF63-4FE2-805F-DBBF96C943A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{C5EAE7BE-E161-48B8-9D3F-EBFC7D8AC75A}.Debug|Win32.Build.0 = Debug|Win32
 		{C5EAE7BE-E161-48B8-9D3F-EBFC7D8AC75A}.Release|Win32.ActiveCfg = Release|Win32
 		{C5EAE7BE-E161-48B8-9D3F-EBFC7D8AC75A}.Release|Win32.Build.0 = Release|Win32
+		{468BB425-EF63-4FE2-805F-DBBF96C943A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{468BB425-EF63-4FE2-805F-DBBF96C943A1}.Debug|Win32.Build.0 = Debug|Win32
+		{468BB425-EF63-4FE2-805F-DBBF96C943A1}.Release|Win32.ActiveCfg = Release|Win32
+		{468BB425-EF63-4FE2-805F-DBBF96C943A1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
