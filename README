@@ -48,7 +48,7 @@ Features that are planned or being worked on:
 - Finish binding rest of the XD API to Lua
 - Generic scene graph (scene/entity structuring/ordering)
 - Joystick and gamepad support
-- Support for mouse move event callback (possibility figure a way to plug it to the virtual input system)
+- Support for mouse move event callback (possibly figure a way to plug it to the virtual input system)
 - Configuration files (loading and saving)
 - Support for indexed arrays in vertex_batch
 - Support for loading resources from other sources than files (i.e. memory)
@@ -68,8 +68,8 @@ Features that might be implemented in future:
 - Recording audio
 
 XD depends on some external libraries. When at more complete stage, XD will ship with a single prebuilt dynamic library
-that also links all the dependancies in it, making XD easy to use and deploy. But if you wish to build XD statically,
-or build XD yourself, you will require these libraries:
+that also links all the dependancies in it, making XD easy to use and deploy. But if you wish to link XD statically,
+or build XD yourself, you will need these libraries:
 
 - boost (this is required even if you use the prebuilt dynamic library)
 - glm (this is header-only library that is included in the vendor folder of xd)

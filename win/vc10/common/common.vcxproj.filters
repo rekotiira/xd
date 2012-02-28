@@ -56,5 +56,8 @@
     <ClInclude Include="..\..\..\include\xd\audio.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\detail\entity.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

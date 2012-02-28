@@ -2,7 +2,7 @@
 #define H_XD_GRAPHICS_VERTEX_BATCH
 
 #include <boost/noncopyable.hpp>
-#include <xd/graphics/traits.hpp>
+#include <xd/graphics/vertex_traits.hpp>
 
 namespace xd
 {
@@ -73,8 +73,8 @@ namespace xd
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
 			// enable used vertex attribs
-			for (vertex_traits::iterator i = m_traits.begin(); i != m_traits.end(); ++i) {
-				glVertexAttribPointer(i->first, i->second.size, i->second.type, i->second.normalized, m_traits.vertex_size, reinterpret_cast<void*>(i->second.offset));
+			for (auto i = m_traits.m_attr_traits.begin(); i != m_traits.m_attr_traits.end(); ++i) {
+				glVertexAttribPointer(i->first, i->second.size, i->second.type, i->second.normalized, i->second.stride, i->second.offset);
 				glEnableVertexAttribArray(i->first);
 			}
 
@@ -82,7 +82,7 @@ namespace xd
 			glDrawArrays(m_draw_mode, begin, count);
 
 			// disable used vertex attribs
-			for (vertex_traits::iterator i = m_traits.begin(); i != m_traits.end(); ++i) {
+			for (auto i = m_traits.m_attr_traits.begin(); i != m_traits.m_attr_traits.end(); ++i) {
 				glDisableVertexAttribArray(i->first);
 			}
 

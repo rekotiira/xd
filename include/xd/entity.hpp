@@ -1,6 +1,8 @@
 #ifndef H_XD_ENTITY
 #define H_XD_ENTITY
 
+#include <xd/detail/entity.hpp>
+
 #include <boost/any.hpp>
 #include <unordered_map>
 #include <functional>
@@ -11,67 +13,8 @@
 #include <xd/ref_counted.hpp>
 #include <xd/event_bus.hpp>
 
-namespace xd {
-    
-	namespace detail
-	{
-		template <typename T>
-		class component_base : public xd::ref_counted
-		{
-		public:
-			virtual ~component_base() {}
-		private:
-			friend T;
-			virtual void init(T&) {}
-		};
-
-		template <typename T>
-		class logic_component : public virtual component_base<T>
-		{
-		public:
-			typedef boost::intrusive_ptr<detail::logic_component<T>> ptr;
-		private:
-			friend T;
-			virtual void update(T&) = 0;
-		};
-        
-		template <typename T>
-		class render_component : public virtual component_base<T>
-		{
-		public:
-			typedef boost::intrusive_ptr<detail::render_component<T>> ptr;
-		private:
-			friend T;
-			virtual void render(T&) = 0;
-		};
-        
-		template <typename T>
-		class component : public logic_component<T>, public render_component<T>
-		{
-		public:
-			typedef boost::intrusive_ptr<detail::component<T>> ptr;
-		};
-
-		/*template <typename C, typename T>
-		T first_argument_helper(bool (C::*callback)(const T&));
-		
-		template <typename C, typename T>
-		T first_argument_helper(bool (C::*callback)(const T&) const);
-
-		template <typename C>
-		struct first_argument
-		{
-			typedef decltype(first_argument_helper(&C::operator())) type;
-		};*/
-
-		// used to disable template argument deduction
-		template <typename T>
-		struct identity
-		{
-			typedef T type;
-		};
-	}
-    
+namespace xd
+{
 	template <typename T>
 	class logic_component : public detail::logic_component<T>
 	{

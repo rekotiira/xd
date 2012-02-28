@@ -180,3 +180,36 @@ xd::text_shader::text_shader()
 	bind_attrib("vTexCoords", xd::VERTEX_ATTR_TEXTURE);
 	link();
 }
+
+xd::sprite_shader::sprite_shader()
+{
+	static const char *vertex_shader_src =
+		"#version 110\n"
+		"uniform mat4 mvpMatrix;"
+		"uniform vec2 vPosition;"
+		"attribute vec4 vVertex;"
+		"attribute vec2 vTexCoords;"
+		"varying vec2 vVaryingTexCoords;"
+		"void main(void)"
+		"{"
+		"	vVaryingTexCoords = vTexCoords;"
+		"	gl_Position = mvpMatrix * (vVertex + vec4(vPosition.x, vPosition.y, 0, 0));"
+		"}";
+
+	static const char *fragment_shader_src =
+		"#version 110\n"
+		"uniform vec4 vColor;"
+		"uniform sampler2D colorMap;"
+		"varying vec2 vVaryingTexCoords;"
+		"void main(void)"
+		"{"
+		"	gl_FragColor.rgb = vColor.rgb;"
+		"	gl_FragColor.a = vColor.a * texture2D(colorMap, vVaryingTexCoords.st).r;"
+		"}";
+
+	attach(GL_VERTEX_SHADER, vertex_shader_src);
+	attach(GL_FRAGMENT_SHADER, fragment_shader_src);
+	bind_attrib("vVertex", xd::VERTEX_ATTR_POSITION);
+	bind_attrib("vTexCoords", xd::VERTEX_ATTR_TEXTURE);
+	link();
+}

@@ -39,6 +39,12 @@ namespace xd
 	public:
 		text_shader();
 	};
+
+	class XD_API sprite_shader : public shader_program
+	{
+	public:
+		sprite_shader();
+	};
 }
 
 #endif

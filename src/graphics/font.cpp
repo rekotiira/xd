@@ -17,30 +17,13 @@ namespace xd { namespace detail { namespace font {
 		glm::vec2 tex;
 	};
 
-	struct vertex_traits : public xd::vertex_traits
+	struct vertex_traits : public xd::vertex_traits<vertex>
 	{
 		vertex_traits()
 		{
-			// we have XY position
-			vertex_attr_traits pos;
-			pos.type = GL_FLOAT;
-			pos.size = 2;
-			pos.offset = 0;
-			pos.normalized = GL_FALSE;
-
-			// and texture coordinates
-			vertex_attr_traits tex;
-			tex.type = GL_FLOAT;
-			tex.size = 2;
-			tex.offset = sizeof(glm::vec2);
-			tex.normalized = GL_FALSE;
-
-			// add the traits to the vertex
-			add_attr_traits(VERTEX_ATTR_POSITION, pos);
-			add_attr_traits(VERTEX_ATTR_TEXTURE, tex);
-
-			// set the size of the vertex
-			vertex_size = sizeof(vertex);
+			// bind vertex attribs
+			bind_attr_traits(VERTEX_ATTR_POSITION, &vertex::pos);
+			bind_attr_traits(VERTEX_ATTR_TEXTURE, &vertex::tex);
 		}
 	};
 

@@ -93,6 +93,12 @@
     <ClCompile Include="..\..\..\src\graphics\text_formatter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\xd\graphics\detail\font.hpp" />
+    <ClInclude Include="..\..\..\include\xd\graphics\detail\image.hpp" />
+    <ClInclude Include="..\..\..\include\xd\graphics\detail\iterate_render.hpp" />
+    <ClInclude Include="..\..\..\include\xd\graphics\detail\sprite_batch.hpp" />
+    <ClInclude Include="..\..\..\include\xd\graphics\detail\text_formatter.hpp" />
+    <ClInclude Include="..\..\..\include\xd\graphics\detail\vertex_traits.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\exceptions.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\font.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\image.hpp" />
@@ -103,11 +109,11 @@
     <ClInclude Include="..\..\..\include\xd\graphics\stock_text_formatter.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\texture.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\text_formatter.hpp" />
-    <ClInclude Include="..\..\..\include\xd\graphics\traits.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\transform_geometry.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\types.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\utility.hpp" />
     <ClInclude Include="..\..\..\include\xd\graphics\vertex_batch.hpp" />
+    <ClInclude Include="..\..\..\include\xd\graphics\vertex_traits.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

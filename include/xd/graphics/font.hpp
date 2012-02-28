@@ -1,6 +1,8 @@
 #ifndef H_XD_GRAPHICS_FONT
 #define H_XD_GRAPHICS_FONT
 
+#include <xd/graphics/detail/font.hpp>
+
 #include <xd/vendor/glew/glew.h>
 #include <xd/vendor/glm/glm.hpp>
 #include <boost/noncopyable.hpp>
@@ -66,13 +68,6 @@ namespace xd
 		boost::optional<font_shadow> shadow;
 		boost::optional<font_outline> outline;
 	};
-
-	namespace detail { namespace font {
-
-		struct glyph;
-		struct face;
-
-	} }
 
 	// font class
 	class XD_API font : public xd::ref_counted, public boost::noncopyable

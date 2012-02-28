@@ -1,6 +1,8 @@
 #ifndef H_XD_GRAPHICS_IMAGE
 #define H_XD_GRAPHICS_IMAGE
 
+#include <xd/graphics/detail/image.hpp>
+
 #include <xd/config.hpp>
 #include <xd/ref_counted.hpp>
 #include <boost/noncopyable.hpp>
@@ -15,13 +17,6 @@
 
 namespace xd
 {
-	namespace detail { namespace image {
-
-		struct handle;
-		typedef std::shared_ptr<handle> handle_ptr;
-
-	} }
-
 	class XD_API image : public xd::ref_counted, public boost::noncopyable
 	{
 	public:

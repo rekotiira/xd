@@ -14,10 +14,10 @@
 #include <xd/graphics/stock_text_formatter.hpp>
 #include <xd/graphics/text_formatter.hpp>
 #include <xd/graphics/texture.hpp>
-#include <xd/graphics/traits.hpp>
 #include <xd/graphics/transform_geometry.hpp>
 #include <xd/graphics/types.hpp>
 #include <xd/graphics/utility.hpp>
+#include <xd/graphics/vertex_traits.hpp>
 #include <xd/graphics/vertex_batch.hpp>
 
 #endif

@@ -3,8 +3,9 @@
 #endif
 
 #include <utility>
+#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 
 #define XD_N BOOST_PP_ITERATION()
