@@ -1,10 +1,18 @@
-XD is a framework/library specifically aimed for writing games, and hence goes beyond most multimedia libraries like SDL and SFML and provides you tools that makes writing games easier and faster.
+XD is a framework/library specifically aimed for writing games, and hence goes beyond most multimedia libraries like SDL and
+SFML and provides you tools that makes writing games easier and faster.
 
-It is cross-platform and is developed on Windows and OS X, but it'll also compile on variety of UNIX systems. The officially supported platforms will at least be Windows, OS X and Linux. Due to the modular design of the framework you can easily just use parts of the framework if you don't need the whole thing.
+It is cross-platform and is developed on Windows and OS X, but it'll also compile on variety of UNIX systems. The officially
+supported platforms will at least be Windows, OS X and Linux. Due to the modular design of the framework you can easily just
+use parts of the framework if you don't need the whole thing.
 
-XD is written in C++11, but only uses C++11 features that are available in recent major compilers. Currently the code is being tested on Visual C++ 2011, LLVM Clang 3.0 and G++ 4.6. Some features such as variadic templates are used when available, but alternative code is provided for platforms that do not yet support them.
+XD is written in C++11, but only uses C++11 features that are available in recent major compilers. Currently the code is
+being tested on Visual C++ 2011, LLVM Clang 3.0 and G++ 4.6. Some features such as variadic templates are used when
+available, but alternative code is provided for platforms that do not yet support them.
 
-For graphics XD uses OpenGL. It is designed towards the new programmable OpenGL 3.x API, and does not use the deprecated fixed-function OpenGL API. However XD does not require OpenGL 3, you can use it with OpenGL 2 applications as well. However some features of the framework might require features that are not available in older OpenGL versions, but the framework will use corresponding extensions on older hardware if possible.
+For graphics XD uses OpenGL. It is designed towards the new programmable OpenGL 3.x API, and does not use the deprecated
+fixed-function OpenGL API. However XD does not require OpenGL 3, you can use it with OpenGL 2 applications as well. However
+some features of the framework might require features that are not available in older OpenGL versions, but the framework
+will use corresponding extensions on older hardware if possible.
 
 Currently XD has the following libraries: system, graphics, audio, lua.
 
@@ -19,7 +27,7 @@ Some of the features XD supports:
 - Matrix stack (supports pushing/popping matrices, translating, scaling and rotating the matrix)
 - Geometry transformation (easy construction of model-view-projection matrix from projection and model-view matrix stacks)
 - Text rendering (supports ttf/otf formats and various effects like coloring, outlines and shadowing)
-- Unicode suport (uses UTF-8 encoding)
+- Unicode support (uses UTF-8 encoding)
 - Text decorators (text formatter allows custom decorators that makes it easy to write your own animations or text effects)
 - Stock text formatter (comes with stock effects such as bold, italic, color, shadow, rainbow and typewriter)
 - Textures (allows you to easily create textures, or load them from image files)
@@ -36,15 +44,28 @@ Some of the features XD supports:
 
 Features that are planned or being worked on:
 - Sprite batching (allows to easily render sprite textures)
-- Scene graph (scene/entity structuring/ordering)
+- Easier way to specify vertex_traits
+- Finish binding rest of the XD API to Lua
+- Generic scene graph (scene/entity structuring/ordering)
 - Joystick and gamepad support
-- Configuration files
+- Support for mouse move event callback (possibility figure a way to plug it to the virtual input system)
+- Configuration files (loading and saving)
+- Support for indexed arrays in vertex_batch
 - Support for loading resources from other sources than files (i.e. memory)
 - Setting loop points for music
+- Positional audio (one listener and multiple emitters, makes it easy to create environmental sounds such as waterfall)
 - Music effects such as fade in/fade out
 - Signed distance field fonts and new effects (and possibly other vectorized graphics)
 - VAO support for vertex_batch
 - Render-to-texture (via FBOs)
+- Saving textures as images (i.e. take screenshot feature)
+- Generic particle system
+
+Features that might be implemented in future:
+- Networking (game networking is big and complex, it might be a good idea to use a library such as RakNet for it instead)
+- Python support
+- JavaScript support
+- Recording audio
 
 XD depends on some external libraries. When at more complete stage, XD will ship with a single prebuilt dynamic library
 that also links all the dependancies in it, making XD easy to use and deploy. But if you wish to build XD statically,
@@ -59,4 +80,4 @@ or build XD yourself, you will require these libraries:
 - glfw
 - freetype2
 - lua
-- luabind
+- luabind (currently xd requires the user to have this always installed, but the plan is to include this in vendor folder)
