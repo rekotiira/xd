@@ -10,36 +10,46 @@
 
 namespace xd
 {
+	enum vertex_attribute_index
+	{
+		VERTEX_POSITION = 0,
+		VERTEX_COLOR,
+		VERTEX_TEXTURE,
+		VERTEX_EXTRA1,
+		VERTEX_EXTRA2,
+		VERTEX_CUSTOM
+	};
+
 	template <typename Vertex, int Size = sizeof(Vertex)>
 	class vertex_traits
 	{
 	public:
 		enum { vertex_size = Size };
 
-		void bind_attr_traits(GLuint attr, GLenum type, GLint size, const GLvoid *offset, GLboolean normalized = GL_FALSE, GLsizei stride = 0)
+		void bind_vertex_attribute(GLuint index, GLenum type, GLint size, const GLvoid *offset, GLboolean normalized = GL_FALSE, GLsizei stride = 0)
 		{
-			detail::vertex_attr_traits traits;
-			traits.type = type;
-			traits.size = size;
-			traits.offset = offset;
-			traits.normalized = normalized;
-			traits.stride = stride;
-			m_attr_traits.insert(std::make_pair(attr, traits));
+			detail::vertex_attribute attrib;
+			attrib.type = type;
+			attrib.size = size;
+			attrib.offset = offset;
+			attrib.normalized = normalized;
+			attrib.stride = stride;
+			m_attribs.insert(std::make_pair(index, attrib));
 		}
 
 		template <typename T, typename R>
-		void bind_attr_traits(GLuint attr, R T::*ptr, GLboolean normalized = GL_FALSE)
+		void bind_vertex_attribute(GLuint index, R T::*ptr, GLboolean normalized = GL_FALSE)
 		{
 			// make sure the types are related
 			static_assert(std::is_same<T, Vertex>::value, "you can't bind a member of unrelated class");
 			// automatically deduce the type, value, offset and stride
-			bind_attr_traits(attr, detail::vertex_attr_trait_type<R>::value, detail::vertex_attr_trait_size<R>::value,
+			bind_vertex_attribute(index, detail::vertex_attribute_type<R>::value, detail::vertex_attribute_size<R>::value,
 				reinterpret_cast<const GLvoid*>(&(static_cast<T*>(nullptr)->*ptr)), normalized, vertex_size);
 		}
 	
 	private:
 		template <typename> friend class vertex_batch;
-		std::unordered_map<GLuint, detail::vertex_attr_traits> m_attr_traits;
+		std::unordered_map<GLuint, detail::vertex_attribute> m_attribs;
 	};
 }
 

@@ -3,14 +3,11 @@
 
 #include <xd/graphics/detail/sprite_batch.hpp>
 
-#include <xd/graphics/vertex_batch.hpp>
-#include <xd/graphics/shader_program.hpp>
 #include <xd/graphics/transform_geometry.hpp>
 #include <xd/graphics/texture.hpp>
 #include <xd/graphics/types.hpp>
 #include <xd/vendor/glm/glm.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/optional.hpp>
 
 #pragma warning(disable: 4275)
 
@@ -29,19 +26,25 @@ namespace xd
 		void draw();
 		
 		void set_scale(float scale);
-		float get_scale();
+		float get_scale() const;
 
-		void add(xd::texture::ptr texture, float x, float y, const glm::vec2& anchor = glm::vec2(0, 0));
-		void add(xd::texture::ptr texture, float x, float y, float rotation, float scale, const glm::vec2& anchor = glm::vec2(0, 0));
-		void add(xd::texture::ptr texture, float x, float y, float rotation, const glm::vec2& scale, const glm::vec2& anchor = glm::vec2(0, 0));
+		void add(const xd::texture::ptr texture, float x, float y,
+			const glm::vec4& color = glm::vec4(1, 1, 1, 1), const glm::vec2& anchor = glm::vec2(0, 0));
+		void add(const xd::texture::ptr texture, float x, float y, float rotation, float scale,
+			const glm::vec4& color = glm::vec4(1, 1, 1, 1), const glm::vec2& anchor = glm::vec2(0, 0));
+		void add(const xd::texture::ptr texture, float x, float y, float rotation, const glm::vec2& scale,
+			const glm::vec4& color = glm::vec4(1, 1, 1, 1), const glm::vec2& anchor = glm::vec2(0, 0));
 
-		/*void add(xd::texture::ptr texture, float x, float y, const xd::rect& src);
-		void add(xd::texture::ptr texture, float x, float y, const xd::rect& src, float rotation, const glm::vec2& anchor, float scale);
-		void add(xd::texture::ptr texture, float x, float y, const xd::rect& src, float rotation, const glm::vec2& anchor, const glm::vec2& scale);*/
+		void add(const xd::texture::ptr texture, const xd::rect& src, float x, float y,
+			const glm::vec4& color = glm::vec4(1, 1, 1, 1), const glm::vec2& anchor = glm::vec2(0, 0));
+		void add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, float rotation, float scale,
+			const glm::vec4& color = glm::vec4(1, 1, 1, 1), const glm::vec2& anchor = glm::vec2(0, 0));
+		void add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, float rotation, const glm::vec2& scale,
+			const glm::vec4& color = glm::vec4(1, 1, 1, 1), const glm::vec2& anchor = glm::vec2(0, 0));
 
 	private:
 		transform_geometry& m_geometry_pipeline;
-		detail::sprite_list *m_sprites;
+		detail::sprite_batch_data *m_data;
 		float m_scale;
 	};
 }

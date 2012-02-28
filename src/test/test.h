@@ -38,10 +38,10 @@ private:
 	my_vertex_batch m_grass_batch, m_edge_batch;
 
 	// textures
-	xd::texture m_grass_texture;
-	xd::texture m_grass_edge_texture;
-	xd::texture m_edge_texture;
-	xd::texture m_mask_texture;
+	xd::texture::ptr m_grass_texture;
+	xd::texture::ptr m_grass_edge_texture;
+	xd::texture::ptr m_edge_texture;
+	xd::texture::ptr m_mask_texture;
 
 	// text rendering stuff
 	xd::stock_text_formatter m_text_formatter;

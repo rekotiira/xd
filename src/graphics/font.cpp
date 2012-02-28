@@ -22,8 +22,8 @@ namespace xd { namespace detail { namespace font {
 		vertex_traits()
 		{
 			// bind vertex attribs
-			bind_attr_traits(VERTEX_ATTR_POSITION, &vertex::pos);
-			bind_attr_traits(VERTEX_ATTR_TEXTURE, &vertex::tex);
+			bind_vertex_attribute(VERTEX_POSITION, &vertex::pos);
+			bind_vertex_attribute(VERTEX_TEXTURE, &vertex::tex);
 		}
 	};
 

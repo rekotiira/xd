@@ -44,17 +44,17 @@ void xd::sound::stop()
 }
 
 
-bool xd::sound::playing()
+bool xd::sound::playing() const
 {
 	return m_handle->sound.GetStatus() == sf::SoundSource::Playing;
 }
 
-bool xd::sound::paused()
+bool xd::sound::paused() const
 {
 	return m_handle->sound.GetStatus() == sf::SoundSource::Paused;
 }
 
-bool xd::sound::stopped()
+bool xd::sound::stopped() const
 {
 	return m_handle->sound.GetStatus() == sf::SoundSource::Stopped;
 }
@@ -84,27 +84,27 @@ void xd::sound::set_loop_point(float time)
 	throw xd::exception("unimplemented");
 }
 
-float xd::sound::get_offset()
+float xd::sound::get_offset() const
 {
 	return m_handle->sound.GetPlayingOffset().AsSeconds();
 }
 
-float xd::sound::get_volume()
+float xd::sound::get_volume() const
 {
 	return m_handle->sound.GetVolume();
 }
 
-float xd::sound::get_pitch()
+float xd::sound::get_pitch() const
 {
 	return m_handle->sound.GetPitch();
 }
 
-bool xd::sound::get_looping()
+bool xd::sound::get_looping() const
 {
 	return m_handle->sound.GetLoop();
 }
 
-float xd::sound::get_loop_point()
+float xd::sound::get_loop_point() const
 {
 	throw xd::exception("unimplemented");
 }

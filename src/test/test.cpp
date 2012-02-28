@@ -1,3 +1,4 @@
+#include <xd/factory.hpp>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -36,10 +37,10 @@ test::test()
 	, m_grass_batch(GL_QUADS)
 	, m_edge_batch(GL_QUADS)
 	, m_font("verdanab.ttf", 12)
-	, m_grass_texture("grass.png")
-	, m_grass_edge_texture("grass_edge.png")
-	, m_edge_texture("edge.png")
-	, m_mask_texture("mask.png", GL_CLAMP, GL_CLAMP)
+	, m_grass_texture(xd::create<xd::texture>("grass.png"))
+	, m_grass_edge_texture(xd::create<xd::texture>("grass_edge.png"))
+	, m_edge_texture(xd::create<xd::texture>("edge.png"))
+	, m_mask_texture(xd::create<xd::texture>("mask.png", GL_CLAMP, GL_CLAMP))
 	, m_hor_animating(false)
 	, m_ver_animating(false)
 	, m_hor_angle(45.0f)
@@ -57,6 +58,12 @@ test::test()
 	// enable multisampling, texturing and depth test
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_TEXTURE_2D);
+
+	// enable blending and alpha test
+	glEnable(GL_BLEND);
+	glEnable(GL_ALPHA_TEST);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glAlphaFunc(GL_GREATER, 0);
 
 	// face culling
 	glEnable(GL_CULL_FACE);
@@ -224,16 +231,10 @@ void test::run()
 		clear();
 
 		// setup orthographic projection for isometric view
-		m_geometry.projection().load(glm::ortho(-320.0f, 320.0f, -240.0f, 240.0f, -999.0f, 999.0f));
+		/*m_geometry.projection().load(glm::ortho(-320.0f, 320.0f, -240.0f, 240.0f, -999.0f, 999.0f));
 
 		// enable depth testing
 		glEnable(GL_DEPTH_TEST);
-
-		// enable blending and alpha test
-		glEnable(GL_BLEND);
-		glEnable(GL_ALPHA_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glAlphaFunc(GL_GREATER, 0);
 
 		// translate and scale
 		m_model_view->identity();
@@ -254,20 +255,31 @@ void test::run()
 			for (int z = 0; z < map_size; z++) {
 				draw_tile(x, z);
 			}
-		}
+		}*/
 
 		// setup orthographic projection for text rendering
 		m_geometry.projection().load(glm::ortho(0.0f, (float)width(), (float)height(), 0.0f, -100.0f, 100.0f));
+		m_model_view->identity();
 
 		// disable depth testing and face culling
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
 
+		// create a sprite batch
+		xd::sprite_batch sprite_batch(m_geometry);
+		// draw a sprite that rotates around its center (texture, x, y, rotation, scale, color, anchor)
+		sprite_batch.add(m_grass_texture, 320, 240, ticks()/1000.0f*45, 1, glm::vec4(1,1,1,1), glm::vec2(0.5,0.5));
+		// draw a partly transparent sprite (texture, x, y, color)
+		sprite_batch.add(m_grass_texture, 240, 240, glm::vec4(1,1,1,0.5));
+		// draw a scaled sprite that is also red (texture, x, y, rotation, scale, color)
+		sprite_batch.add(m_grass_texture, xd::rect(0, 0, 16, 16), 400, 240, 0, 1.5, glm::vec4(1,0,0,1));
+		// draw all of them at same time
+		sprite_batch.draw();
+
 		// alpha testing
 		//glAlphaFunc(GL_GREATER, 0.5f);
 
 		// draw text
-		m_model_view->identity();
 		m_model_view->translate(50, 20, 0);
 		m_model_view->rotate(10, 0, 0, 1);
 		m_model_view->scale(1.2f);

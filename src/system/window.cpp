@@ -165,6 +165,11 @@ int xd::window::height() const
 	return m_height;
 }
 
+int xd::window::ticks() const
+{
+	return m_current_ticks;
+}
+
 int xd::window::delta_ticks() const
 {
 	return m_current_ticks - m_last_ticks;

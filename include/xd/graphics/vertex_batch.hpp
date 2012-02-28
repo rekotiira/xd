@@ -1,16 +1,20 @@
 #ifndef H_XD_GRAPHICS_VERTEX_BATCH
 #define H_XD_GRAPHICS_VERTEX_BATCH
 
-#include <boost/noncopyable.hpp>
+#include <xd/ref_counted.hpp>
 #include <xd/graphics/vertex_traits.hpp>
+#include <boost/noncopyable.hpp>
+#include <boost/intrusive_ptr.hpp>
 
 namespace xd
 {
-	template <typename T>
-	class vertex_batch : public boost::noncopyable
+	template <typename Traits>
+	class vertex_batch : public xd::ref_counted, public boost::noncopyable
 	{
 	public:
-		vertex_batch(GLenum draw_mode = GL_TRIANGLES, const T& traits = T())
+		typedef boost::intrusive_ptr<vertex_batch> ptr;
+
+		vertex_batch(GLenum draw_mode = GL_TRIANGLES, const Traits& traits = Traits())
 			: m_draw_mode(draw_mode)
 			, m_traits(traits)
 			, m_count(0)
@@ -18,7 +22,7 @@ namespace xd
 			init();
 		}
 
-		vertex_batch(const void *data, size_t count, GLenum draw_mode = GL_TRIANGLES, const T& traits = T())
+		vertex_batch(const void *data, size_t count, GLenum draw_mode = GL_TRIANGLES, const Traits& traits = Traits())
 			: m_draw_mode(draw_mode)
 			, m_traits(traits)
 			, m_count(0)
@@ -32,7 +36,7 @@ namespace xd
 			glDeleteBuffers(1, &m_vbo);
 		}
 
-		T get_traits()
+		Traits get_traits()
 		{
 			return m_traits;
 		}
@@ -73,7 +77,7 @@ namespace xd
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
 			// enable used vertex attribs
-			for (auto i = m_traits.m_attr_traits.begin(); i != m_traits.m_attr_traits.end(); ++i) {
+			for (auto i = m_traits.m_attribs.begin(); i != m_traits.m_attribs.end(); ++i) {
 				glVertexAttribPointer(i->first, i->second.size, i->second.type, i->second.normalized, i->second.stride, i->second.offset);
 				glEnableVertexAttribArray(i->first);
 			}
@@ -82,7 +86,7 @@ namespace xd
 			glDrawArrays(m_draw_mode, begin, count);
 
 			// disable used vertex attribs
-			for (auto i = m_traits.m_attr_traits.begin(); i != m_traits.m_attr_traits.end(); ++i) {
+			for (auto i = m_traits.m_attribs.begin(); i != m_traits.m_attribs.end(); ++i) {
 				glDisableVertexAttribArray(i->first);
 			}
 
@@ -91,7 +95,7 @@ namespace xd
 		}
 
 	private:
-		T m_traits;
+		Traits m_traits;
 		GLenum m_draw_mode;
 		GLuint m_vbo;
 		int m_count;

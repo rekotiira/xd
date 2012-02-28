@@ -27,7 +27,7 @@ namespace xd
 		virtual void setup();
 
 		// bind attrib
-		virtual void bind_attrib(const std::string& name, GLuint attr);
+		virtual void bind_attribute(const std::string& name, GLuint attr);
 
 		// bind uniforms
 		virtual void bind_uniform(const std::string& name, int val);

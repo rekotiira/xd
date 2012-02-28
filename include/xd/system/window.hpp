@@ -39,6 +39,7 @@ namespace xd
 		int height() const;
 
 		// ticks stuff
+		int ticks() const;
 		int delta_ticks() const;
 		float delta_time() const;
 		void register_tick_handler(tick_callback_t callback, boost::uint32_t interval);

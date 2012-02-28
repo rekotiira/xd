@@ -15,8 +15,8 @@ struct my_vertex_traits : xd::vertex_traits<my_vertex>
 	my_vertex_traits()
 	{
 		// bind vertex attribs
-		bind_attr_traits(xd::VERTEX_ATTR_POSITION, &my_vertex::pos);
-		bind_attr_traits(xd::VERTEX_ATTR_TEXTURE, &my_vertex::tex);
+		bind_vertex_attribute(xd::VERTEX_POSITION, &my_vertex::pos);
+		bind_vertex_attribute(xd::VERTEX_TEXTURE, &my_vertex::tex);
 	}
 };
 

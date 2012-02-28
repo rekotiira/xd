@@ -28,9 +28,9 @@ namespace xd
 		void pause();
 		void stop();
 
-		bool playing();
-		bool paused();
-		bool stopped();
+		bool playing() const;
+		bool paused() const;
+		bool stopped() const;
 
 		void set_offset(float offset);
 		void set_volume(float volume);
@@ -38,11 +38,11 @@ namespace xd
 		void set_looping(bool looping);
 		void set_loop_point(float time);
 
-		float get_offset();
-		float get_volume();
-		float get_pitch();
-		bool get_looping();
-		float get_loop_point();
+		float get_offset() const;
+		float get_volume() const;
+		float get_pitch() const;
+		bool get_looping() const;
+		float get_loop_point() const;
 
 	private:
 		detail::sound_handle *m_handle;
