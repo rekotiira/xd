@@ -1,10 +1,10 @@
 #ifndef H_XD_GRAPHICS
 #define H_XD_GRAPHICS
 
+#include <xd/glm.hpp>
 #include <xd/vendor/glew/glew.h>
-#include <xd/vendor/glm/glm.hpp>
-#include <xd/vendor/glm/gtc/type_ptr.hpp>
 
+#include <xd/factory.hpp>
 #include <xd/graphics/exceptions.hpp>
 #include <xd/graphics/font.hpp>
 #include <xd/graphics/image.hpp>

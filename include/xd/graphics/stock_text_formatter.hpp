@@ -1,7 +1,7 @@
 #ifndef H_XD_GRAPHICS_STOCK_TEXT_FORMATTER
 #define H_XD_GRAPHICS_STOCK_TEXT_FORMATTER
 
-#include <xd/vendor/glm/glm.hpp>
+#include <xd/glm.hpp>
 #include <string>
 #include <ctime>
 #include <unordered_map>

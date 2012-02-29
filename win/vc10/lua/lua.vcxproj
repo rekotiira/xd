@@ -70,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;XD_LUA_EXPORT;LUA_LIB;LUA_BUILD_AS_DLL;LUABIND_DYNAMIC_LINK;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;XD_LUA_EXPORT;LUA_LIB;LUA_BUILD_AS_DLL;LUABIND_BUILDING;LUABIND_DYNAMIC_LINK;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalOptions>/wd4251 /wd4275 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>

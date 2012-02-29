@@ -57,5 +57,11 @@
       <Filter>Header Files\detail</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\xd\types.hpp" />
+    <ClInclude Include="..\..\..\include\xd\glm.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\detail\iterate_entity_constructor.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

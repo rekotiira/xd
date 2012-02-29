@@ -2,6 +2,7 @@
 #define H_XD_SYSTEM
 
 #include <xd/config.hpp>
+#include <xd/factory.hpp>
 #include <xd/system/input.hpp>
 #include <xd/system/exceptions.hpp>
 #include <xd/system/window.hpp>

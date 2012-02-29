@@ -186,13 +186,14 @@ xd::sprite_shader::sprite_shader()
 	static const char *vertex_shader_src =
 		"#version 110\n"
 		"uniform mat4 mvpMatrix;"
+		"uniform vec4 vPosition;"
 		"attribute vec4 vVertex;"
 		"attribute vec2 vTexCoords;"
 		"varying vec2 vVaryingTexCoords;"
 		"void main(void)"
 		"{"
 		"	vVaryingTexCoords = vTexCoords;"
-		"	gl_Position = mvpMatrix * vVertex;"
+		"	gl_Position = mvpMatrix * (vPosition + vVertex);"
 		"}";
 
 	static const char *fragment_shader_src =

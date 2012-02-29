@@ -19,8 +19,8 @@ void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& tex
 	float start = (float)(clock()/1000 % 1000) / 1000.0f * 2*pi;
 	for (xd::formatted_text::const_iterator i = text.begin(); i != text.end(); ++i) {
 		float pos = sin(start)*height;
-		decorator.push_position(glm::vec2(0, pos));
-		//decorator.push_position(glm::vec2(0, int(pos > 0 ? pos + 0.5f : pos - 0.5f)));
+		decorator.push_position(xd::vec2(0, pos));
+		//decorator.push_position(xd::vec2(0, int(pos > 0 ? pos + 0.5f : pos - 0.5f)));
 		decorator.push_text(*i);
 		decorator.pop_position();
 		start += step;
@@ -77,10 +77,10 @@ test::test()
 	{
 		my_vertex data[4];
 
-		data[0].pos = glm::vec3(-0.5f, 0.0f,  0.5f); data[0].tex = glm::vec2(0, 1);
-		data[1].pos = glm::vec3( 0.5f, 0.0f,  0.5f); data[1].tex = glm::vec2(1, 1);
-		data[2].pos = glm::vec3( 0.5f, 0.0f, -0.5f); data[2].tex = glm::vec2(1, 0);
-		data[3].pos = glm::vec3(-0.5f, 0.0f, -0.5f); data[3].tex = glm::vec2(0, 0);
+		data[0].pos = xd::vec3(-0.5f, 0.0f,  0.5f); data[0].tex = xd::vec2(0, 1);
+		data[1].pos = xd::vec3( 0.5f, 0.0f,  0.5f); data[1].tex = xd::vec2(1, 1);
+		data[2].pos = xd::vec3( 0.5f, 0.0f, -0.5f); data[2].tex = xd::vec2(1, 0);
+		data[3].pos = xd::vec3(-0.5f, 0.0f, -0.5f); data[3].tex = xd::vec2(0, 0);
 
 		m_grass_batch.load(&data[0], 4);
 	}
@@ -89,25 +89,25 @@ test::test()
 	{
 		my_vertex data[16];
 
-		data[0].pos  = glm::vec3(-0.5f,  0.0f,  0.5f); data[0].tex  = glm::vec2(0, 0);
-		data[1].pos  = glm::vec3(-0.5f,  0.0f, -0.5f); data[1].tex  = glm::vec2(1, 0);
-		data[2].pos  = glm::vec3(-0.5f, -1.0f, -0.5f); data[2].tex  = glm::vec2(1, 1);
-		data[3].pos  = glm::vec3(-0.5f, -1.0f,  0.5f); data[3].tex  = glm::vec2(0, 1);
+		data[0].pos  = xd::vec3(-0.5f,  0.0f,  0.5f); data[0].tex  = xd::vec2(0, 0);
+		data[1].pos  = xd::vec3(-0.5f,  0.0f, -0.5f); data[1].tex  = xd::vec2(1, 0);
+		data[2].pos  = xd::vec3(-0.5f, -1.0f, -0.5f); data[2].tex  = xd::vec2(1, 1);
+		data[3].pos  = xd::vec3(-0.5f, -1.0f,  0.5f); data[3].tex  = xd::vec2(0, 1);
 
-		data[4].pos  = glm::vec3( 0.5f,  0.0f, -0.5f); data[4].tex  = glm::vec2(0, 0);
-		data[5].pos  = glm::vec3( 0.5f,  0.0f,  0.5f); data[5].tex  = glm::vec2(1, 0);
-		data[6].pos  = glm::vec3( 0.5f, -1.0f,  0.5f); data[6].tex  = glm::vec2(1, 1);
-		data[7].pos  = glm::vec3( 0.5f, -1.0f, -0.5f); data[7].tex  = glm::vec2(0, 1);
+		data[4].pos  = xd::vec3( 0.5f,  0.0f, -0.5f); data[4].tex  = xd::vec2(0, 0);
+		data[5].pos  = xd::vec3( 0.5f,  0.0f,  0.5f); data[5].tex  = xd::vec2(1, 0);
+		data[6].pos  = xd::vec3( 0.5f, -1.0f,  0.5f); data[6].tex  = xd::vec2(1, 1);
+		data[7].pos  = xd::vec3( 0.5f, -1.0f, -0.5f); data[7].tex  = xd::vec2(0, 1);
 
-		data[8].pos  = glm::vec3(-0.5f,  0.0f, -0.5f); data[8].tex  = glm::vec2(0, 0);
-		data[9].pos  = glm::vec3( 0.5f,  0.0f, -0.5f); data[9].tex  = glm::vec2(1, 0);
-		data[10].pos = glm::vec3( 0.5f, -1.0f, -0.5f); data[10].tex = glm::vec2(1, 1);
-		data[11].pos = glm::vec3(-0.5f, -1.0f, -0.5f); data[11].tex = glm::vec2(0, 1);
+		data[8].pos  = xd::vec3(-0.5f,  0.0f, -0.5f); data[8].tex  = xd::vec2(0, 0);
+		data[9].pos  = xd::vec3( 0.5f,  0.0f, -0.5f); data[9].tex  = xd::vec2(1, 0);
+		data[10].pos = xd::vec3( 0.5f, -1.0f, -0.5f); data[10].tex = xd::vec2(1, 1);
+		data[11].pos = xd::vec3(-0.5f, -1.0f, -0.5f); data[11].tex = xd::vec2(0, 1);
 
-		data[12].pos = glm::vec3( 0.5f,  0.0f,  0.5f); data[12].tex = glm::vec2(0, 0);
-		data[13].pos = glm::vec3(-0.5f,  0.0f,  0.5f); data[13].tex = glm::vec2(1, 0);
-		data[14].pos = glm::vec3(-0.5f, -1.0f,  0.5f); data[14].tex = glm::vec2(1, 1);
-		data[15].pos = glm::vec3( 0.5f, -1.0f,  0.5f); data[15].tex = glm::vec2(0, 1);
+		data[12].pos = xd::vec3( 0.5f,  0.0f,  0.5f); data[12].tex = xd::vec2(0, 0);
+		data[13].pos = xd::vec3(-0.5f,  0.0f,  0.5f); data[13].tex = xd::vec2(1, 0);
+		data[14].pos = xd::vec3(-0.5f, -1.0f,  0.5f); data[14].tex = xd::vec2(1, 1);
+		data[15].pos = xd::vec3( 0.5f, -1.0f,  0.5f); data[15].tex = xd::vec2(0, 1);
 		
 		m_edge_batch.load(&data[0], 16);
 	}
@@ -130,8 +130,8 @@ test::~test()
 void test::draw_text(float x, float y, const std::string& text)
 {
 	xd::font_style style;
-	style.color = glm::vec4(1, 1, 1, 1);
-	style.shadow = xd::font_shadow(1, -1, glm::vec4(0, 0, 0, 1));
+	style.color = xd::vec4(1, 1, 1, 1);
+	style.shadow = xd::font_shadow(1, -1, xd::vec4(0, 0, 0, 1));
 
 	m_model_view->push();
 		m_model_view->translate(x, y, 0);
@@ -227,11 +227,13 @@ void test::run()
 			break;
 		}
 
+		glViewport(0, 0, width(), height());
+
 		// clear screen
 		clear();
 
 		// setup orthographic projection for isometric view
-		/*m_geometry.projection().load(glm::ortho(-320.0f, 320.0f, -240.0f, 240.0f, -999.0f, 999.0f));
+		m_geometry.projection().load(xd::ortho(-320.0f, 320.0f, -240.0f, 240.0f, -999.0f, 999.0f));
 
 		// enable depth testing
 		glEnable(GL_DEPTH_TEST);
@@ -255,10 +257,10 @@ void test::run()
 			for (int z = 0; z < map_size; z++) {
 				draw_tile(x, z);
 			}
-		}*/
+		}
 
 		// setup orthographic projection for text rendering
-		m_geometry.projection().load(glm::ortho(0.0f, (float)width(), (float)height(), 0.0f, -100.0f, 100.0f));
+		m_geometry.projection().load(xd::ortho<float>(0, 640, 480, 0, -100, 100));
 		m_model_view->identity();
 
 		// disable depth testing and face culling
@@ -266,15 +268,15 @@ void test::run()
 		glDisable(GL_CULL_FACE);
 
 		// create a sprite batch
-		xd::sprite_batch sprite_batch(m_geometry);
+		xd::sprite_batch sprite_batch;
 		// draw a sprite that rotates around its center (texture, x, y, rotation, scale, color, anchor)
-		sprite_batch.add(m_grass_texture, 320, 240, ticks()/1000.0f*45, 1, glm::vec4(1,1,1,1), glm::vec2(0.5,0.5));
+		sprite_batch.add(m_grass_texture, 320, 240, ticks()/1000.0f*45, 1, xd::vec4(1,1,1,1), xd::vec2(0.5,0.5));
 		// draw a partly transparent sprite (texture, x, y, color)
-		sprite_batch.add(m_grass_texture, 240, 240, glm::vec4(1,1,1,0.5));
+		sprite_batch.add(m_grass_texture, 240, 240, xd::vec4(1,1,1,0.5));
 		// draw a scaled sprite that is also red (texture, x, y, rotation, scale, color)
-		sprite_batch.add(m_grass_texture, xd::rect(0, 0, 16, 16), 400, 240, 0, 1.5, glm::vec4(1,0,0,1));
+		sprite_batch.add(m_grass_texture, 400, 240, 0, 1.5, xd::vec4(1,0,0,1));
 		// draw all of them at same time
-		sprite_batch.draw();
+		sprite_batch.draw(m_geometry.mvp());
 
 		// alpha testing
 		//glAlphaFunc(GL_GREATER, 0.5f);

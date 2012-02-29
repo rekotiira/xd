@@ -4,18 +4,18 @@
 #include <xd/graphics/detail/font.hpp>
 
 #include <xd/vendor/glew/glew.h>
-#include <xd/vendor/glm/glm.hpp>
-#include <boost/noncopyable.hpp>
-#include <boost/optional.hpp>
-#include <boost/unordered_map.hpp>
-#include <memory>
-#include <unordered_map>
+#include <xd/glm.hpp>
+
 #include <xd/ref_counted.hpp>
 #include <xd/graphics/types.hpp>
 #include <xd/graphics/vertex_batch.hpp>
 #include <xd/graphics/shader_program.hpp>
 #include <xd/graphics/transform_geometry.hpp>
 #include <xd/vendor/utf8.h>
+#include <boost/noncopyable.hpp>
+#include <boost/optional.hpp>
+#include <memory>
+#include <unordered_map>
 
 #ifndef XD_STATIC
 // disable warning about boost::noncopyable not being dll-exportable

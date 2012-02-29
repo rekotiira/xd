@@ -1,7 +1,7 @@
 #ifndef H_XD_GRAPHICS_TYPES
 #define H_XD_GRAPHICS_TYPES
 
-#include <xd/vendor/glm/glm.hpp>
+#include <xd/glm.hpp>
 
 namespace xd
 {
@@ -15,11 +15,15 @@ namespace xd
 			: x(x), y(y), w(w), h(h)
 		{}
 
-		explicit rect(glm::vec2 xy, glm::vec2 wh)
+		explicit rect(const glm::vec2& xy, const glm::vec2& wh)
 			: x(xy.x), y(xy.y), w(wh.x), h(wh.y)
 		{}
 
-		explicit rect(glm::vec4 rect)
+		explicit rect(const glm::vec2& xy, float w, float h)
+			: x(xy.x), y(xy.y), w(w), h(h)
+		{}
+
+		explicit rect(const glm::vec4& rect)
 			: x(rect[0]), y(rect[1]), w(rect[2]), h(rect[3])
 		{}
 
@@ -31,6 +35,17 @@ namespace xd
 			, w(static_cast<float>(w))
 			, h(static_cast<float>(h))
 		{}
+
+		// check if two rects intersect
+		bool intersects(const rect& other)
+		{
+			return (
+				    x < (other.x+other.w) &&
+				(x+w) > other.x           &&
+				    y < (other.y+other.h) &&
+				(y+h) > other.y
+			);
+		}
 
 		float x, y, w, h;
 	};

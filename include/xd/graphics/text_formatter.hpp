@@ -3,6 +3,11 @@
 
 #include <xd/graphics/detail/text_formatter.hpp>
 
+#include <xd/glm.hpp>
+#include <xd/graphics/exceptions.hpp>
+#include <xd/graphics/font.hpp>
+#include <xd/graphics/shader_program.hpp>
+#include <xd/vendor/utf8.h>
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
 #include <boost/noncopyable.hpp>
@@ -12,11 +17,6 @@
 #include <string>
 #include <functional>
 #include <unordered_map>
-#include <xd/vendor/glm/glm.hpp>
-#include <xd/graphics/exceptions.hpp>
-#include <xd/graphics/font.hpp>
-#include <xd/graphics/shader_program.hpp>
-#include <xd/vendor/utf8.h>
 
 #ifndef XD_STATIC
 // disable warnings about nonstandard extension

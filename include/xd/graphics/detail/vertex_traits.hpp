@@ -2,7 +2,7 @@
 #define H_XD_GRAPHICS_DETAIL_VERTEX_TRAITS
 
 #include <xd/vendor/glew/glew.h>
-#include <xd/vendor/glm/glm.hpp>
+#include <xd/glm.hpp>
 #include <type_traits>
 
 namespace xd

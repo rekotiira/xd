@@ -1,4 +1,4 @@
-#include <xd/vendor/glm/gtc/type_ptr.hpp>
+#include <xd/glm.hpp>
 #include <xd/graphics/shader_program.hpp>
 #include <xd/graphics/exceptions.hpp>
 

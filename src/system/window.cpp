@@ -19,7 +19,7 @@ namespace
 	}
 };
 
-xd::window::window(const std::string& title, int width, int height)
+xd::window::window(const std::string& title, int width, int height, const window_options& options)
 	: m_width(width)
 	, m_height(height)
 {
@@ -33,21 +33,25 @@ xd::window::window(const std::string& title, int width, int height)
 		throw xd::window_creation_failed();
 	}
 	
-	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
-	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 4);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 0);
-	
-	if (glfwOpenWindow(m_width, m_height, 8, 8, 8, 8, 24, 0, GLFW_WINDOW) == GL_FALSE) {
+	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, !options.allow_resize);
+	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, options.antialiasing_level);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, options.major_version);
+	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, options.minor_version);
+
+	if (glfwOpenWindow(m_width, m_height, 8, 8, 8, 8, options.depth_bits, options.stencil_bits,
+		options.fullscreen ? GLFW_FULLSCREEN : GLFW_WINDOW) == GL_FALSE)
+	{
 		glfwTerminate();
 		throw xd::window_creation_failed();
 	}
 
 	glfwSetWindowTitle(title.c_str());
+	if (options.display_cursor)
+		glfwEnable(GLFW_MOUSE_CURSOR);
+	else
+		glfwDisable(GLFW_MOUSE_CURSOR);
 
 	glfwEnable(GLFW_SYSTEM_KEYS);
-	glfwEnable(GLFW_MOUSE_CURSOR);
-
 	glfwDisable(GLFW_AUTO_POLL_EVENTS);
 	glfwDisable(GLFW_STICKY_KEYS);
 	glfwDisable(GLFW_STICKY_MOUSE_BUTTONS);
@@ -157,12 +161,16 @@ bool xd::window::closed() const
 
 int xd::window::width() const
 {
-	return m_width;
+	int width;
+	glfwGetWindowSize(&width, nullptr);
+	return width;
 }
 
 int xd::window::height() const
 {
-	return m_height;
+	int height;
+	glfwGetWindowSize(nullptr, &height);
+	return height;
 }
 
 int xd::window::ticks() const

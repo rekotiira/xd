@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 #include <stack>
-#include <xd/vendor/glm/glm.hpp>
+#include <xd/glm.hpp>
 #include <xd/vendor/glm/gtc/matrix_transform.hpp>
 
 namespace xd
@@ -81,6 +81,7 @@ namespace xd
 		{
 			scale(glm::vec3(s, s, s));
 		}
+
 		void rotate(float a, const glm::vec3& vec)
 		{
 			m_stack.top() = glm::rotate(m_stack.top(), a, vec);

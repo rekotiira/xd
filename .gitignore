@@ -14,3 +14,8 @@
 /win/vc10/test/Debug
 /win/vc10/common/Debug
 /win/vc10/system/Debug
+/win/vc10/samples/pong/Debug
+/win/vc10/samples/pong/Release
+/win/vc10/samples/Release
+/win/vc10/samples/Debug
+/win/vc10/samples/ipch

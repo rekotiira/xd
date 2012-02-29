@@ -1,15 +1,18 @@
 #ifndef H_XD_SYSTEM_WINDOW
 #define H_XD_SYSTEM_WINDOW
 
-#include <string>
+#include <xd/ref_counted.hpp>
+#include <xd/system/window_options.hpp>
 #include <xd/system/input.hpp>
 #include <xd/graphics/transform_geometry.hpp>
 #include <xd/event_bus.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/cstdint.hpp>
 #include <unordered_map>
 #include <unordered_set>
 #include <functional>
+#include <string>
 
 #if defined(_MSC_VER) && !defined(XD_STATIC)
 // disable warning about boost::noncopyable not being dll-exportable
@@ -19,15 +22,16 @@
 
 namespace xd
 {
-	class XD_API window : public boost::noncopyable
+	class XD_API window : public xd::ref_counted, public boost::noncopyable
 	{
 	public:
 		// typedefs
+		typedef boost::intrusive_ptr<window> ptr;
 		typedef event_bus<input_args>::callback_t input_event_callback_t;
 		typedef std::function<void ()> tick_callback_t;
 
 		// public interface
-		window(const std::string& title, int width, int height);
+		window(const std::string& title, int width, int height, const window_options& options = window_options());
 		virtual ~window();
 
 		void update();

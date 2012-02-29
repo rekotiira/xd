@@ -10,19 +10,26 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\samples\pong\pong.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\samples\pong\main.cpp" />
+    <ClCompile Include="..\..\..\..\samples\pong\pong.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B959AC85-FA1A-42C4-9F90-61A1901A9915}</ProjectGuid>
+    <ProjectGuid>{6CFB0E08-FBA3-438B-812B-A73F49969EBD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>common</RootNamespace>
+    <RootNamespace>pong</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -38,12 +45,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>xd_$(ProjectName)</TargetName>
-    <IncludePath>$(SolutionDir)..\..\include;$(IncludePath)</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>xd_$(ProjectName)</TargetName>
-    <IncludePath>$(SolutionDir)..\..\include;$(IncludePath)</IncludePath>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\..\..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\Release;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -51,10 +59,10 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -66,36 +74,16 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;glew.lib;xd_system.lib;xd_graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\include\xd\audio.hpp" />
-    <ClInclude Include="..\..\..\include\xd\config.hpp" />
-    <ClInclude Include="..\..\..\include\xd\detail\entity.hpp" />
-    <ClInclude Include="..\..\..\include\xd\detail\iterate_create.hpp" />
-    <ClInclude Include="..\..\..\include\xd\detail\iterate_entity_constructor.hpp" />
-    <ClInclude Include="..\..\..\include\xd\detail\iterate_factory_create.hpp" />
-    <ClInclude Include="..\..\..\include\xd\entity.hpp" />
-    <ClInclude Include="..\..\..\include\xd\event_bus.hpp" />
-    <ClInclude Include="..\..\..\include\xd\exception.hpp" />
-    <ClInclude Include="..\..\..\include\xd\factory.hpp" />
-    <ClInclude Include="..\..\..\include\xd\glm.hpp" />
-    <ClInclude Include="..\..\..\include\xd\graphics.hpp" />
-    <ClInclude Include="..\..\..\include\xd\lua.hpp" />
-    <ClInclude Include="..\..\..\include\xd\ref_counted.hpp" />
-    <ClInclude Include="..\..\..\include\xd\system.hpp" />
-    <ClInclude Include="..\..\..\include\xd\types.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

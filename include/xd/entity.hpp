@@ -3,6 +3,9 @@
 
 #include <xd/detail/entity.hpp>
 
+#include <xd/ref_counted.hpp>
+#include <xd/event_bus.hpp>
+#include <boost/config.hpp>
 #include <boost/any.hpp>
 #include <unordered_map>
 #include <functional>
@@ -10,8 +13,10 @@
 #include <list>
 #include <map>
 #include <type_traits>
-#include <xd/ref_counted.hpp>
-#include <xd/event_bus.hpp>
+
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#include <boost/preprocessor/iteration/iterate.hpp>
+#endif
 
 namespace xd
 {
@@ -50,6 +55,19 @@ namespace xd
 		entity()
 		{
 		}
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+		// constructor that delegates parameters to the entity_base
+		template <typename... Args>
+		entity(Args&&... args)
+			: Base(std::forward<Args>(args)...)
+		{
+		}
+#else
+		// generate xd::entity::entity overloads with file iteration (up to XD_MAX_ARITY parameters)
+		#define BOOST_PP_ITERATION_PARAMS_1 (3, (1, XD_MAX_ARITY, <xd/detail/iterate_entity_constructor.hpp>))
+		#include BOOST_PP_ITERATE()
+#endif
 
 		entity(const Base& base)
 			: Base(base)

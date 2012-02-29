@@ -1,6 +1,8 @@
 #ifndef H_XD_LUA
 #define H_XD_LUA
 
+#include <xd/config.hpp>
+#include <xd/factory.hpp>
 #include <xd/lua/config.hpp>
 #include <xd/lua/types.hpp>
 #include <xd/lua/exceptions.hpp>

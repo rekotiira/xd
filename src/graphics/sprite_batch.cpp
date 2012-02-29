@@ -11,12 +11,12 @@ namespace xd { namespace detail {
 	struct sprite
 	{
 		texture::ptr texture;
-		xd::rect src;
+		rect src;
 		float x, y;
 		float rotation;
-		glm::vec2 scale;
-		glm::vec2 anchor;
-		glm::vec4 color;
+		xd::vec2 scale;
+		xd::vec2 origin;
+		xd::vec4 color;
 		float depth;
 	};
 
@@ -28,9 +28,8 @@ namespace xd { namespace detail {
 
 } }
 
-xd::sprite_batch::sprite_batch(xd::transform_geometry& geometry_pipeline)
-	: m_geometry_pipeline(geometry_pipeline)
-	, m_data(new detail::sprite_batch_data)
+xd::sprite_batch::sprite_batch()
+	: m_data(new detail::sprite_batch_data)
 	, m_scale(1)
 {
 }
@@ -45,53 +44,64 @@ void xd::sprite_batch::clear()
 	m_data->sprites.clear();
 }
 
-void xd::sprite_batch::draw()
+void xd::sprite_batch::draw(const xd::mat4& mvp_matrix)
 {
 	// create a vertex batch for sending vertex data
 	vertex_batch<detail::sprite_vertex_traits> batch(GL_QUADS);
 
 	// setup the shader
 	m_data->shader.use();
+	m_data->shader.bind_uniform("mvpMatrix", mvp_matrix);
 
-	// get the modelview matrix for convenience
-	auto& model_view = m_geometry_pipeline.model_view();
+	// create a quad for rendering sprites
+	detail::sprite_vertex quad[4];
 
 	// iterate through all sprites
 	for (auto i = m_data->sprites.begin(); i != m_data->sprites.end(); ++i) {
-		// push matrix
-		model_view.push();
-		// create a quad for rendering sprites
-		detail::sprite_vertex quad[4];
-		// assign position
+		// so we need to type less ;)
 		auto tw = i->texture->width();
 		auto th = i->texture->height();
 		auto& src = i->src;
-		auto& anchor = i->anchor;
-		quad[0].pos = glm::vec2((0-anchor.x)*src.w, (1-anchor.y)*src.h);
-		quad[1].pos = glm::vec2((1-anchor.x)*src.w, (1-anchor.y)*src.h);
-		quad[2].pos = glm::vec2((1-anchor.x)*src.w, (0-anchor.y)*src.h);
-		quad[3].pos = glm::vec2((0-anchor.x)*src.w, (0-anchor.y)*src.h);
+		auto& origin = i->origin;
+
+		// calculate scale
+		vec2 scale = m_scale * i->scale;
+
+		// assign position
+		quad[0].pos = vec2(scale.x*(0-origin.x)*src.w, scale.y*(1-origin.y)*src.h);
+		quad[1].pos = vec2(scale.x*(1-origin.x)*src.w, scale.y*(1-origin.y)*src.h);
+		quad[2].pos = vec2(scale.x*(1-origin.x)*src.w, scale.y*(0-origin.y)*src.h);
+		quad[3].pos = vec2(scale.x*(0-origin.x)*src.w, scale.y*(0-origin.y)*src.h);
+
+		// if there's rotation
+		if (i->rotation) {
+			// construct a rotation matrix
+			auto rotation_matrix = rotate(mat4(), i->rotation, vec3(0, 0, 1));
+			// rotate the 4 vertices
+			quad[0].pos = vec2(rotation_matrix * vec4(quad[0].pos, 0, 1));
+			quad[1].pos = vec2(rotation_matrix * vec4(quad[1].pos, 0, 1));
+			quad[2].pos = vec2(rotation_matrix * vec4(quad[2].pos, 0, 1));
+			quad[3].pos = vec2(rotation_matrix * vec4(quad[3].pos, 0, 1));
+		}
+
 		// assign texture pos
-		quad[0].texpos = glm::vec2(src.x/tw        , (src.y+src.h)/th);
-		quad[1].texpos = glm::vec2((src.x+src.w)/tw, (src.y+src.h)/th);
-		quad[2].texpos = glm::vec2((src.x+src.w)/tw, src.y/th);
-		quad[3].texpos = glm::vec2(src.x/tw        , src.y/th);
+		quad[0].texpos = vec2(src.x/tw        , (src.y+src.h)/th);
+		quad[1].texpos = vec2((src.x+src.w)/tw, (src.y+src.h)/th);
+		quad[2].texpos = vec2((src.x+src.w)/tw, src.y/th);
+		quad[3].texpos = vec2(src.x/tw        , src.y/th);
+
 		// load the quad
 		batch.load(&quad[0], 4);
-		// translate to the correct position
-		model_view.translate(i->x, i->y, i->depth);
-		// setup rotation and scaling
-		model_view.rotate(i->rotation, 0, 0, 1);
-		model_view.scale(m_scale*i->scale.x, m_scale*i->scale.y, 1);
+		
 		// give required params to shader
-		m_data->shader.bind_uniform("mvpMatrix", m_geometry_pipeline.mvp());
+		m_data->shader.bind_uniform("vPosition", vec4(i->x, i->y, i->depth, 0));
 		m_data->shader.bind_uniform("vColor", i->color);
+
 		// bind the texture
 		i->texture->bind(GL_TEXTURE0);
+		
 		// draw it
 		batch.render();
-		// pop matrix
-		model_view.pop();
 	}
 }
 
@@ -105,32 +115,32 @@ float xd::sprite_batch::get_scale() const
 	return m_scale;
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, const glm::vec4& color, const glm::vec2& anchor)
+void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, const xd::vec4& color, const xd::vec2& origin)
 {
-	add(texture, xd::rect(0, 0, texture->width(), texture->height()), x, y, 0, glm::vec2(1, 1), color, anchor);
+	add(texture, rect(0, 0, texture->width(), texture->height()), x, y, 0, vec2(1, 1), color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, float rotation, float scale, const glm::vec4& color, const glm::vec2& anchor)
+void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, float rotation, float scale, const xd::vec4& color, const xd::vec2& origin)
 {
-	add(texture, xd::rect(0, 0, texture->width(), texture->height()), x, y, rotation, glm::vec2(scale, scale), color, anchor);
+	add(texture, rect(0, 0, texture->width(), texture->height()), x, y, rotation, vec2(scale, scale), color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, float rotation, const glm::vec2& scale, const glm::vec4& color, const glm::vec2& anchor)
+void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, float rotation, const xd::vec2& scale, const xd::vec4& color, const xd::vec2& origin)
 {
-	add(texture, xd::rect(0, 0, texture->width(), texture->height()), x, y, rotation, scale, color, anchor);
+	add(texture, rect(0, 0, texture->width(), texture->height()), x, y, rotation, scale, color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, const glm::vec4& color, const glm::vec2& anchor)
+void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, const xd::vec4& color, const xd::vec2& origin)
 {
-	add(texture, src, x, y, 0, glm::vec2(1, 1), color, anchor);
+	add(texture, src, x, y, 0, vec2(1, 1), color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, float rotation, float scale, const glm::vec4& color, const glm::vec2& anchor)
+void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, float rotation, float scale, const xd::vec4& color, const xd::vec2& origin)
 {
-	add(texture, src, x, y, rotation, glm::vec2(scale, scale), color, anchor);
+	add(texture, src, x, y, rotation, vec2(scale, scale), color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, float rotation, const glm::vec2& scale, const glm::vec4& color, const glm::vec2& anchor)
+void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, float rotation, const xd::vec2& scale, const xd::vec4& color, const xd::vec2& origin)
 {
 	detail::sprite sprite;
 	sprite.texture = texture;
@@ -139,7 +149,7 @@ void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, 
 	sprite.y = y;
 	sprite.rotation = rotation;
 	sprite.scale = scale;
-	sprite.anchor = anchor;
+	sprite.origin = origin;
 	sprite.color = color;
 	sprite.depth = 0.0f;
 	m_data->sprites.push_back(sprite);
