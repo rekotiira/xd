@@ -8,7 +8,7 @@ namespace xd { namespace lua { namespace detail {
 	struct scheduler_thread_task
 	{
 		lua_State *thread;
-		scheduler_task::ptr task;
+		scheduler_task::handle task;
 	};
 
 	struct scheduler_task_list
@@ -131,7 +131,7 @@ void xd::lua::scheduler::run()
 	}
 }
 
-void xd::lua::scheduler::yield(xd::lua::scheduler_task::ptr task)
+void xd::lua::scheduler::yield(xd::lua::scheduler_task::handle task)
 {
 	detail::scheduler_thread_task thread_task;
 	thread_task.thread = m_current_thread;

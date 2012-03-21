@@ -63,5 +63,17 @@
     <ClInclude Include="..\..\..\include\xd\detail\iterate_entity_constructor.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\detail\resource_handle.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\resource_handle.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\resource.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\detail\identity.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

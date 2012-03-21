@@ -10,7 +10,7 @@ namespace xd { namespace detail {
 
 	struct sprite
 	{
-		texture::ptr texture;
+		texture::handle texture;
 		rect src;
 		float x, y;
 		float rotation;
@@ -115,32 +115,32 @@ float xd::sprite_batch::get_scale() const
 	return m_scale;
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, const xd::vec4& color, const xd::vec2& origin)
+void xd::sprite_batch::add(const xd::texture::handle texture, float x, float y, const xd::vec4& color, const xd::vec2& origin)
 {
 	add(texture, rect(0, 0, texture->width(), texture->height()), x, y, 0, vec2(1, 1), color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, float rotation, float scale, const xd::vec4& color, const xd::vec2& origin)
+void xd::sprite_batch::add(const xd::texture::handle texture, float x, float y, float rotation, float scale, const xd::vec4& color, const xd::vec2& origin)
 {
 	add(texture, rect(0, 0, texture->width(), texture->height()), x, y, rotation, vec2(scale, scale), color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, float x, float y, float rotation, const xd::vec2& scale, const xd::vec4& color, const xd::vec2& origin)
+void xd::sprite_batch::add(const xd::texture::handle texture, float x, float y, float rotation, const xd::vec2& scale, const xd::vec4& color, const xd::vec2& origin)
 {
 	add(texture, rect(0, 0, texture->width(), texture->height()), x, y, rotation, scale, color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, const xd::vec4& color, const xd::vec2& origin)
+void xd::sprite_batch::add(const xd::texture::handle texture, const xd::rect& src, float x, float y, const xd::vec4& color, const xd::vec2& origin)
 {
 	add(texture, src, x, y, 0, vec2(1, 1), color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, float rotation, float scale, const xd::vec4& color, const xd::vec2& origin)
+void xd::sprite_batch::add(const xd::texture::handle texture, const xd::rect& src, float x, float y, float rotation, float scale, const xd::vec4& color, const xd::vec2& origin)
 {
 	add(texture, src, x, y, rotation, vec2(scale, scale), color, origin);
 }
 
-void xd::sprite_batch::add(const xd::texture::ptr texture, const xd::rect& src, float x, float y, float rotation, const xd::vec2& scale, const xd::vec4& color, const xd::vec2& origin)
+void xd::sprite_batch::add(const xd::texture::handle texture, const xd::rect& src, float x, float y, float rotation, const xd::vec2& scale, const xd::vec4& color, const xd::vec2& origin)
 {
 	detail::sprite sprite;
 	sprite.texture = texture;

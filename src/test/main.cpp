@@ -96,23 +96,18 @@ void input(std::string message)
 */
 
 #include <xd/factory.hpp>
+#include <xd/resource.hpp>
+#include <xd/resource_handle.hpp>
 
-class foo
+struct foo : xd::resource
 {
-public:
-	typedef std::shared_ptr<foo> ptr;
-private:
-	foo() {}
-	friend class xd::factory;
-};
-
-struct bar : xd::ref_counted
-{
-	typedef boost::intrusive_ptr<bar> ptr;
+	typedef xd::resource_handle<foo> handle;
 };
 
 int main(int argc, char *argv[])
 {
+	foo::handle x = new foo;
+
 	/*try
 	{
 		xd::lua::virtual_machine vm;

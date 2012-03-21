@@ -16,7 +16,7 @@ void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& tex
 	const float pi = 3.14159265f;
 	float step = pi / 4;
 	float height = 2;
-	float start = (float)(clock()/1000 % 1000) / 1000.0f * 2*pi;
+	float start = (clock() % 1000) / 1000.0f * 2*pi;
 	for (xd::formatted_text::const_iterator i = text.begin(); i != text.end(); ++i) {
 		float pos = sin(start)*height;
 		decorator.push_position(xd::vec2(0, pos));
@@ -285,7 +285,7 @@ void test::run()
 		m_model_view->translate(50, 20, 0);
 		m_model_view->rotate(10, 0, 0, 1);
 		m_model_view->scale(1.2f);
-		draw_text(10, 20, "{color=yellow}FPS:{/color} "+boost::lexical_cast<std::string>(fps()));
+		draw_text(10, 20, "{wave}{typewriter}{color=yellow}FPS:{/color} "+boost::lexical_cast<std::string>(fps())+"{/typewriter}{/wave}");
 		m_model_view->translate(0, 20, 0);
 		m_model_view->rotate(-15, 0, 0, 1);
 		m_model_view->scale(0.9f);

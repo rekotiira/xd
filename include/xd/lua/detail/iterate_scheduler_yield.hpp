@@ -14,7 +14,7 @@
 template <typename Task BOOST_PP_ENUM_TRAILING_PARAMS(XD_N, typename T)>
 void yield(BOOST_PP_ENUM_BINARY_PARAMS(XD_N, T, && p))
 {
-	yield(xd::lua::scheduler_task::ptr(new Task(BOOST_PP_ENUM(XD_N, XD_FORWARD, _))));
+	yield(xd::lua::scheduler_task::handle(new Task(BOOST_PP_ENUM(XD_N, XD_FORWARD, _))));
 }
 
 #undef XD_FORWARD

@@ -82,9 +82,11 @@
     <ClInclude Include="..\..\..\include\xd\audio.hpp" />
     <ClInclude Include="..\..\..\include\xd\config.hpp" />
     <ClInclude Include="..\..\..\include\xd\detail\entity.hpp" />
+    <ClInclude Include="..\..\..\include\xd\detail\identity.hpp" />
     <ClInclude Include="..\..\..\include\xd\detail\iterate_create.hpp" />
     <ClInclude Include="..\..\..\include\xd\detail\iterate_entity_constructor.hpp" />
     <ClInclude Include="..\..\..\include\xd\detail\iterate_factory_create.hpp" />
+    <ClInclude Include="..\..\..\include\xd\detail\resource_handle.hpp" />
     <ClInclude Include="..\..\..\include\xd\entity.hpp" />
     <ClInclude Include="..\..\..\include\xd\event_bus.hpp" />
     <ClInclude Include="..\..\..\include\xd\exception.hpp" />
@@ -93,6 +95,8 @@
     <ClInclude Include="..\..\..\include\xd\graphics.hpp" />
     <ClInclude Include="..\..\..\include\xd\lua.hpp" />
     <ClInclude Include="..\..\..\include\xd\ref_counted.hpp" />
+    <ClInclude Include="..\..\..\include\xd\resource.hpp" />
+    <ClInclude Include="..\..\..\include\xd\resource_handle.hpp" />
     <ClInclude Include="..\..\..\include\xd\system.hpp" />
     <ClInclude Include="..\..\..\include\xd\types.hpp" />
   </ItemGroup>

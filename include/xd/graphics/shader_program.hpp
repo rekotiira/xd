@@ -2,21 +2,21 @@
 #define H_XD_GRAPHICS_SHADER_PROGRAM
 
 #include <xd/config.hpp>
-#include <xd/ref_counted.hpp>
+#include <xd/resource.hpp>
+#include <xd/resource_handle.hpp>
 #include <xd/vendor/glew/glew.h>
 #include <xd/glm.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/intrusive_ptr.hpp>
 #include <string>
 
 #pragma warning(disable: 4275)
 
 namespace xd
 {
-	class XD_API shader_program : public ref_counted, public boost::noncopyable
+	class XD_API shader_program : public xd::resource, public boost::noncopyable
 	{
 	public:
-		typedef boost::intrusive_ptr<shader_program> ptr;
+		typedef resource_handle<shader_program> handle;
 
 		// constructors & destructors
 		shader_program();

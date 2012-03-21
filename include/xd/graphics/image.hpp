@@ -4,7 +4,8 @@
 #include <xd/graphics/detail/image.hpp>
 
 #include <xd/config.hpp>
-#include <xd/ref_counted.hpp>
+#include <xd/resource.hpp>
+#include <xd/resource_handle.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
 #include <memory>
@@ -17,10 +18,10 @@
 
 namespace xd
 {
-	class XD_API image : public xd::ref_counted, public boost::noncopyable
+	class XD_API image : public xd::resource, public boost::noncopyable
 	{
 	public:
-		typedef boost::intrusive_ptr<image> ptr;
+		typedef resource_handle<image> handle;
 
 		image(const std::string& filename);
 		virtual ~image();

@@ -12,7 +12,7 @@
 #define XD_FORWARD(Z, N, D) std::forward<BOOST_PP_CAT(T, N)>(BOOST_PP_CAT(p, N))
 
 template <typename R BOOST_PP_ENUM_TRAILING_PARAMS(XD_N, typename T)>
-typename R::ptr create(BOOST_PP_ENUM_BINARY_PARAMS(XD_N, T, && p))
+typename R::handle create(BOOST_PP_ENUM_BINARY_PARAMS(XD_N, T, && p))
 {
 	return xd::factory::create<R>(BOOST_PP_ENUM(XD_N, XD_FORWARD, _));
 }

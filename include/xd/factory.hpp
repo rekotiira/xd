@@ -15,9 +15,9 @@ namespace xd
 	public:
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 		template <typename R, typename... Args>
-		static typename R::ptr create(Args&&... args)
+		static typename R::handle create(Args&&... args)
 		{
-			return R::ptr(new R(std::forward<Args>(args)...));
+			return R::handle(new R(std::forward<Args>(args)...));
 		}
 #else
 		// generate xd::factory::create functions with file iteration (up to XD_MAX_ARITY overloads)
@@ -28,7 +28,7 @@ namespace xd
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 	template <typename R, typename... Args>
-	typename R::ptr create(Args&&... args)
+	typename R::handle create(Args&&... args)
 	{
 		return xd::factory::create<R>(std::forward<Args>(args)...);
 	}

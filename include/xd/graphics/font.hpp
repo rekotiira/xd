@@ -6,7 +6,8 @@
 #include <xd/vendor/glew/glew.h>
 #include <xd/glm.hpp>
 
-#include <xd/ref_counted.hpp>
+#include <xd/resource.hpp>
+#include <xd/resource_handle.hpp>
 #include <xd/graphics/types.hpp>
 #include <xd/graphics/vertex_batch.hpp>
 #include <xd/graphics/shader_program.hpp>
@@ -70,16 +71,16 @@ namespace xd
 	};
 
 	// font class
-	class XD_API font : public xd::ref_counted, public boost::noncopyable
+	class XD_API font : public xd::resource, public boost::noncopyable
 	{
 	public:
-		typedef boost::intrusive_ptr<font> ptr;
+		typedef resource_handle<font> handle;
 
 		font(const std::string& filename, int size);
 		virtual ~font();
 
 		void link_font(const std::string& type, const std::string& filename);
-		void link_font(const std::string& type, font::ptr font);
+		void link_font(const std::string& type, font::handle font);
 		void unlink_font(const std::string& type);
 
 		void render(const std::string& text, const font_style& style,
@@ -96,7 +97,7 @@ namespace xd
 		void set_texture_uniform(const std::string&);
 	private:
 		typedef std::unordered_map<int, std::unique_ptr<detail::font::glyph>> glyph_map_t;
-		typedef std::unordered_map<std::string, font::ptr> font_map_t;
+		typedef std::unordered_map<std::string, font::handle> font_map_t;
 		const detail::font::glyph& load_glyph(utf8::uint32_t char_index);
 
 		std::unique_ptr<detail::font::face> m_face;

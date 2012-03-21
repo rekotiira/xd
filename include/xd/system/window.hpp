@@ -1,13 +1,13 @@
 #ifndef H_XD_SYSTEM_WINDOW
 #define H_XD_SYSTEM_WINDOW
 
-#include <xd/ref_counted.hpp>
+#include <xd/resource.hpp>
+#include <xd/resource_handle.hpp>
 #include <xd/system/window_options.hpp>
 #include <xd/system/input.hpp>
 #include <xd/graphics/transform_geometry.hpp>
 #include <xd/event_bus.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/intrusive_ptr.hpp>
 #include <boost/cstdint.hpp>
 #include <unordered_map>
 #include <unordered_set>
@@ -22,11 +22,11 @@
 
 namespace xd
 {
-	class XD_API window : public xd::ref_counted, public boost::noncopyable
+	class XD_API window : public xd::resource, public boost::noncopyable
 	{
 	public:
 		// typedefs
-		typedef boost::intrusive_ptr<window> ptr;
+		typedef resource_handle<window> handle;
 		typedef event_bus<input_args>::callback_t input_event_callback_t;
 		typedef std::function<void ()> tick_callback_t;
 

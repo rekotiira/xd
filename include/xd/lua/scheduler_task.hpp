@@ -2,9 +2,9 @@
 #define H_XD_LUA_SCHEDULER_TASK
 
 #include <xd/lua/detail/scheduler_task.hpp>
-
 #include <xd/config.hpp>
-#include <xd/ref_counted.hpp>
+#include <xd/resource.hpp>
+#include <xd/resource_handle.hpp>
 #include <xd/lua/config.hpp>
 #include <luabind/luabind.hpp>
 #include <memory>
@@ -64,10 +64,10 @@ namespace xd
 
 
 		// a base class for scheduler tasks
-		class scheduler_task : public xd::ref_counted
+		class scheduler_task : public xd::resource
 		{
 		public:
-				typedef boost::intrusive_ptr<scheduler_task> ptr;
+				typedef resource_handle<scheduler_task> handle;
 
 				virtual ~scheduler_task() {}
 				virtual bool is_complete() = 0;

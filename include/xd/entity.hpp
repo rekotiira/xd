@@ -3,7 +3,8 @@
 
 #include <xd/detail/entity.hpp>
 
-#include <xd/ref_counted.hpp>
+#include <xd/resource.hpp>
+#include <xd/resource_handle.hpp>
 #include <xd/event_bus.hpp>
 #include <boost/config.hpp>
 #include <boost/any.hpp>
@@ -42,15 +43,15 @@ namespace xd
 	};
     
 	template <typename Base = entity_base>
-	class entity : public Base, public xd::ref_counted
+	class entity : public Base, public xd::resource
 	{
 	public:
 		// required for xd::factory
-		typedef boost::intrusive_ptr<entity> ptr;
-		// component ptr typedefs
-		typedef typename component<entity<Base>>::ptr component_ptr;
-		typedef typename logic_component<entity<Base>>::ptr logic_component_ptr;
-		typedef typename render_component<entity<Base>>::ptr render_component_ptr;
+		typedef resource_handle<entity> handle;
+		// component handle typedefs
+		typedef typename component<entity<Base>>::handle component_handle;
+		typedef typename logic_component<entity<Base>>::handle logic_component_handle;
+		typedef typename render_component<entity<Base>>::handle render_component_handle;
 
 		entity()
 		{
@@ -154,26 +155,26 @@ namespace xd
 			get_event_bus<T>()[name](args);
 		}
         
-		void add_component(const logic_component_ptr& component, int priority = 0)
+		void add_component(const logic_component_handle& component, int priority = 0)
 		{
 			m_components[priority].logic_components.push_back(component);
 			component->init(*this);
 		}
         
-		void add_component(const render_component_ptr& component, int priority = 0)
+		void add_component(const render_component_handle& component, int priority = 0)
 		{
 			m_components[priority].render_components.push_back(component);
 			component->init(*this);
 		}
         
-		void add_component(const component_ptr& component, int priority = 0)
+		void add_component(const component_handle& component, int priority = 0)
 		{
 			m_components[priority].logic_components.push_back(component);
 			m_components[priority].render_components.push_back(component);
 			component->init(*this);
 		}
 
-		void del_component(const logic_component_ptr& component, int priority)
+		void del_component(const logic_component_handle& component, int priority)
 		{
 			logic_component_list_t& components = m_components[priority].logic_components;
 			auto i = components.find(component);
@@ -182,14 +183,14 @@ namespace xd
 			}
 		}
 
-		void del_component(const logic_component_ptr& component)
+		void del_component(const logic_component_handle& component)
 		{
 			for (auto i = m_components.begin(); i != m_components.end(); ++i) {
 				del_component(component, i->first);
 			}
 		}
 
-		void del_component(const render_component_ptr& component, int priority)
+		void del_component(const render_component_handle& component, int priority)
 		{
 			logic_component_list_t& components = m_components[priority].logic_components;
 			auto i = components.find(component);
@@ -198,14 +199,14 @@ namespace xd
 			}
 		}
 
-		void del_component(const render_component_ptr& component)
+		void del_component(const render_component_handle& component)
 		{
 			for (auto i = m_components.begin(); i != m_components.end(); ++i) {
 				del_component(component, i->first);
 			}
 		}
 
-		void del_component(const component_ptr& component, int priority)
+		void del_component(const component_handle& component, int priority)
 		{
 			components_set& components = m_components[priority];
 			{
@@ -222,7 +223,7 @@ namespace xd
 			}
 		}
 
-		void del_component(const component_ptr& component)
+		void del_component(const component_handle& component)
 		{
 			for (auto i = m_components.begin(); i != m_components.end(); ++i) {
 				del_component(component, i->first);
@@ -253,8 +254,8 @@ namespace xd
 		}
         
 	private:
-		typedef std::list<logic_component_ptr> logic_component_list_t;
-		typedef std::list<render_component_ptr> render_component_list_t;
+		typedef std::list<logic_component_handle> logic_component_list_t;
+		typedef std::list<render_component_handle> render_component_list_t;
 
 		// data
 		std::unordered_map<std::size_t, boost::any> m_type_to_data;

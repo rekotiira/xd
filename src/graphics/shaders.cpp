@@ -98,7 +98,7 @@ xd::texture_shader::texture_shader()
 	link();
 }
 
-void xd::texture_shader::setup(const glm::mat4& mvp, const texture::ptr tex)
+void xd::texture_shader::setup(const glm::mat4& mvp, const texture::handle tex)
 {
 	use();
 	tex->bind(GL_TEXTURE0);
@@ -138,7 +138,7 @@ xd::texture_mask_shader::texture_mask_shader()
 	link();
 }
 
-void xd::texture_mask_shader::setup(const glm::mat4& mvp, const texture::ptr tex, const texture::ptr mask)
+void xd::texture_mask_shader::setup(const glm::mat4& mvp, const texture::handle tex, const texture::handle mask)
 {
 	use();
 	tex->bind(GL_TEXTURE0);

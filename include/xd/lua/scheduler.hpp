@@ -33,7 +33,7 @@ namespace xd
 			lua_State *current_thread();
 			void start(luabind::object func);
 			void run();
-			void yield(scheduler_task::ptr task);
+			void yield(scheduler_task::handle task);
 			int pending_tasks();
 
 			// a convenience function for starting a xd::lua::function<T>
@@ -97,7 +97,7 @@ namespace xd
 			template <typename Task, typename... Args>
 			void yield(Args&&... args)
 			{
-				yield(xd::lua::scheduler_task::ptr(new Task(std::forward<Args>(args)...)));
+				yield(xd::lua::scheduler_task::handle(new Task(std::forward<Args>(args)...)));
 			}
 #else
 			// generate convenience yield functions that allow to construct task in-place

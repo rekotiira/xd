@@ -26,29 +26,28 @@ struct entity_data
 typedef xd::entity<entity_data> pong_entity;
 
 // the game class
-class pong
+class pong : public xd::window
 {
 public:
 	pong();
 	~pong();
 
 	void run();
-	void update();
+	void frame_update();
 	void render();
 	void reset();
 
 private:
 	// some resources required by our game
-	xd::window::ptr m_window;
-	xd::texture::ptr m_texture;
-	xd::font::ptr m_font;
-	xd::text_shader::ptr m_text_shader;
+	xd::texture m_texture;
+	xd::font m_font;
+	xd::text_shader m_text_shader;
 	xd::transform_geometry m_geometry;
 
 	// the game entities
-	pong_entity::ptr m_player;
-	pong_entity::ptr m_computer;
-	pong_entity::ptr m_ball;
+	pong_entity m_player;
+	pong_entity m_computer;
+	pong_entity m_ball;
 
 	// scores
 	int m_player_score;

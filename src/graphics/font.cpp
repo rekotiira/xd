@@ -1,3 +1,4 @@
+#include <xd/factory.hpp>
 #include <xd/graphics/font.hpp>
 #include <xd/graphics/exceptions.hpp>
 #include <xd/vendor/utf8.h>
@@ -104,11 +105,11 @@ xd::font::~font()
 
 void xd::font::link_font(const std::string& type, const std::string& filename)
 {
-	font::ptr linked_font = font::ptr(new font(filename, m_size));
+	auto linked_font = xd::create<font>(filename, m_size);
 	m_linked_fonts[type] = linked_font;
 }
 
-void xd::font::link_font(const std::string& type, font::ptr font)
+void xd::font::link_font(const std::string& type, font::handle font)
 {
 	m_linked_fonts[type] = font;
 }
