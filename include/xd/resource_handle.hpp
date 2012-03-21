@@ -174,12 +174,20 @@ namespace xd
 
 		void add_ref()
 		{
+			// resource_handle_add_ref(T*)
+			// should be overloaded in the namespace where
+			// T is defined in. ADL will correctly look-up
+			// the correct overload
 			if (m_ptr)
 				resource_handle_add_ref(m_ptr);
 		}
 
 		void release()
 		{
+			// resource_handle_release(T*)
+			// should be overloaded in the namespace where
+			// T is defined in. ADL will correctly look-up
+			// the correct overload
 			if (m_ptr && resource_handle_release(m_ptr))
 				m_deleter(m_ptr);
 		}
@@ -195,6 +203,10 @@ namespace xd
 		std::function<void (T*&)> m_deleter;
 	};
 
+	// std::swap will find this function when used with xd::resource_handle
+	// using an argument dependent lookup (ADL); it's a nicer way than defining
+	// the overload in std namespace, and in addition it'll also work for non-standard
+	// swap algorithms, such as boost::swap
 	template <typename T>
 	inline void swap(resource_handle<T>& lhs, resource_handle<T>& rhs)
 	{
