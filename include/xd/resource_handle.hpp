@@ -140,14 +140,13 @@ namespace xd
 			resource_handle().swap(*this);
 		}
 
-		template <typename U>
-		void reset(U* rhs)
+		void reset(T* rhs)
 		{
 			resource_handle(rhs).swap(*this);
 		}
 
-		template <typename U, typename Deleter>
-		void reset(U* rhs, Deleter deleter)
+		template <typename Deleter>
+		void reset(T* rhs, Deleter deleter)
 		{
 			resource_handle(rhs, deleter).swap(*this);
 		}
