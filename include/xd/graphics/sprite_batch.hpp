@@ -2,8 +2,7 @@
 #define H_XD_GRAPHICS_SPRITE_BATCH
 
 #include <xd/graphics/detail/sprite_batch.hpp>
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
 #include <xd/graphics/transform_geometry.hpp>
 #include <xd/graphics/texture.hpp>
 #include <xd/graphics/types.hpp>
@@ -15,10 +14,11 @@
 namespace xd
 {
 	// sprite batch
-	class XD_API sprite_batch : public xd::resource, public boost::noncopyable
+	class XD_API sprite_batch : public boost::noncopyable
 	{
 	public:
-		typedef resource_handle<sprite_batch> handle;
+		typedef handle<sprite_batch> handle;
+		typedef weak_handle<sprite_batch> weak_handle;
 
 		sprite_batch();
 		virtual ~sprite_batch();

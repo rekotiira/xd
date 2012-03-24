@@ -2,8 +2,8 @@
 #define H_XD_GRAPHICS_TEXTURE
 
 #include <xd/vendor/glew/glew.h>
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
+#include <xd/asset_serializer.hpp>
 #include <xd/graphics/image.hpp>
 #include <boost/noncopyable.hpp>
 #include <memory>
@@ -11,10 +11,11 @@
 
 namespace xd
 {
-	class XD_API texture : public xd::resource, public boost::noncopyable
+	class XD_API texture : public boost::noncopyable
 	{
 	public:
-		typedef resource_handle<texture> handle;
+		typedef handle<texture> handle;
+		typedef weak_handle<texture> weak_handle;
 
 		texture(int width, int height, const void *data = 0,
 			GLint wrap_s = GL_REPEAT, GLint wrap_t = GL_REPEAT,
@@ -48,6 +49,16 @@ namespace xd
 		int m_height;
 
 		void init();
+	};
+
+	template <>
+	struct asset_serializer<xd::texture>
+	{
+		typedef std::string key_type;
+		key_type operator()(const std::string& texture) const
+		{
+			return texture;
+		}
 	};
 }
 

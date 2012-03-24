@@ -6,8 +6,7 @@
 #include <xd/vendor/glew/glew.h>
 #include <xd/glm.hpp>
 
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
 #include <xd/graphics/types.hpp>
 #include <xd/graphics/vertex_batch.hpp>
 #include <xd/graphics/shader_program.hpp>
@@ -71,10 +70,11 @@ namespace xd
 	};
 
 	// font class
-	class XD_API font : public xd::resource, public boost::noncopyable
+	class XD_API font : public boost::noncopyable
 	{
 	public:
-		typedef resource_handle<font> handle;
+		typedef handle<font> handle;
+		typedef weak_handle<font> weak_handle;
 
 		font(const std::string& filename, int size);
 		virtual ~font();

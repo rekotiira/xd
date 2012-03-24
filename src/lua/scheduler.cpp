@@ -1,5 +1,6 @@
 #include <xd/lua/scheduler.hpp>
 #include <xd/lua/scheduler_task.hpp>
+#include <xd/factory.hpp>
 #include <boost/optional.hpp>
 #include <stack>
 
@@ -79,7 +80,7 @@ void xd::lua::scheduler::start(luabind::object func)
 	// if the thread was yielded from lua side, and the return value is a callable function
 	int type = luabind::type(result);
 	if (type == LUA_TFUNCTION || type == LUA_TTABLE || type == LUA_TUSERDATA) {
-		yield(new detail::callback_task_lua(result));
+		yield(xd::create<detail::callback_task_lua>(result));
 	}
 	// reset current thread
 	m_thread_stack->threads.pop();
@@ -117,7 +118,7 @@ void xd::lua::scheduler::run()
 			// if the thread was yielded from lua side, and the return value is a callable function
 			int type = luabind::type(result);
 			if (type == LUA_TFUNCTION || type == LUA_TTABLE || type == LUA_TUSERDATA) {
-				yield(new detail::callback_task_lua(result));
+				yield(xd::create<detail::callback_task_lua>(result));
 			}
 			// reset current thread
 			m_thread_stack->threads.pop();

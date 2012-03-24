@@ -3,8 +3,7 @@
 
 #include <xd/lua/detail/scheduler_task.hpp>
 #include <xd/config.hpp>
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
 #include <xd/lua/config.hpp>
 #include <luabind/luabind.hpp>
 #include <memory>
@@ -64,10 +63,11 @@ namespace xd
 
 
 		// a base class for scheduler tasks
-		class scheduler_task : public xd::resource
+		class scheduler_task
 		{
 		public:
-				typedef resource_handle<scheduler_task> handle;
+				typedef handle<scheduler_task> handle;
+				typedef weak_handle<scheduler_task> weak_handle;
 
 				virtual ~scheduler_task() {}
 				virtual bool is_complete() = 0;

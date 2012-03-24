@@ -2,8 +2,7 @@
 #define H_XD_GRAPHICS_SHADER_PROGRAM
 
 #include <xd/config.hpp>
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
 #include <xd/vendor/glew/glew.h>
 #include <xd/glm.hpp>
 #include <boost/noncopyable.hpp>
@@ -13,10 +12,11 @@
 
 namespace xd
 {
-	class XD_API shader_program : public xd::resource, public boost::noncopyable
+	class XD_API shader_program : public boost::noncopyable
 	{
 	public:
-		typedef resource_handle<shader_program> handle;
+		typedef handle<shader_program> handle;
+		typedef weak_handle<shader_program> weak_handle;
 
 		// constructors & destructors
 		shader_program();

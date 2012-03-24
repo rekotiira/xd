@@ -1,8 +1,7 @@
 #ifndef H_XD_SYSTEM_WINDOW
 #define H_XD_SYSTEM_WINDOW
 
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
 #include <xd/system/window_options.hpp>
 #include <xd/system/input.hpp>
 #include <xd/graphics/transform_geometry.hpp>
@@ -22,11 +21,12 @@
 
 namespace xd
 {
-	class XD_API window : public xd::resource, public boost::noncopyable
+	class XD_API window : public boost::noncopyable
 	{
 	public:
 		// typedefs
-		typedef resource_handle<window> handle;
+		typedef handle<window> handle;
+		typedef weak_handle<window> weak_handle;
 		typedef event_bus<input_args>::callback_t input_event_callback_t;
 		typedef std::function<void ()> tick_callback_t;
 

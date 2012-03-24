@@ -3,8 +3,7 @@
 
 #include <xd/detail/entity.hpp>
 
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
 #include <xd/event_bus.hpp>
 #include <boost/config.hpp>
 #include <boost/any.hpp>
@@ -43,11 +42,12 @@ namespace xd
 	};
     
 	template <typename Base = entity_base>
-	class entity : public Base, public xd::resource
+	class entity : public Base
 	{
 	public:
 		// required for xd::factory
-		typedef resource_handle<entity> handle;
+		typedef handle<entity> handle;
+		typedef weak_handle<entity> weak_handle;
 		// component handle typedefs
 		typedef typename component<entity<Base>>::handle component_handle;
 		typedef typename logic_component<entity<Base>>::handle logic_component_handle;

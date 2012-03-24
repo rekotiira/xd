@@ -95,19 +95,37 @@ void input(std::string message)
 }
 */
 
-#include <xd/factory.hpp>
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/asset_manager.hpp>
 
-struct foo : xd::resource
+struct foo
 {
-	typedef xd::resource_handle<foo> handle;
+	typedef xd::handle<foo> handle;
+	typedef xd::weak_handle<foo> weak_handle;
+
+	foo(const std::string& name)
+		: name(name)
+	{
+		std::cout << "foo(const std::string&)" << std::endl;
+	}
+
+	std::string name;
 };
+
+namespace xd
+{
+	template <>
+	struct asset_serializer<foo>
+	{
+		typedef std::string key_type;
+		key_type operator()(const std::string& name) const
+		{
+			return name;
+		}
+	};
+}
 
 int main(int argc, char *argv[])
 {
-	foo::handle x = new foo;
-
 	/*try
 	{
 		xd::lua::virtual_machine vm;
@@ -137,7 +155,7 @@ int main(int argc, char *argv[])
 
 		my_entity e(my_app);
 		e.get<std::string>("name") = "foo";
-		e.add_component(new life_component);
+		e.add_component(xd::create<life_component>());
 		e.update();
     
 		test_args args;

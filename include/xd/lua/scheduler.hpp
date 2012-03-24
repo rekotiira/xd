@@ -4,6 +4,7 @@
 #include <xd/lua/detail/scheduler.hpp>
 
 #include <xd/config.hpp>
+#include <xd/factory.hpp>
 #include <xd/lua/config.hpp>
 #include <xd/lua/types.hpp>
 #include <xd/lua/virtual_machine.hpp>
@@ -49,19 +50,19 @@ namespace xd
 			typename std::enable_if<std::is_base_of<scheduler_task, T>::value>::type
 			yield(const T& task)
 			{
-				yield(new T(task));
+				yield(xd::create<T>(task));
 			}
 
 			// we also want to support plain function types as tasks
 			void yield(bool (*callback)())
 			{
-				yield(new detail::callback_task(callback));
+				yield(xd::create<detail::callback_task>(callback));
 			}
 
 			// for function tasks that have a result
 			void yield(bool (*callback)(scheduler_task_result&))
 			{
-				yield(new detail::callback_task_result(callback));
+				yield(xd::create<detail::callback_task_result>(callback));
 			}
 
 			// for class types, assume we're dealing with a function object
@@ -81,7 +82,7 @@ namespace xd
 			template <typename F>
 			void yield(F f, bool (F::*callback)() const)
 			{
-				yield(new detail::callback_task(f));
+				yield(xd::create<detail::callback_task>(f));
 			}
 
 			// an overload for functor callbacks with a result
@@ -90,7 +91,7 @@ namespace xd
 			template <typename F>
 			void yield(F f, bool (F::*callback)(scheduler_task_result&) const)
 			{
-				yield(new detail::callback_task_result(f));
+				yield(xd::create<detail::callback_task_result>(f));
 			}
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES

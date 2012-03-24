@@ -4,8 +4,7 @@
 #include <xd/graphics/detail/image.hpp>
 
 #include <xd/config.hpp>
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
 #include <memory>
@@ -18,10 +17,11 @@
 
 namespace xd
 {
-	class XD_API image : public xd::resource, public boost::noncopyable
+	class XD_API image : public boost::noncopyable
 	{
 	public:
-		typedef resource_handle<image> handle;
+		typedef handle<image> handle;
+		typedef weak_handle<image> weak_handle;
 
 		image(const std::string& filename);
 		virtual ~image();

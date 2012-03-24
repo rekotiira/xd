@@ -2,8 +2,7 @@
 #define H_XD_AUDIO_SOUND
 
 #include <xd/config.hpp>
-#include <xd/resource.hpp>
-#include <xd/resource_handle.hpp>
+#include <xd/handle.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
 
@@ -16,10 +15,11 @@ namespace xd
 		struct sound_handle;
 	}
 
-	class XD_API sound : public xd::resource, public boost::noncopyable
+	class XD_API sound : public boost::noncopyable
 	{
 	public:
-		typedef resource_handle<sound> handle;
+		typedef handle<sound> handle;
+		typedef weak_handle<sound> weak_handle;
 
 		sound(const std::string& filename);
 		virtual ~sound();

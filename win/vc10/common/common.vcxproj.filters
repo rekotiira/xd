@@ -63,16 +63,25 @@
     <ClInclude Include="..\..\..\include\xd\detail\iterate_entity_constructor.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\detail\resource_handle.hpp">
+    <ClInclude Include="..\..\..\include\xd\detail\identity.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\resource_handle.hpp">
+    <ClInclude Include="..\..\..\include\xd\weak_handle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\resource.hpp">
+    <ClInclude Include="..\..\..\include\xd\handle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\xd\detail\identity.hpp">
+    <ClInclude Include="..\..\..\include\xd\detail\noop_deleter.hpp">
+      <Filter>Header Files\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\asset_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\asset_serializer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\xd\detail\iterate_asset_manager.hpp">
       <Filter>Header Files\detail</Filter>
     </ClInclude>
   </ItemGroup>
