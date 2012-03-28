@@ -3,6 +3,7 @@
 
 #include <xd/vendor/glm/glm.hpp>
 #include <xd/vendor/glm/gtc/type_ptr.hpp>
+#include <xd/vendor/glm/gtc/matrix_transform.hpp>
 
 namespace xd
 {

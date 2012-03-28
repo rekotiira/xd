@@ -9,6 +9,7 @@
 #include <boost/lexical_cast.hpp>
 #include <ctime>
 #include <cmath>
+#include <xd/graphics/simple_text_renderer.hpp>
 #include "test.h"
 
 void wave_decorator(xd::text_decorator& decorator, const xd::formatted_text& text, const xd::text_decorator_args& args)
@@ -36,7 +37,7 @@ test::test()
 	: xd::window("3D Isometric Sample", 640, 480)
 	, m_grass_batch(GL_QUADS)
 	, m_edge_batch(GL_QUADS)
-	, m_font("verdanab.ttf", 12)
+	, m_font("verdanab.ttf")
 	, m_grass_texture(xd::create<xd::texture>("grass.png"))
 	, m_grass_edge_texture(xd::create<xd::texture>("grass_edge.png"))
 	, m_edge_texture(xd::create<xd::texture>("edge.png"))
@@ -125,19 +126,6 @@ test::test()
 
 test::~test()
 {
-}
-
-void test::draw_text(float x, float y, const std::string& text)
-{
-	xd::font_style style;
-	style.color = xd::vec4(1, 1, 1, 1);
-	style.shadow = xd::font_shadow(1, -1, xd::vec4(0, 0, 0, 1));
-
-	m_model_view->push();
-		m_model_view->translate(x, y, 0);
-		m_model_view->scale(1, -1, 1);
-		m_text_formatter.render(text, m_font, style, m_text_shader, m_geometry.mvp());
-	m_model_view->pop();
 }
 
 void test::draw_tile(int x, int y)
@@ -281,8 +269,10 @@ void test::run()
 		// alpha testing
 		//glAlphaFunc(GL_GREATER, 0.5f);
 
+		//draw_text(0, 0, "Foobar");
+
 		// draw text
-		m_model_view->translate(50, 20, 0);
+		/*m_model_view->translate(50, 20, 0);
 		m_model_view->rotate(10, 0, 0, 1);
 		m_model_view->scale(1.2f);
 		draw_text(10, 20, "{wave}{typewriter}{color=yellow}FPS:{/color} "+boost::lexical_cast<std::string>(fps())+"{/typewriter}{/wave}");
@@ -296,7 +286,19 @@ void test::run()
 		m_model_view->translate(0, 10, 0);
 		m_model_view->rotate(-15, 0, 0, 1);
 		m_model_view->scale(1.1f);
-		draw_text(10, 80, "{color=yellow}Zoom:{/color} "+boost::lexical_cast<std::string>(m_zoom));
+		draw_text(10, 80, "{color=yellow}Zoom:{/color} "+boost::lexical_cast<std::string>(m_zoom));*/
+
+		m_model_view->translate(100, 50, 0);
+		m_model_view->rotate(30, 0, 0, 1);
+		m_model_view->scale(1, -1, 1);
+
+		xd::simple_text_renderer render_text(640, 480);
+		auto style = xd::font_style(xd::vec4(1,1,1,1), 24).shadow(2, -2, xd::vec4(0,0,0,1));
+		auto text = "{wave}Hello there {color=yellow}skauert{/color}!{/wave}";
+		render_text.render_formatted(m_font, m_text_formatter, style, 20, 440, text);
+
+		//xd::text_renderer render_text;
+		//render_text.render_formatted(m_font, m_text_formatter, style, m_geometry.mvp(), text);
 
 		swap();
 	}

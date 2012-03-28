@@ -97,7 +97,7 @@ namespace xd
 				loaded_assets.erase(it2);
 		}
 #else
-		// generate xd::entity::entity overloads with file iteration (up to XD_MAX_ARITY parameters)
+		// generate overloads for load, load_persistent and release with file iteration (up to XD_MAX_ARITY parameters)
 		#define BOOST_PP_ITERATION_PARAMS_1 (3, (1, XD_MAX_ARITY, <xd/detail/iterate_asset_manager.hpp>))
 		#include BOOST_PP_ITERATE()
 #endif

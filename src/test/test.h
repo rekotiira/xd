@@ -32,7 +32,6 @@ private:
 	// shaders for rendering textured quads and text
 	xd::texture_shader m_texture_shader;
 	xd::texture_mask_shader m_texture_mask_shader;
-	xd::text_shader m_text_shader;
 
 	// vertex batch for grass and edges
 	my_vertex_batch m_grass_batch, m_edge_batch;

@@ -41,6 +41,7 @@ namespace xd { namespace detail { namespace text_formatter {
 
 	// typedefs for styles
 	typedef nested_value<glm::vec4> nested_color;
+	typedef nested_value<int> nested_size;
 	typedef nested_value<float> nested_alpha;
 	typedef nested_value<std::string> nested_type;
 	typedef nested_value<font_shadow> nested_shadow;
@@ -52,6 +53,7 @@ namespace xd { namespace detail { namespace text_formatter {
 	// state changes
 	struct state_change_push_color : nested_color {};
 	struct state_change_push_alpha : nested_alpha {};
+	struct state_change_push_size : nested_size {};
 	struct state_change_push_type : nested_type {};
 	struct state_change_push_shadow : nested_shadow {};
 	struct state_change_push_outline : nested_outline {};
@@ -59,6 +61,7 @@ namespace xd { namespace detail { namespace text_formatter {
 	struct state_change_push_letter_spacing : nested_letter_spacing {};
 	struct state_change_pop_color : nested_void {};
 	struct state_change_pop_alpha : nested_void {};
+	struct state_change_pop_size : nested_void {};
 	struct state_change_pop_type : nested_void {};
 	struct state_change_pop_shadow : nested_void {};
 	struct state_change_pop_outline : nested_void {};
@@ -69,6 +72,7 @@ namespace xd { namespace detail { namespace text_formatter {
 	typedef boost::variant<
 		state_change_push_color,
 		state_change_push_alpha,
+		state_change_push_size,
 		state_change_push_type,
 		state_change_push_shadow,
 		state_change_push_outline,
@@ -76,6 +80,7 @@ namespace xd { namespace detail { namespace text_formatter {
 		state_change_push_letter_spacing,
 		state_change_pop_color,
 		state_change_pop_alpha,
+		state_change_pop_size,
 		state_change_pop_type,
 		state_change_pop_shadow,
 		state_change_pop_outline,

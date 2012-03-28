@@ -4,7 +4,6 @@
 #include <stdexcept>
 #include <stack>
 #include <xd/glm.hpp>
-#include <xd/vendor/glm/gtc/matrix_transform.hpp>
 
 namespace xd
 {

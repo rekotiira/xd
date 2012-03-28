@@ -87,6 +87,14 @@ namespace xd
 		{
 		}
 	};
+
+	struct font_style_undefined : exception
+	{
+		font_style_undefined(const std::string& style)
+			: exception("font style "+style+" is undefined")
+		{
+		}
+	};
 }
 
 #endif

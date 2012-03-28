@@ -20,5 +20,7 @@
 #include <xd/graphics/vertex_traits.hpp>
 #include <xd/graphics/vertex_batch.hpp>
 #include <xd/graphics/sprite_batch.hpp>
+#include <xd/graphics/text_renderer.hpp>
+#include <xd/graphics/simple_text_renderer.hpp>
 
 #endif

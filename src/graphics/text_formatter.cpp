@@ -1,3 +1,8 @@
+#include <xd/graphics/exceptions.hpp>
+#include <xd/graphics/text_formatter.hpp>
+#include <xd/glm.hpp>
+#include <xd/vendor/utf8.h>
+#include <boost/lexical_cast.hpp>
 #include <string>
 #include <algorithm>
 #include <stdexcept>
@@ -5,11 +10,6 @@
 #include <utility>
 #include <list>
 #include <cctype>
-#include <boost/lexical_cast.hpp>
-#include <xd/graphics/exceptions.hpp>
-#include <xd/graphics/text_formatter.hpp>
-#include <xd/vendor/utf8.h>
-#include <iostream>
 
 namespace xd { namespace detail { namespace text_formatter {
 
@@ -194,32 +194,37 @@ namespace xd { namespace detail { namespace text_formatter {
 		stacked_font_style(const font_style& initial_state)
 		{
 			nested_color color;
-			color.value = initial_state.color;
+			color.value = initial_state.color();
 			color.level = 0;
 			colors.push_back(color);
 
+			nested_size size;
+			size.value = initial_state.size();
+			size.level = 0;
+			sizes.push_back(size);
+
 			nested_letter_spacing letter_spacing;
-			letter_spacing.value = initial_state.letter_spacing;
+			letter_spacing.value = initial_state.letter_spacing();
 			letter_spacing.level = 0;
 			letter_spacings.push_back(letter_spacing);
 
-			if (initial_state.type) {
+			if (initial_state.has_type()) {
 				nested_type type;
-				type.value = *initial_state.type;
+				type.value = initial_state.type();
 				type.level = 0;
 				types.push_back(type);
 			}
 
-			if (initial_state.shadow) {
+			if (initial_state.has_shadow()) {
 				nested_shadow shadow;
-				shadow.value = *initial_state.shadow;
+				shadow.value = initial_state.shadow();
 				shadow.level = 0;
 				shadows.push_back(shadow);
 			}
 
-			if (initial_state.outline) {
+			if (initial_state.has_outline()) {
 				nested_outline outline;
-				outline.value = *initial_state.outline;
+				outline.value = initial_state.outline();
 				outline.level = 0;
 				outlines.push_back(outline);
 			}
@@ -227,17 +232,16 @@ namespace xd { namespace detail { namespace text_formatter {
 
 		font_style get_font_style()
 		{
-			font_style style;
-			style.color = colors.back().value;
-			style.letter_spacing = letter_spacings.back().value;
+			font_style style(colors.back().value, sizes.back().value);
+			style.letter_spacing(letter_spacings.back().value);
 			if (alphas.size() != 0)
-				style.color.a *= alphas.back().value;
+				style.color().a *= alphas.back().value;
 			if (types.size() != 0)
-				style.type = types.back().value;
+				style.type(types.back().value);
 			if (shadows.size() != 0)
-				style.shadow = shadows.back().value;
+				style.shadow(shadows.back().value);
 			if (outlines.size() != 0)
-				style.outline = outlines.back().value;
+				style.outline(outlines.back().value);
 			return style;
 		}
 
@@ -270,6 +274,11 @@ namespace xd { namespace detail { namespace text_formatter {
 				push(alphas, value * alphas.back().value, level);
 			else
 				push(alphas, value, level);
+		}
+
+		void push_size(int value, int level)
+		{
+			push(sizes, value, level);
 		}
 
 		void push_type(const std::string& value, int level)
@@ -321,6 +330,11 @@ namespace xd { namespace detail { namespace text_formatter {
 			pop(alphas, level);
 		}
 
+		void pop_size(int level)
+		{
+			pop(sizes, level);
+		}
+
 		void pop_type(int level)
 		{
 			pop(types, level);
@@ -361,6 +375,7 @@ namespace xd { namespace detail { namespace text_formatter {
 		void pop_level(int level)
 		{
 			pop_level(colors, level);
+			pop_level(sizes, level);
 			pop_level(alphas, level);
 			pop_level(types, level);
 			pop_level(shadows, level);
@@ -370,6 +385,7 @@ namespace xd { namespace detail { namespace text_formatter {
 		}
 
 		std::list<nested_color> colors;
+		std::list<nested_size> sizes;
 		std::list<nested_alpha> alphas;
 		std::list<nested_type> types;
 		std::list<nested_shadow> shadows;
@@ -395,6 +411,11 @@ namespace xd { namespace detail { namespace text_formatter {
 		void operator()(const state_change_push_alpha& state_change)
 		{
 			m_style_stack.push_alpha(state_change.value, state_change.level);
+		}
+
+		void operator()(const state_change_push_size& state_change)
+		{
+			m_style_stack.push_size(state_change.value, state_change.level);
 		}
 
 		void operator()(const state_change_push_type& state_change)
@@ -430,6 +451,11 @@ namespace xd { namespace detail { namespace text_formatter {
 		void operator()(const state_change_pop_alpha& state_change)
 		{
 			m_style_stack.pop_alpha(state_change.level);
+		}
+
+		void operator()(const state_change_pop_size& state_change)
+		{
+			m_style_stack.pop_size(state_change.level);
 		}
 
 		void operator()(const state_change_pop_type& state_change)
@@ -521,6 +547,14 @@ void xd::text_decorator::push_alpha(float value)
 	m_current_state_changes.push_back(state_change);
 }
 
+void xd::text_decorator::push_size(int value)
+{
+	detail::text_formatter::state_change_push_size state_change;
+	state_change.value = value;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
 void xd::text_decorator::push_type(const std::string& value)
 {
 	detail::text_formatter::state_change_push_type state_change;
@@ -571,6 +605,13 @@ void xd::text_decorator::pop_color()
 void xd::text_decorator::pop_alpha()
 {
 	detail::text_formatter::state_change_pop_alpha state_change;
+	state_change.level = m_current_level;
+	m_current_state_changes.push_back(state_change);
+}
+
+void xd::text_decorator::pop_size()
+{
+	detail::text_formatter::state_change_pop_size state_change;
 	state_change.level = m_current_level;
 	m_current_state_changes.push_back(state_change);
 }
@@ -730,8 +771,8 @@ void xd::text_formatter::set_variable_delims(const std::string& open, const std:
 	m_variable_close_delim = close;
 }
 
-void xd::text_formatter::render(const std::string& text, xd::font& font, const xd::font_style& style,
-	xd::shader_program& shader, const glm::mat4& mvp)
+void xd::text_formatter::render(const std::string& text, xd::font::handle font, const xd::font_style& style,
+	xd::shader_program::handle shader, const glm::mat4& mvp)
 {
 	// parse the input
 	detail::text_formatter::token_list tokens;
@@ -761,7 +802,7 @@ void xd::text_formatter::render(const std::string& text, xd::font& font, const x
 				if (current_str.length() != 0) {
 					if (style_stack.positions.size() != 0)
 						pos += style_stack.positions.back().value;
-					font.render(current_str, style_stack.get_font_style(), shader, mvp, &pos);
+					font->render(current_str, style_stack.get_font_style(), shader, mvp, &pos);
 					if (style_stack.positions.size() != 0)
 						pos -= style_stack.positions.back().value;
 					current_str.clear();
@@ -787,7 +828,7 @@ void xd::text_formatter::render(const std::string& text, xd::font& font, const x
 		if (current_str.length() != 0) {
 			if (style_stack.positions.size() != 0)
 				pos += style_stack.positions.back().value;
-			font.render(current_str, style_stack.get_font_style(), shader, mvp, &pos);
+			font->render(current_str, style_stack.get_font_style(), shader, mvp, &pos);
 		}
 	}
 }

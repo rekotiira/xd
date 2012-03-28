@@ -41,10 +41,15 @@ Some of the features XD supports:
 - Generic event bus (allows you to easily create your own event handlers with filtering support)
 - Entity/component system (supports logic, render and data components, event dispatching to interact with other code)
 - Generic factory (creating objects via a generic factory, also allows your own types to plug into it)
-
-Features that are planned or being worked on:
 - Sprite batching (allows to easily render sprite textures)
-- Easier way to specify vertex_traits
+- Asset manager (manages and caches loaded assets, so that resources are re-used when possible)
+
+TODO:
+- Change GLFW to SFML for various reasons
+- Make API calls that use GL functions not change the previous state of GL (use DSA extension when available)
+- Separate font from text rendering, and make the API to render text simpler
+- Support multiple sizes per font object, instead of just one
+- More advanced features for text rendering, such as bounding boxes with auto-wrapping
 - Finish binding rest of the XD API to Lua
 - Generic scene graph (scene/entity structuring/ordering)
 - Joystick and gamepad support
@@ -60,6 +65,7 @@ Features that are planned or being worked on:
 - Render-to-texture (via FBOs)
 - Saving textures as images (i.e. take screenshot feature)
 - Generic particle system
+- Write documentation/tutorials
 
 Features that might be implemented in future:
 - Networking (game networking is big and complex, it might be a good idea to use a library such as RakNet for it instead)

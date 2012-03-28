@@ -25,6 +25,7 @@ namespace xd
 		typedef std::unordered_map<std::string, glm::vec4> color_map_t;
 		typedef std::unordered_map<int, std::clock_t> typewriter_timer_map_t;
 
+		void size_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
 		void type_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
 		void bold_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);
 		void italic_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args);

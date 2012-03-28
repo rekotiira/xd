@@ -171,7 +171,7 @@ struct move_ball: xd::logic_component<pong_entity>
 pong::pong()
 	: xd::window("Pong", 640, 480)
 	, m_texture("texture.png")
-	, m_font("font.otf", 16)
+	, m_font("font.otf")
 	, m_player(*this)
 	, m_computer(*this)
 	, m_ball(*this)
@@ -225,7 +225,7 @@ pong::pong()
 
 	// register out update handler; this is where we'll update the game logic
 	// target for 60 FPS (1000 milliseconds / 60)
-	register_tick_handler(std::bind(&pong::frame_update, this), 1000/60);
+	register_tick_handler(std::bind(&pong::frame_update, this), 1000/120);
 }
 
 pong::~pong()
@@ -279,7 +279,7 @@ void pong::render()
 	// note that even if the window resolution changes it'll properly scale
 	// to the whole visible area of the window, but allows us to use these values
 	// as game coordinates, making it easy to write resolution-independent code
-	m_geometry.projection().load(xd::ortho<float>(0, 320, 240, 0, -1, 1));
+	m_geometry.projection().load(xd::ortho<float>(0, game_width, game_height, 0, -1, 1));
 	
 	// load the identity matrix
 	m_geometry.model_view().identity();
@@ -302,21 +302,13 @@ void pong::render()
 	m_computer.render();
 	m_ball.render();
 
-	// draw the text in white color
-	xd::font_style style;
-	style.color = glm::vec4(1, 1, 1, 1);
-	// draw the player score
-	m_geometry.model_view().push();
-	m_geometry.model_view().translate(game_width/2-50-10*(m_player_score/10+1), game_margin+wall_thickness+game_height/10, 0);
-	m_geometry.model_view().scale(1, -1, 1);
-	m_font.render(boost::lexical_cast<std::string>(m_player_score), style, m_text_shader, m_geometry.mvp());
-	m_geometry.model_view().pop();
-	// draw the computer score
-	m_geometry.model_view().push();
-	m_geometry.model_view().translate(game_width/2+50-10*(m_computer_score/10+1), game_margin+wall_thickness+game_height/10, 0);
-	m_geometry.model_view().scale(1, -1, 1);
-	m_font.render(boost::lexical_cast<std::string>(m_computer_score), style, m_text_shader, m_geometry.mvp());
-	m_geometry.model_view().pop();
+	// render the scores
+	xd::simple_text_renderer render_text(game_width, game_height);
+	xd::font_style style(xd::vec4(1,1,1,1), 16);
+	render_text.render(m_font, style, game_width/2-50-10*(m_player_score/10+1), game_height-(game_margin+wall_thickness+25),
+		boost::lexical_cast<std::string>(m_player_score));
+	render_text.render(m_font, style, game_width/2+50-10*(m_computer_score/10+1), game_height-(game_margin+wall_thickness+25),
+		boost::lexical_cast<std::string>(m_computer_score));
 
 	// show what we've drawn
 	swap();

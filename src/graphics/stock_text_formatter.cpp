@@ -18,6 +18,7 @@ xd::stock_text_formatter::stock_text_formatter()
 	m_colors["cyan"]   = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
 	// register default decorators
+	register_decorator("size", std::bind(&stock_text_formatter::size_decorator, this, _1, _2, _3));
 	register_decorator("type", std::bind(&stock_text_formatter::type_decorator, this, _1, _2, _3));
 	register_decorator("bold", std::bind(&stock_text_formatter::bold_decorator, this, _1, _2, _3));
 	register_decorator("italic", std::bind(&stock_text_formatter::italic_decorator, this, _1, _2, _3));
@@ -55,6 +56,12 @@ void xd::stock_text_formatter::set_color(const std::string& name, const glm::vec
 void xd::stock_text_formatter::reset_typewriter(int timer)
 {
 	m_typewriter_timers[timer] = std::clock();
+}
+
+void xd::stock_text_formatter::size_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args)
+{
+	decorator.push_size(args.get<int>(0));
+	decorator.push_text(text);
 }
 
 void xd::stock_text_formatter::type_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args)
@@ -100,56 +107,56 @@ void xd::stock_text_formatter::color_decorator(text_decorator& decorator, const 
 
 void xd::stock_text_formatter::shadow_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args)
 {
-	font_shadow shadow;
-	shadow.x = args.get<float>(0, 1);
-	shadow.y = args.get<float>(1, -1);
+	float x = args.get<float>(0, 1);
+	float y = args.get<float>(1, -1);
+	vec4 color;
 	if (args.count() == 3) {
 		std::string name = args.get<std::string>(2);
 		color_map_t::iterator i = m_colors.find(name);
 		if (i == m_colors.end())
 			throw text_decorator_exception("invalid color: "+name);
-		shadow.color = i->second;
+		color = i->second;
 	} else if (args.count() >= 5) {
 		float r = args.get<float>(2) / 255.0f;
 		float g = args.get<float>(3) / 255.0f;
 		float b = args.get<float>(4) / 255.0f;
 		float a = args.get<float>(5, 255) / 255.0f;
-		shadow.color = glm::vec4(r, g, b, a);
+		color = glm::vec4(r, g, b, a);
 	} else if (args.count() != 0 && args.count() != 2) {
 		throw text_decorator_exception("invalid arguments to shadow decorator");
 	} else {
 		// default shadow color
-		shadow.color = glm::vec4(0, 0, 0, 1);
+		color = glm::vec4(0, 0, 0, 1);
 	}
 
-	decorator.push_shadow(shadow);
+	decorator.push_shadow(font_shadow(x, y, color));
 	decorator.push_text(text);
 }
 
 void xd::stock_text_formatter::outline_decorator(text_decorator& decorator, const formatted_text& text, const text_decorator_args& args)
 {
-	font_outline outline;
-	outline.width = args.get<int>(0, 1);
+	int width = args.get<int>(0, 1);
+	vec4 color;
 	if (args.count() == 2) {
 		std::string name = args.get<std::string>(1);
 		color_map_t::iterator i = m_colors.find(name);
 		if (i == m_colors.end())
 			throw text_decorator_exception("invalid color: "+name);
-		outline.color = i->second;
+		color = i->second;
 	} else if (args.count() >= 4) {
 		float r = args.get<float>(1) / 255.0f;
 		float g = args.get<float>(2) / 255.0f;
 		float b = args.get<float>(3) / 255.0f;
 		float a = args.get<float>(4, 255) / 255.0f;
-		outline.color = glm::vec4(r, g, b, a);
+		color = glm::vec4(r, g, b, a);
 	} else if (args.count() != 0 && args.count() != 1) {
 		throw text_decorator_exception("invalid arguments to outline decorator");
 	} else {
 		// default outline color
-		outline.color = glm::vec4(0, 0, 0, 1);
+		color = glm::vec4(0, 0, 0, 1);
 	}
 
-	decorator.push_outline(outline);
+	decorator.push_outline(font_outline(width, color));
 	decorator.push_text(text);
 }
 

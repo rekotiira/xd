@@ -7,6 +7,8 @@
 #include <xd/graphics/exceptions.hpp>
 #include <xd/graphics/font.hpp>
 #include <xd/graphics/shader_program.hpp>
+#include <xd/handle.hpp>
+#include <xd/weak_handle.hpp>
 #include <xd/vendor/utf8.h>
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
@@ -196,6 +198,7 @@ namespace xd
 
 		void push_color(const glm::vec4& color);
 		void push_alpha(float alpha);
+		void push_size(int size);
 		void push_type(const std::string& type);
 		void push_shadow(const font_shadow& shadow);
 		void push_outline(const font_outline& outline);
@@ -204,6 +207,7 @@ namespace xd
 
 		void pop_color();
 		void pop_alpha();
+		void pop_size();
 		void pop_type();
 		void pop_shadow();
 		void pop_outline();
@@ -230,6 +234,9 @@ namespace xd
 	class XD_API text_formatter
 	{
 	public:
+		typedef xd::handle<text_formatter> handle;
+		typedef xd::weak_handle<text_formatter> weak_handle;
+
 		typedef std::function<void (text_decorator&, const formatted_text&, const text_decorator_args&)> decorator_callback_t;
 		typedef std::function<std::string (const std::string&)> variable_callback_t;
 
@@ -255,8 +262,8 @@ namespace xd
 		void unregister_decorator(const std::string& name);
 		void unregister_variable(const std::string& name);
 
-		void render(const std::string& text, xd::font& font, const xd::font_style& style,
-			xd::shader_program& shader, const glm::mat4& mvp);
+		void render(const std::string& text, xd::font::handle font, const xd::font_style& style,
+			xd::shader_program::handle shader, const glm::mat4& mvp);
 
 	private:
 		//typedef std::list<detail::text_formatter_token> token_list_t;

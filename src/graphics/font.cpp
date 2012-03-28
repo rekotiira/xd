@@ -2,15 +2,16 @@
 #include <xd/graphics/font.hpp>
 #include <xd/graphics/exceptions.hpp>
 #include <xd/vendor/utf8.h>
-#include <memory>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
+#include FT_SIZES_H
+#include <memory>
+#include <map>
 #include <memory>
 
 namespace xd { namespace detail { namespace font {
 
-	FT_Library *library = NULL;
+	FT_Library *library = nullptr;
 
 	struct vertex
 	{
@@ -51,13 +52,13 @@ namespace xd { namespace detail { namespace font {
 	struct face
 	{
 		FT_Face handle;
+		std::map<int, FT_Size> sizes;
 	};
 
 } } }
 
-xd::font::font(const std::string& filename, int size)
+xd::font::font(const std::string& filename)
     : m_filename(filename)
-	, m_size(size)
 	, m_mvp_uniform("mvpMatrix")
 	, m_position_uniform("vPosition")
 	, m_color_uniform("vColor")
@@ -80,7 +81,7 @@ xd::font::font(const std::string& filename, int size)
 	if (error)
 		throw font_load_failed(filename);
 
-	try {
+	/*try {
 		error = FT_Set_Pixel_Sizes(m_face->handle, 0, size);
 		if (error)
 			throw font_load_failed(filename);
@@ -92,20 +93,26 @@ xd::font::font(const std::string& filename, int size)
 	} catch (...) {
 		FT_Done_Face(m_face->handle);
 		throw;
-	}
+	}*/
 }
 
 xd::font::~font()
 {
+	// free all textures
 	for (auto i = m_glyph_map.begin(); i != m_glyph_map.end(); ++i) {
 		glDeleteTextures(1, &i->second->texture_id);
 	}
+	// free font sizes
+	for (auto i = m_face->sizes.begin(); i != m_face->sizes.end(); ++i) {
+		FT_Done_Size(i->second);
+	}
+	// free the font handle
 	FT_Done_Face(m_face->handle);
 }
 
 void xd::font::link_font(const std::string& type, const std::string& filename)
 {
-	auto linked_font = xd::create<font>(filename, m_size);
+	auto linked_font = xd::create<font>(filename);
 	m_linked_fonts[type] = linked_font;
 }
 
@@ -119,7 +126,7 @@ void xd::font::unlink_font(const std::string& type)
 	m_linked_fonts.erase(type);
 }
 
-const xd::detail::font::glyph& xd::font::load_glyph(utf8::uint32_t char_index)
+const xd::detail::font::glyph& xd::font::load_glyph(utf8::uint32_t char_index, int size)
 {
 	// check if glyph is already loaded
 	glyph_map_t::iterator i = m_glyph_map.find(char_index);
@@ -175,27 +182,57 @@ const xd::detail::font::glyph& xd::font::load_glyph(utf8::uint32_t char_index)
 }
 
 void xd::font::render(const std::string& text, const font_style& style,
-	xd::shader_program& shader, const glm::mat4& mvp, glm::vec2 *pos)
+	xd::shader_program::handle shader, const glm::mat4& mvp, glm::vec2 *pos)
 {
 	// check if we're rendering using this font or a linked font
-	if (style.type && style.type->length() != 0) {
-		font_map_t::iterator i = m_linked_fonts.find(*style.type);
+	if (style.m_type && style.m_type->length() != 0) {
+		font_map_t::iterator i = m_linked_fonts.find(*style.m_type);
 		if (i == m_linked_fonts.end())
-			throw invalid_font_type(*style.type);
+			throw invalid_font_type(*style.m_type);
 		font_style linked_style = style;
-		linked_style.type = boost::none;
+		linked_style.m_type = boost::none;
 		i->second->render(text, linked_style, shader, mvp, pos);
 		return;
+	}
+
+	// check if the font size is already loaded
+	auto it = m_face->sizes.find(style.m_size);
+	if (it == m_face->sizes.end()) {
+		// create a new size
+		FT_Size size;
+		if (FT_New_Size(m_face->handle, &size) != 0)
+			throw font_load_failed(m_filename);
+		// free the size in catch block if something goes wrong
+		try {
+			if (FT_Activate_Size(size) != 0)
+				throw font_load_failed(m_filename);
+			// set the pixel size
+			if (FT_Set_Pixel_Sizes(m_face->handle, 0, style.m_size) != 0)
+				throw font_load_failed(m_filename);
+			// pre-load 7-bit ASCII glyphs
+			for (int i = 0; i < 128; i++) {
+				load_glyph(i, style.m_size);
+			}
+		} catch (...) {
+			// free the size and re-throw
+			FT_Done_Size(size);
+			throw;
+		}
+		// insert the newly loaded size in the map
+		m_face->sizes.insert(std::make_pair(style.m_size, size));
+	} else {
+		// activate the size
+		FT_Activate_Size(it->second);
 	}
 
 	// bind to first texture unit
 	glActiveTexture(GL_TEXTURE0);
 
 	// setup the shader
-	shader.use();
-	shader.bind_uniform(m_mvp_uniform, mvp);
-	shader.bind_uniform(m_color_uniform, style.color);
-	shader.bind_uniform(m_texture_uniform, 0);
+	shader->use();
+	shader->bind_uniform(m_mvp_uniform, mvp);
+	shader->bind_uniform(m_color_uniform, style.m_color);
+	shader->bind_uniform(m_texture_uniform, 0);
 
 	// is kerning supported
 	FT_Bool kerning = FT_HAS_KERNING(m_face->handle);
@@ -212,7 +249,7 @@ void xd::font::render(const std::string& text, const font_style& style,
 		utf8::uint32_t char_index = utf8::next(i, text.end());
 
 		// get the cached glyph, or cache if it is not yet cached
-		const detail::font::glyph& glyph = load_glyph(char_index);
+		const detail::font::glyph& glyph = load_glyph(char_index, style.m_size);
 
 		// bind the texture
 		glBindTexture(GL_TEXTURE_2D, glyph.texture_id);
@@ -230,62 +267,62 @@ void xd::font::render(const std::string& text, const font_style& style,
 		glyph_pos.y += glyph.offset.y;
 
 		// add optional letter spacing
-		glyph_pos.x += style.letter_spacing/2;
+		glyph_pos.x += style.m_letter_spacing/2;
 
 		// if shadow is enabled, draw the shadow first
-		if (style.shadow) {
+		if (style.m_shadow) {
 			// calculate shadow position
 			glm::vec2 shadow_pos = glyph_pos;
-			shadow_pos.x += style.shadow->x;
-			shadow_pos.y += style.shadow->y;
+			shadow_pos.x += style.m_shadow->x;
+			shadow_pos.y += style.m_shadow->y;
 
 			// calculate shadow color
-			glm::vec4 shadow_color = style.shadow->color;
-			shadow_color.a *= style.color.a;
+			glm::vec4 shadow_color = style.m_shadow->color;
+			shadow_color.a *= style.m_color.a;
 
 			// bind uniforms
-			shader.bind_uniform(m_color_uniform, shadow_color);
-			shader.bind_uniform(m_position_uniform, shadow_pos);
+			shader->bind_uniform(m_color_uniform, shadow_color);
+			shader->bind_uniform(m_position_uniform, shadow_pos);
 
 			// draw shadow
 			glyph.quad_ptr->render();
 
 			// restore the text color
-			shader.bind_uniform(m_color_uniform, style.color);
+			shader->bind_uniform(m_color_uniform, style.m_color);
 		}
 		
 		// if outline is enabled, draw outline
-		if (style.outline) {
+		if (style.m_outline) {
 			// calculate outline color
-			glm::vec4 outline_color = style.outline->color;
-			outline_color.a *= style.color.a;
+			glm::vec4 outline_color = style.m_outline->color;
+			outline_color.a *= style.m_color.a;
 
 			// bind color
-			shader.bind_uniform(m_color_uniform, outline_color);
+			shader->bind_uniform(m_color_uniform, outline_color);
 
 			// draw font multiple times times to draw outline (EXPENSIVE!)
-			for (int x = -style.outline->width; x <= style.outline->width; x++) {
-				for (int y = -style.outline->width; y <= style.outline->width; y++) {
+			for (int x = -style.m_outline->width; x <= style.m_outline->width; x++) {
+				for (int y = -style.m_outline->width; y <= style.m_outline->width; y++) {
 					if (x == 0 && y == 0)
 						continue;
-					shader.bind_uniform(m_position_uniform, glyph_pos + glm::vec2(x, y));
+					shader->bind_uniform(m_position_uniform, glyph_pos + glm::vec2(x, y));
 					glyph.quad_ptr->render();
 				}
 			}
 
 			// restore the text color
-			shader.bind_uniform(m_color_uniform, style.color);
+			shader->bind_uniform(m_color_uniform, style.m_color);
 		}
 
 		// bind uniforms
-		shader.bind_uniform(m_position_uniform, glyph_pos);
+		shader->bind_uniform(m_position_uniform, glyph_pos);
 
 		// draw the glyph
 		glyph.quad_ptr->render();
 		
 		// advance the position
 		text_pos += glyph.advance;
-		text_pos.x += style.letter_spacing;
+		text_pos.x += style.m_letter_spacing;
 
 		// keep track of previous glyph to do kerning
 		prev_glyph_index = glyph.glyph_index;

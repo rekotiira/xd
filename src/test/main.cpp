@@ -97,7 +97,7 @@ void input(std::string message)
 
 #include <xd/asset_manager.hpp>
 
-struct foo
+/*struct foo
 {
 	typedef xd::handle<foo> handle;
 	typedef xd::weak_handle<foo> weak_handle;
@@ -122,7 +122,18 @@ namespace xd
 			return name;
 		}
 	};
-}
+}*/
+
+#include <cstdint>
+#include <cmath>
+
+struct foo
+{
+	void bar(const std::uint8_t& n)
+	{
+		std::cout << n << std::endl;
+	}
+};
 
 int main(int argc, char *argv[])
 {
@@ -153,14 +164,14 @@ int main(int argc, char *argv[])
 
 		test my_app;
 
-		my_entity e(my_app);
+		/*my_entity e(my_app);
 		e.get<std::string>("name") = "foo";
 		e.add_component(xd::create<life_component>());
 		e.update();
     
 		test_args args;
 		args.x = 1337;
-		e.trigger("test", args);
+		e.trigger("test", args);*/
 
 		my_app.run();
 	} catch (std::exception& e) {

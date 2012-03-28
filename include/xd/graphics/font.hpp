@@ -2,10 +2,9 @@
 #define H_XD_GRAPHICS_FONT
 
 #include <xd/graphics/detail/font.hpp>
-
+#include <xd/graphics/font_style.hpp>
 #include <xd/vendor/glew/glew.h>
 #include <xd/glm.hpp>
-
 #include <xd/handle.hpp>
 #include <xd/graphics/types.hpp>
 #include <xd/graphics/vertex_batch.hpp>
@@ -29,46 +28,6 @@
 
 namespace xd
 {
-	struct font_shadow
-	{
-		font_shadow() {}
-		font_shadow(float x_, float y_, const glm::vec4& color_)
-			: x(x_), y(y_), color(color_) {}
-
-		float x;
-		float y;
-		glm::vec4 color;
-	};
-
-	struct font_outline
-	{
-		font_outline() {}
-		font_outline(int width_, const glm::vec4& color_)
-			: width(width_), color(color_) {}
-
-		int width;
-		glm::vec4 color;
-	};
-
-	struct font_style
-	{
-		font_style()
-			: letter_spacing(0)
-			, line_height(0)
-		{
-		}
-
-		// required styles
-		glm::vec4 color;
-		float letter_spacing;
-		float line_height;
-
-		// optional styles
-		boost::optional<std::string> type;
-		boost::optional<font_shadow> shadow;
-		boost::optional<font_outline> outline;
-	};
-
 	// font class
 	class XD_API font : public boost::noncopyable
 	{
@@ -76,7 +35,7 @@ namespace xd
 		typedef handle<font> handle;
 		typedef weak_handle<font> weak_handle;
 
-		font(const std::string& filename, int size);
+		font(const std::string& filename);
 		virtual ~font();
 
 		void link_font(const std::string& type, const std::string& filename);
@@ -84,7 +43,7 @@ namespace xd
 		void unlink_font(const std::string& type);
 
 		void render(const std::string& text, const font_style& style,
-			shader_program& shader, const glm::mat4& mvp, glm::vec2 *pos = 0);
+			shader_program::handle shader, const glm::mat4& mvp, glm::vec2 *pos = 0);
 
 		const std::string& get_mvp_uniform();
 		const std::string& get_pos_uniform();
@@ -98,11 +57,10 @@ namespace xd
 	private:
 		typedef std::unordered_map<int, std::unique_ptr<detail::font::glyph>> glyph_map_t;
 		typedef std::unordered_map<std::string, font::handle> font_map_t;
-		const detail::font::glyph& load_glyph(utf8::uint32_t char_index);
+		const detail::font::glyph& load_glyph(utf8::uint32_t char_index, int size);
 
 		std::unique_ptr<detail::font::face> m_face;
 		std::string m_filename;
-		int m_size;
 		glyph_map_t m_glyph_map;
 		font_map_t m_linked_fonts;
 		std::string m_mvp_uniform;
