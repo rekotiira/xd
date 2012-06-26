@@ -32,8 +32,8 @@ namespace xd
 	class XD_API font : public boost::noncopyable
 	{
 	public:
-		typedef handle<font> handle;
-		typedef weak_handle<font> weak_handle;
+		typedef xd::handle<font> handle;
+		typedef xd::weak_handle<font> weak_handle;
 
 		font(const std::string& filename);
 		virtual ~font();
