@@ -20,8 +20,8 @@ namespace xd
 	class XD_API image : public boost::noncopyable
 	{
 	public:
-		typedef handle<image> handle;
-		typedef weak_handle<image> weak_handle;
+		typedef xd::handle<image> handle;
+		typedef xd::weak_handle<image> weak_handle;
 
 		image(const std::string& filename);
 		virtual ~image();
