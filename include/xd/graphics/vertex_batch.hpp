@@ -11,8 +11,8 @@ namespace xd
 	class vertex_batch : public boost::noncopyable
 	{
 	public:
-		typedef handle<vertex_batch> handle;
-		typedef weak_handle<vertex_batch> weak_handle;
+		typedef xd::handle<vertex_batch> handle;
+		typedef xd::weak_handle<vertex_batch> weak_handle;
 
 		vertex_batch(GLenum draw_mode = GL_TRIANGLES, const Traits& traits = Traits())
 			: m_draw_mode(draw_mode)
