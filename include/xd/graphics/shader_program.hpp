@@ -15,8 +15,8 @@ namespace xd
 	class XD_API shader_program : public boost::noncopyable
 	{
 	public:
-		typedef handle<shader_program> handle;
-		typedef weak_handle<shader_program> weak_handle;
+		typedef xd::handle<shader_program> handle;
+		typedef xd::weak_handle<shader_program> weak_handle;
 
 		// constructors & destructors
 		shader_program();
