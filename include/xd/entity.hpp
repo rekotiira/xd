@@ -46,12 +46,12 @@ namespace xd
 	{
 	public:
 		// required for xd::factory
-		typedef handle<entity> handle;
-		typedef weak_handle<entity> weak_handle;
+		typedef xd::handle<entity> handle;
+		typedef xd::weak_handle<entity> weak_handle;
 		// component handle typedefs
-		typedef typename component<entity<Base>>::handle component_handle;
-		typedef typename logic_component<entity<Base>>::handle logic_component_handle;
-		typedef typename render_component<entity<Base>>::handle render_component_handle;
+		typedef typename xd::component<entity<Base>>::handle component_handle;
+		typedef typename xd::logic_component<entity<Base>>::handle logic_component_handle;
+		typedef typename xd::render_component<entity<Base>>::handle render_component_handle;
 
 		entity()
 		{
