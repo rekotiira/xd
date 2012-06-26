@@ -14,7 +14,7 @@
 template <typename R BOOST_PP_ENUM_TRAILING_PARAMS(XD_N, typename T)>
 static typename R::handle create(BOOST_PP_ENUM_BINARY_PARAMS(XD_N, T, && p))
 {
-	return R::handle(new R(BOOST_PP_ENUM(XD_N, XD_FORWARD, _)));
+	return typename R::handle(new R(BOOST_PP_ENUM(XD_N, XD_FORWARD, _)));
 }
 
 #undef XD_FORWARD
