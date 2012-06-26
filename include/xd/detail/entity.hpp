@@ -20,8 +20,8 @@ namespace xd { namespace detail {
 	class logic_component : public virtual component_base<T>
 	{
 	public:
-		typedef handle<detail::logic_component<T>> handle;
-		typedef weak_handle<detail::logic_component<T>> weak_handle;
+		typedef xd::handle<detail::logic_component<T>> handle;
+		typedef xd::weak_handle<detail::logic_component<T>> weak_handle;
 	private:
 		friend T;
 		virtual void update(T&) = 0;
@@ -31,8 +31,8 @@ namespace xd { namespace detail {
 	class render_component : public virtual component_base<T>
 	{
 	public:
-		typedef handle<detail::render_component<T>> handle;
-		typedef weak_handle<detail::render_component<T>> weak_handle;
+		typedef xd::handle<detail::render_component<T>> handle;
+		typedef xd::weak_handle<detail::render_component<T>> weak_handle;
 	private:
 		friend T;
 		virtual void render(T&) = 0;
