@@ -14,8 +14,8 @@ namespace xd
 	class XD_API texture : public boost::noncopyable
 	{
 	public:
-		typedef handle<texture> handle;
-		typedef weak_handle<texture> weak_handle;
+		typedef xd::handle<texture> handle;
+		typedef xd::weak_handle<texture> weak_handle;
 
 		texture(int width, int height, const void *data = 0,
 			GLint wrap_s = GL_REPEAT, GLint wrap_t = GL_REPEAT,
