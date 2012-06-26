@@ -17,7 +17,7 @@ namespace xd
 		template <typename R, typename... Args>
 		static typename R::handle create(Args&&... args)
 		{
-			return R::handle(new R(std::forward<Args>(args)...));
+			return typename R::handle(new R(std::forward<Args>(args)...));
 		}
 #else
 		// generate xd::factory::create functions with file iteration (up to XD_MAX_ARITY overloads)
