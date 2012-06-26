@@ -17,8 +17,8 @@ namespace xd
 	class XD_API sprite_batch : public boost::noncopyable
 	{
 	public:
-		typedef handle<sprite_batch> handle;
-		typedef weak_handle<sprite_batch> weak_handle;
+		typedef xd::handle<sprite_batch> handle;
+		typedef xd::weak_handle<sprite_batch> weak_handle;
 
 		sprite_batch();
 		virtual ~sprite_batch();
