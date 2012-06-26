@@ -25,9 +25,9 @@ namespace xd
 	{
 	public:
 		// typedefs
-		typedef handle<window> handle;
-		typedef weak_handle<window> weak_handle;
-		typedef event_bus<input_args>::callback_t input_event_callback_t;
+		typedef xd::handle<window> handle;
+		typedef xd::weak_handle<window> weak_handle;
+		typedef xd::event_bus<input_args>::callback_t input_event_callback_t;
 		typedef std::function<void ()> tick_callback_t;
 
 		// public interface
