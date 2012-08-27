@@ -23,18 +23,21 @@
 namespace xd
 {
 	template <typename T>
-	class logic_component : public detail::logic_component<T>
+	struct logic_component : detail::logic_component<T>
 	{
+		typedef boost::intrusive_ptr<logic_component> ptr;
 	};
 
 	template <typename T>
-	class render_component : public detail::render_component<T>
+	struct render_component : detail::render_component<T>
 	{
+		typedef boost::intrusive_ptr<render_component> ptr;
 	};
     
 	template <typename T>
-	class component : public detail::component<T>
+	struct component : detail::component<T>
 	{
+		typedef boost::intrusive_ptr<component> ptr;
 	};
 	
 	class entity_placeholder
@@ -257,8 +260,8 @@ namespace xd
 		}
         
 	private:
-		typedef std::list<logic_component_ptr> logic_component_list_t;
-		typedef std::list<render_component_ptr> render_component_list_t;
+		typedef std::list<typename detail::logic_component<Class>::ptr> logic_component_list_t;
+		typedef std::list<typename detail::render_component<Class>::ptr> render_component_list_t;
 
 		// data
 		std::unordered_map<std::size_t, boost::any> m_type_to_data;

@@ -22,12 +22,19 @@ struct test_args
     int x;
 };
 
-class life_component : public xd::logic_component<my_entity>
+class life_component : public xd::component<my_entity>
 {
+public:
+	typedef boost::intrusive_ptr<life_component> ptr;
+
 	void init(my_entity& e)
 	{
 		// register event with a lambda filter
 		e.on("test", &life_component::on_test, this);
+	}
+
+	void render(my_entity& e)
+	{
 	}
 
 	void update(my_entity& e)
