@@ -217,14 +217,14 @@ namespace xd
 			components_set& components = m_components[priority];
 			{
 				auto i = std::find(components.logic_components.begin(), components.logic_components.end(), component);
-				if (i != components.end()) {
-					components.erase(i);
+				if (i != components.logic_components.end()) {
+					components.logic_components.erase(i);
 				}
 			}
 			{
 				auto i = std::find(components.render_components.begin(), components.render_components.end(), component);
-				if (i != components.end()) {
-					components.erase(i);
+				if (i != components.render_components.end()) {
+					components.render_components.erase(i);
 				}
 			}
 		}
