@@ -51,7 +51,7 @@ namespace xd
 	{
 	public:
 		// required for xd::factory
-		typedef boost::intrusive_ptr<entity> ptr;
+		typedef boost::intrusive_ptr<Class> ptr;
 		// component ptr typedefs
 		typedef typename xd::component<Class>::ptr component_ptr;
 		typedef typename xd::logic_component<Class>::ptr logic_component_ptr;

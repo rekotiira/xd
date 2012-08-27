@@ -8,11 +8,10 @@
 // the entity data needs forward declaration of pong class
 class pong;
 
-// the data that each entity share
-// pong has only two entities: paddle and ball
-struct entity_data
+// our entity class
+struct pong_entity : xd::entity<pong_entity>
 {
-	entity_data(pong& game)
+	pong_entity(pong& game)
 		: game(game)
 	{}
 
@@ -21,9 +20,6 @@ struct entity_data
 	// position
 	xd::vec2 pos;
 };
-
-// our entity class
-typedef xd::entity<entity_data> pong_entity;
 
 // the game class
 class pong : public xd::window
@@ -39,15 +35,15 @@ public:
 
 private:
 	// some resources required by our game
-	xd::texture m_texture;
-	xd::font m_font;
-	xd::text_shader m_text_shader;
+	xd::texture::ptr m_texture;
+	xd::font::ptr m_font;
+	xd::text_shader::ptr m_text_shader;
 	xd::transform_geometry m_geometry;
 
 	// the game entities
-	pong_entity m_player;
-	pong_entity m_computer;
-	pong_entity m_ball;
+	pong_entity::ptr m_player;
+	pong_entity::ptr m_computer;
+	pong_entity::ptr m_ball;
 
 	// scores
 	int m_player_score;

@@ -55,7 +55,7 @@ struct input_controller : xd::logic_component<pong_entity>
 struct ai_controller : xd::logic_component<pong_entity>
 {
 	// the AI controller will act on ball's position
-	ai_controller(pong_entity::handle ball)
+	ai_controller(pong_entity::ptr ball)
 		: ball(ball)
 	{
 	}
@@ -74,7 +74,7 @@ struct ai_controller : xd::logic_component<pong_entity>
 			paddle.pos.y -= units;
 	}
 
-	pong_entity::handle ball;
+	pong_entity::ptr ball;
 };
 
 // you could also check if the paddle goes too up or down in input_controller
@@ -93,22 +93,22 @@ struct paddle_collision : xd::logic_component<pong_entity>
 
 		// check if the paddle is colliding with the ball
 		auto& ball = paddle.game.m_ball;
-		if (xd::rect(paddle.pos, paddle_thickness, paddle_height).intersects(xd::rect(ball.pos, ball_size, ball_size))) {
+		if (xd::rect(paddle.pos, paddle_thickness, paddle_height).intersects(xd::rect(ball->pos, ball_size, ball_size))) {
 			// get the velocity
-			auto& velocity = ball.get<glm::vec2>("velocity");
+			auto& velocity = ball->get<glm::vec2>("velocity");
 			// we also need to check on which side of the paddle the collision happened on, so we can correctly
 			// invert either the x or y velocity of the ball, we simply check whether the collision happened on side
 			// or top/bottom of the paddle by checking the x position of ball in previous frame
-			if ((velocity.x < 0 && (paddle.pos.x+paddle_thickness) < (ball.pos.x-velocity.x*ball_speed)) ||
-				(velocity.x > 0 && paddle.pos.x > (ball.pos.x+ball_size-velocity.x*ball_speed)))
+			if ((velocity.x < 0 && (paddle.pos.x+paddle_thickness) < (ball->pos.x-velocity.x*ball_speed)) ||
+				(velocity.x > 0 && paddle.pos.x > (ball->pos.x+ball_size-velocity.x*ball_speed)))
 			{
 				// the collision happened horizontally; position the ball so that it's not inside the paddle
-				ball.pos.x = paddle.pos.x + (velocity.x < 0 ? paddle_thickness : -ball_size);
+				ball->pos.x = paddle.pos.x + (velocity.x < 0 ? paddle_thickness : -ball_size);
 				// invert the x velocity to bounce the ball back
 				velocity.x = -velocity.x;
 				// finally to make a things bit interesting, instead of just bouncing the ball back, apply
 				// a little bit of variency on it depending on where on the paddle it hit
-				float hitting_point = (ball.pos.y+ball_size) - paddle.pos.y;
+				float hitting_point = (ball->pos.y+ball_size) - paddle.pos.y;
 				// because the ball doesn't have to entirely touch the paddle, it means the collision area
 				// is approximately paddle_height+ball_size, let's clamp the value between 0.0f - 1.0f
 				hitting_point = hitting_point / (paddle_height+ball_size);
@@ -128,7 +128,7 @@ struct paddle_collision : xd::logic_component<pong_entity>
 			else
 			{
 				// the collision happened vertically, position the ball so that it's not inside the paddle
-				ball.pos.y = paddle.pos.y + (velocity.y < 0 ? paddle_height : -ball_size);
+				ball->pos.y = paddle.pos.y + (velocity.y < 0 ? paddle_height : -ball_size);
 				// invert the y velocity to bounce the ball back
 				velocity.y = -velocity.y;
 			}
@@ -170,11 +170,11 @@ struct move_ball: xd::logic_component<pong_entity>
 
 pong::pong()
 	: xd::window("Pong", 640, 480)
-	, m_texture("texture.png")
-	, m_font("font.otf")
-	, m_player(*this)
-	, m_computer(*this)
-	, m_ball(*this)
+	, m_texture(xd::create<xd::texture>("texture.png"))
+	, m_font(xd::create<xd::font>("font.otf"))
+	, m_player(xd::create<pong_entity>(*this))
+	, m_computer(xd::create<pong_entity>(*this))
+	, m_ball(xd::create<pong_entity>(*this))
 	, m_player_score(0)
 	, m_computer_score(0)
 {
@@ -191,13 +191,13 @@ pong::pong()
 
 	// make player controllible by keyboard and computer by AI, also deal with collisions
 	auto collision_detector = xd::create<paddle_collision>();
-	m_player.add_component(xd::create<input_controller>());
-	m_player.add_component(collision_detector);
-	m_computer.add_component(xd::create<ai_controller>(m_ball));
-	m_computer.add_component(collision_detector);
+	m_player->add_component(xd::create<input_controller>());
+	m_player->add_component(collision_detector);
+	m_computer->add_component(xd::create<ai_controller>(m_ball));
+	m_computer->add_component(collision_detector);
 
 	// finally the next component will move the ball
-	m_ball.add_component(xd::create<move_ball>());
+	m_ball->add_component(xd::create<move_ball>());
 
 	// create renderers, multiple entities can share a single component
 	// which is why we only create one paddle renderer
@@ -205,9 +205,9 @@ pong::pong()
 	auto render_ball = xd::create<ball_renderer>();
 
 	// register renderers to entities
-	m_player.add_component(render_paddle);
-	m_computer.add_component(render_paddle);
-	m_ball.add_component(render_ball);
+	m_player->add_component(render_paddle);
+	m_computer->add_component(render_paddle);
+	m_ball->add_component(render_ball);
 
 	// reset game
 	reset();
@@ -255,16 +255,16 @@ void pong::run()
 void pong::frame_update()
 {
 	// update paddles and ball
-	m_player.update();
-	m_computer.update();
-	m_ball.update();
+	m_player->update();
+	m_computer->update();
+	m_ball->update();
 
 	// check if we should give score
-	if ((m_ball.pos.x+ball_size) < 0) {
+	if ((m_ball->pos.x+ball_size) < 0) {
 		m_computer_score++;
 		reset();
 	}
-	if (m_ball.pos.x > game_width) {
+	if (m_ball->pos.x > game_width) {
 		m_player_score++;
 		reset();
 	}
@@ -298,9 +298,9 @@ void pong::render()
 
 	// now render the paddles and the ball, these will simply use the registered
 	// render components of the entities
-	m_player.render();
-	m_computer.render();
-	m_ball.render();
+	m_player->render();
+	m_computer->render();
+	m_ball->render();
 
 	// render the scores
 	xd::simple_text_renderer render_text(game_width, game_height);
@@ -317,16 +317,16 @@ void pong::render()
 void pong::reset()
 {
 	// set paddle positions
-	m_player.pos = xd::vec2(game_margin, game_height/2-paddle_height/2);
-	m_computer.pos = xd::vec2(game_width-paddle_thickness-game_margin, game_height/2-paddle_height/2);
+	m_player->pos = xd::vec2(game_margin, game_height/2-paddle_height/2);
+	m_computer->pos = xd::vec2(game_width-paddle_thickness-game_margin, game_height/2-paddle_height/2);
 
 	// set ball starting position
-	m_ball.pos.x = game_margin + wall_thickness;
-	m_ball.pos.y = game_margin + wall_thickness;
-	m_ball.pos.y += static_cast<float>(std::rand())/RAND_MAX*(game_height-game_margin*2-wall_thickness*2);
+	m_ball->pos.x = game_margin + wall_thickness;
+	m_ball->pos.y = game_margin + wall_thickness;
+	m_ball->pos.y += static_cast<float>(std::rand())/RAND_MAX*(game_height-game_margin*2-wall_thickness*2);
 
 	// randomize y-velocity
-	auto& velocity = m_ball.get<glm::vec2>("velocity");
+	auto& velocity = m_ball->get<glm::vec2>("velocity");
 	velocity.x = 1.0f;
 	velocity.y = static_cast<float>(std::rand())/RAND_MAX-0.5f;
 	if (velocity.y < 0)
