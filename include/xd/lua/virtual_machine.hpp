@@ -7,6 +7,7 @@
 #include <xd/lua/exceptions.hpp>
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
+#include <luabind/operator.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
 

@@ -771,8 +771,8 @@ void xd::text_formatter::set_variable_delims(const std::string& open, const std:
 	m_variable_close_delim = close;
 }
 
-void xd::text_formatter::render(const std::string& text, xd::font::handle font, const xd::font_style& style,
-	xd::shader_program::handle shader, const glm::mat4& mvp)
+void xd::text_formatter::render(const std::string& text, xd::font::ptr font, const xd::font_style& style,
+	xd::shader_program::ptr shader, const glm::mat4& mvp)
 {
 	// parse the input
 	detail::text_formatter::token_list tokens;

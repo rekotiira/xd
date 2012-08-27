@@ -7,9 +7,9 @@
 #include <xd/graphics/exceptions.hpp>
 #include <xd/graphics/font.hpp>
 #include <xd/graphics/shader_program.hpp>
-#include <xd/handle.hpp>
-#include <xd/weak_handle.hpp>
+#include <xd/ref_counted.hpp>
 #include <xd/vendor/utf8.h>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
 #include <boost/noncopyable.hpp>
@@ -231,11 +231,10 @@ namespace xd
 		friend class detail::text_formatter::decorate_text;
 	};
 
-	class XD_API text_formatter
+	class XD_API text_formatter : public xd::ref_counted
 	{
 	public:
-		typedef xd::handle<text_formatter> handle;
-		typedef xd::weak_handle<text_formatter> weak_handle;
+		typedef boost::intrusive_ptr<text_formatter> ptr;
 
 		typedef std::function<void (text_decorator&, const formatted_text&, const text_decorator_args&)> decorator_callback_t;
 		typedef std::function<std::string (const std::string&)> variable_callback_t;
@@ -262,8 +261,8 @@ namespace xd
 		void unregister_decorator(const std::string& name);
 		void unregister_variable(const std::string& name);
 
-		void render(const std::string& text, xd::font::handle font, const xd::font_style& style,
-			xd::shader_program::handle shader, const glm::mat4& mvp);
+		void render(const std::string& text, xd::font::ptr font, const xd::font_style& style,
+			xd::shader_program::ptr shader, const glm::mat4& mvp);
 
 	private:
 		//typedef std::list<detail::text_formatter_token> token_list_t;

@@ -14,15 +14,15 @@ namespace xd
 	{
 	public:
 		text_renderer();
-		text_renderer(shader_program::handle shader);
+		text_renderer(shader_program::ptr shader);
 		virtual ~text_renderer();
 
-		void render(xd::font::handle font, const xd::font_style& style, const mat4& mvp, const std::string& text);
-		void render_formatted(xd::font::handle font, xd::text_formatter::handle formatter,
+		void render(xd::font::ptr font, const xd::font_style& style, const mat4& mvp, const std::string& text);
+		void render_formatted(xd::font::ptr font, xd::text_formatter::ptr formatter,
 			const xd::font_style& style, const mat4& mvp, const std::string& text);
 
 	private:
-		shader_program::handle m_shader;		
+		shader_program::ptr m_shader;		
 	};
 }
 

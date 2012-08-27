@@ -1,7 +1,7 @@
 #ifndef H_XD_SYSTEM_WINDOW
 #define H_XD_SYSTEM_WINDOW
 
-#include <xd/handle.hpp>
+#include <xd/ref_counted.hpp>
 #include <xd/system/window_options.hpp>
 #include <xd/system/input.hpp>
 #include <xd/graphics/transform_geometry.hpp>
@@ -21,12 +21,11 @@
 
 namespace xd
 {
-	class XD_API window : public boost::noncopyable
+	class XD_API window : public xd::ref_counted, public boost::noncopyable
 	{
 	public:
 		// typedefs
-		typedef xd::handle<window> handle;
-		typedef xd::weak_handle<window> weak_handle;
+		typedef boost::intrusive_ptr<window> ptr;
 		typedef xd::event_bus<input_args>::callback_t input_event_callback_t;
 		typedef std::function<void ()> tick_callback_t;
 

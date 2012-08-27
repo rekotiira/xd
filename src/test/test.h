@@ -37,14 +37,14 @@ private:
 	my_vertex_batch m_grass_batch, m_edge_batch;
 
 	// textures
-	xd::texture::handle m_grass_texture;
-	xd::texture::handle m_grass_edge_texture;
-	xd::texture::handle m_edge_texture;
-	xd::texture::handle m_mask_texture;
+	xd::texture::ptr m_grass_texture;
+	xd::texture::ptr m_grass_edge_texture;
+	xd::texture::ptr m_edge_texture;
+	xd::texture::ptr m_mask_texture;
 
 	// text rendering stuff
-	xd::stock_text_formatter m_text_formatter;
-	xd::font m_font;
+	xd::stock_text_formatter::ptr m_text_formatter;
+	xd::font::ptr m_font;
 
 	// game variables
 	bool m_hor_animating;

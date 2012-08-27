@@ -1,18 +1,18 @@
 #ifndef H_XD_GRAPHICS_VERTEX_BATCH
 #define H_XD_GRAPHICS_VERTEX_BATCH
 
-#include <xd/handle.hpp>
+#include <xd/ref_counted.hpp>
 #include <xd/graphics/vertex_traits.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/noncopyable.hpp>
 
 namespace xd
 {
 	template <typename Traits>
-	class vertex_batch : public boost::noncopyable
+	class vertex_batch : public xd::ref_counted, public boost::noncopyable
 	{
 	public:
-		typedef xd::handle<vertex_batch> handle;
-		typedef xd::weak_handle<vertex_batch> weak_handle;
+		typedef boost::intrusive_ptr<vertex_batch> ptr;
 
 		vertex_batch(GLenum draw_mode = GL_TRIANGLES, const Traits& traits = Traits())
 			: m_draw_mode(draw_mode)

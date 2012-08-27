@@ -5,7 +5,7 @@ namespace xd { namespace detail {
 
 	// keep only a single text_shader loaded
 	// this is defined in simple_text_renderer.cpp
-	extern xd::text_shader::handle text_renderer_shader;
+	extern xd::text_shader::ptr text_renderer_shader;
 
 } }
 
@@ -17,7 +17,7 @@ xd::text_renderer::text_renderer()
 	m_shader = detail::text_renderer_shader;
 }
 
-xd::text_renderer::text_renderer(xd::shader_program::handle shader)
+xd::text_renderer::text_renderer(xd::shader_program::ptr shader)
 	: m_shader(shader)
 {
 }
@@ -26,12 +26,12 @@ xd::text_renderer::~text_renderer()
 {
 }
 
-void xd::text_renderer::render(xd::font::handle font, const xd::font_style& style, const xd::mat4& mvp, const std::string& text)
+void xd::text_renderer::render(xd::font::ptr font, const xd::font_style& style, const xd::mat4& mvp, const std::string& text)
 {
 	font->render(text, style, m_shader, mvp);
 }
 
-void xd::text_renderer::render_formatted(xd::font::handle font, xd::text_formatter::handle formatter,
+void xd::text_renderer::render_formatted(xd::font::ptr font, xd::text_formatter::ptr formatter,
 	const xd::font_style& style, const xd::mat4& mvp, const std::string& text)
 {
 	formatter->render(text, font, style, m_shader, mvp);

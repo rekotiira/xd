@@ -37,7 +37,8 @@ test::test()
 	: xd::window("3D Isometric Sample", 640, 480)
 	, m_grass_batch(GL_QUADS)
 	, m_edge_batch(GL_QUADS)
-	, m_font("verdanab.ttf")
+	, m_font(xd::create<xd::font>("verdanab.ttf"))
+	, m_text_formatter(xd::create<xd::stock_text_formatter>())
 	, m_grass_texture(xd::create<xd::texture>("grass.png"))
 	, m_grass_edge_texture(xd::create<xd::texture>("grass_edge.png"))
 	, m_edge_texture(xd::create<xd::texture>("edge.png"))
@@ -50,11 +51,13 @@ test::test()
 	, m_ver_target_angle(isometric)
 	, m_zoom(1.0f)
 {
+	std::cout << GL_R32F << std::endl;
+
 	// store pointer to model view for ease of access
 	m_model_view = &m_geometry.model_view();
 
 	// register variable and decorator
-	m_text_formatter.register_decorator("wave", &wave_decorator);
+	m_text_formatter->register_decorator("wave", &wave_decorator);
 
 	// enable multisampling, texturing and depth test
 	glEnable(GL_MULTISAMPLE);
@@ -299,7 +302,6 @@ void test::run()
 
 		//xd::text_renderer render_text;
 		//render_text.render_formatted(m_font, m_text_formatter, style, m_geometry.mvp(), text);
-
 		swap();
 	}
 }

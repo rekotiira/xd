@@ -2,9 +2,10 @@
 #define H_XD_GRAPHICS_SHADER_PROGRAM
 
 #include <xd/config.hpp>
-#include <xd/handle.hpp>
+#include <xd/ref_counted.hpp>
 #include <xd/vendor/glew/glew.h>
 #include <xd/glm.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
 
@@ -12,11 +13,10 @@
 
 namespace xd
 {
-	class XD_API shader_program : public boost::noncopyable
+	class XD_API shader_program : public xd::ref_counted, public boost::noncopyable
 	{
 	public:
-		typedef xd::handle<shader_program> handle;
-		typedef xd::weak_handle<shader_program> weak_handle;
+		typedef boost::intrusive_ptr<shader_program> ptr;
 
 		// constructors & destructors
 		shader_program();

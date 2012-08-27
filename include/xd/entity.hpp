@@ -3,12 +3,14 @@
 
 #include <xd/detail/entity.hpp>
 
-#include <xd/handle.hpp>
+#include <xd/ref_counted.hpp>
 #include <xd/event_bus.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/config.hpp>
 #include <boost/any.hpp>
 #include <unordered_map>
 #include <functional>
+#include <algorithm>
 #include <memory>
 #include <list>
 #include <map>
@@ -35,28 +37,28 @@ namespace xd
 	{
 	};
 	
-	class entity_base
+	class entity_placeholder
 	{
 	protected:
-		~entity_base() {}
+		~entity_placeholder() {}
 	};
     
-	template <typename Base = entity_base>
-	class entity : public Base
+	template <typename Class = entity_placeholder>
+	class entity : public xd::ref_counted
 	{
 	public:
 		// required for xd::factory
-		typedef xd::handle<entity> handle;
-		typedef xd::weak_handle<entity> weak_handle;
-		// component handle typedefs
-		typedef typename xd::component<entity<Base>>::handle component_handle;
-		typedef typename xd::logic_component<entity<Base>>::handle logic_component_handle;
-		typedef typename xd::render_component<entity<Base>>::handle render_component_handle;
+		typedef boost::intrusive_ptr<entity> ptr;
+		// component ptr typedefs
+		typedef typename xd::component<Class>::ptr component_ptr;
+		typedef typename xd::logic_component<Class>::ptr logic_component_ptr;
+		typedef typename xd::render_component<Class>::ptr render_component_ptr;
 
 		entity()
 		{
 		}
 
+/*
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 		// constructor that delegates parameters to the entity_base
 		template <typename... Args>
@@ -74,6 +76,7 @@ namespace xd
 			: Base(base)
 		{
 		}
+*/
 
 		virtual ~entity()
 		{
@@ -155,75 +158,75 @@ namespace xd
 			get_event_bus<T>()[name](args);
 		}
         
-		void add_component(const logic_component_handle& component, int priority = 0)
+		void add_component(const logic_component_ptr& component, int priority = 0)
 		{
 			m_components[priority].logic_components.push_back(component);
-			component->init(*this);
+			component->init(*static_cast<Class*>(this));
 		}
         
-		void add_component(const render_component_handle& component, int priority = 0)
+		void add_component(const render_component_ptr& component, int priority = 0)
 		{
 			m_components[priority].render_components.push_back(component);
-			component->init(*this);
+			component->init(*static_cast<Class*>(this));
 		}
         
-		void add_component(const component_handle& component, int priority = 0)
+		void add_component(const component_ptr& component, int priority = 0)
 		{
 			m_components[priority].logic_components.push_back(component);
 			m_components[priority].render_components.push_back(component);
-			component->init(*this);
+			component->init(*static_cast<Class*>(this));
 		}
 
-		void del_component(const logic_component_handle& component, int priority)
+		void del_component(const logic_component_ptr& component, int priority)
 		{
 			logic_component_list_t& components = m_components[priority].logic_components;
-			auto i = components.find(component);
+			auto i = std::find(components.begin(), components.end(), component);
 			if (i != components.end()) {
 				components.erase(i);
 			}
 		}
 
-		void del_component(const logic_component_handle& component)
+		void del_component(const logic_component_ptr& component)
 		{
 			for (auto i = m_components.begin(); i != m_components.end(); ++i) {
 				del_component(component, i->first);
 			}
 		}
 
-		void del_component(const render_component_handle& component, int priority)
+		void del_component(const render_component_ptr& component, int priority)
 		{
 			logic_component_list_t& components = m_components[priority].logic_components;
-			auto i = components.find(component);
+			auto i = std::find(components.begin(), components.end(), component);
 			if (i != components.end()) {
 				components.erase(i);
 			}
 		}
 
-		void del_component(const render_component_handle& component)
+		void del_component(const render_component_ptr& component)
 		{
 			for (auto i = m_components.begin(); i != m_components.end(); ++i) {
 				del_component(component, i->first);
 			}
 		}
 
-		void del_component(const component_handle& component, int priority)
+		void del_component(const component_ptr& component, int priority)
 		{
 			components_set& components = m_components[priority];
 			{
-				auto i = components.logic_components.find(component);
+				auto i = std::find(components.logic_components.begin(), components.logic_components.end(), component);
 				if (i != components.end()) {
 					components.erase(i);
 				}
 			}
 			{
-				auto i = components.render_components.find(component);
+				auto i = std::find(components.render_components.begin(), components.render_components.end(), component);
 				if (i != components.end()) {
 					components.erase(i);
 				}
 			}
 		}
 
-		void del_component(const component_handle& component)
+		void del_component(const component_ptr& component)
 		{
 			for (auto i = m_components.begin(); i != m_components.end(); ++i) {
 				del_component(component, i->first);
@@ -239,7 +242,7 @@ namespace xd
 		{
 			for (auto i = m_components.begin(); i != m_components.end(); ++i) {
 				for (auto j = i->second.logic_components.begin(); j != i->second.logic_components.end(); ++j) {
-					(*j)->update(*this);
+					(*j)->update(*static_cast<Class*>(this));
 				}
 			}
 		}
@@ -248,14 +251,14 @@ namespace xd
 		{
 			for (auto i = m_components.begin(); i != m_components.end(); ++i) {
 				for (auto j = i->second.render_components.begin(); j != i->second.render_components.end(); ++j) {
-					(*j)->render(*this);
+					(*j)->render(*static_cast<Class*>(this));
 				}
 			}
 		}
         
 	private:
-		typedef std::list<logic_component_handle> logic_component_list_t;
-		typedef std::list<render_component_handle> render_component_list_t;
+		typedef std::list<logic_component_ptr> logic_component_list_t;
+		typedef std::list<render_component_ptr> render_component_list_t;
 
 		// data
 		std::unordered_map<std::size_t, boost::any> m_type_to_data;

@@ -3,9 +3,10 @@
 
 #include <xd/lua/detail/scheduler_task.hpp>
 #include <xd/config.hpp>
-#include <xd/handle.hpp>
+#include <xd/ref_counted.hpp>
 #include <xd/lua/config.hpp>
 #include <luabind/luabind.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <memory>
 
 namespace xd
@@ -63,11 +64,10 @@ namespace xd
 
 
 		// a base class for scheduler tasks
-		class scheduler_task
+		class scheduler_task : public xd::ref_counted
 		{
 		public:
-				typedef handle<scheduler_task> handle;
-				typedef weak_handle<scheduler_task> weak_handle;
+				typedef boost::intrusive_ptr<scheduler_task> ptr;
 
 				virtual ~scheduler_task() {}
 				virtual bool is_complete() = 0;

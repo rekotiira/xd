@@ -116,7 +116,7 @@ void xd::font::link_font(const std::string& type, const std::string& filename)
 	m_linked_fonts[type] = linked_font;
 }
 
-void xd::font::link_font(const std::string& type, font::handle font)
+void xd::font::link_font(const std::string& type, font::ptr font)
 {
 	m_linked_fonts[type] = font;
 }
@@ -182,7 +182,7 @@ const xd::detail::font::glyph& xd::font::load_glyph(utf8::uint32_t char_index, i
 }
 
 void xd::font::render(const std::string& text, const font_style& style,
-	xd::shader_program::handle shader, const glm::mat4& mvp, glm::vec2 *pos)
+	xd::shader_program::ptr shader, const glm::mat4& mvp, glm::vec2 *pos)
 {
 	// check if we're rendering using this font or a linked font
 	if (style.m_type && style.m_type->length() != 0) {

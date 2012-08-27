@@ -1,4 +1,4 @@
-#ifndef H_XD_HANDLE
+/*#ifndef H_XD_HANDLE
 #define H_XD_HANDLE
 
 #include <xd/detail/noop_deleter.hpp>
@@ -189,3 +189,4 @@ namespace xd
 }
 
 #endif
+*/

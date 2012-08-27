@@ -9,7 +9,7 @@ namespace xd { namespace lua { namespace detail {
 	struct scheduler_thread_task
 	{
 		lua_State *thread;
-		scheduler_task::handle task;
+		scheduler_task::ptr task;
 	};
 
 	struct scheduler_task_list
@@ -132,12 +132,18 @@ void xd::lua::scheduler::run()
 	}
 }
 
-void xd::lua::scheduler::yield(xd::lua::scheduler_task::handle task)
+void xd::lua::scheduler::yield(xd::lua::scheduler_task::ptr task)
 {
 	detail::scheduler_thread_task thread_task;
 	thread_task.thread = m_current_thread;
 	thread_task.task = task;
 	m_tasks->tasks.push_back(thread_task);
+	// pusnnil is used to ensure that a call to a C++ function
+	// that yields will return a NIL object, otherwise the return
+	// value would be the first parameter passed to the function
+	// which could confuse the scheduler as it uses the return type
+	// to determine whether it was lua or C++ function that yielded
+	lua_pushnil(m_current_thread);
 }
 
 int xd::lua::scheduler::pending_tasks()

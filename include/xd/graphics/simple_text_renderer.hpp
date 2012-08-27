@@ -14,16 +14,16 @@ namespace xd
 	{
 	public:
 		simple_text_renderer(float width, float height);
-		simple_text_renderer(float width, float height, shader_program::handle shader);
+		simple_text_renderer(float width, float height, shader_program::ptr shader);
 		virtual ~simple_text_renderer();
 
-		void render(xd::font::handle font, const xd::font_style& style, float x, float y, const std::string& text);
-		void render_formatted(xd::font::handle font, xd::text_formatter::handle formatter,
+		void render(xd::font::ptr font, const xd::font_style& style, float x, float y, const std::string& text);
+		void render_formatted(xd::font::ptr font, xd::text_formatter::ptr formatter,
 			const xd::font_style& style, float x, float y, const std::string& text);
 
 	private:
 		mat4 m_projection;
-		shader_program::handle m_shader;		
+		shader_program::ptr m_shader;		
 	};
 }
 

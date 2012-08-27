@@ -1,4 +1,4 @@
-#ifndef H_XD_WEAK_HANDLE
+/*#ifndef H_XD_WEAK_HANDLE
 #define H_XD_WEAK_HANDLE
 
 #include <xd/handle.hpp>
@@ -145,3 +145,4 @@ namespace xd
 }
 
 #endif
+*/

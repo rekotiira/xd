@@ -12,6 +12,8 @@ namespace xd
 	class XD_API stock_text_formatter : public text_formatter
 	{
 	public:
+		typedef boost::intrusive_ptr<stock_text_formatter> ptr;
+
 		stock_text_formatter();
 		virtual ~stock_text_formatter();
 

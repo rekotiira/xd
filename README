@@ -47,9 +47,10 @@ Some of the features XD supports:
 TODO:
 - Change GLFW to SFML for various reasons
 - Make API calls that use GL functions not change the previous state of GL (use DSA extension when available)
-- Separate font from text rendering, and make the API to render text simpler
-- Support multiple sizes per font object, instead of just one
 - More advanced features for text rendering, such as bounding boxes with auto-wrapping
+- Allow creationg of textures from custom data (not just loaded images), for texture generation
+- Add separate class for sprite, sprite_batch will use it internally
+- Make sprite_batch to be more efficient
 - Finish binding rest of the XD API to Lua
 - Generic scene graph (scene/entity structuring/ordering)
 - Joystick and gamepad support

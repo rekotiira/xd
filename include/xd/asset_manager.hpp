@@ -1,8 +1,7 @@
 #ifndef H_XD_ASSET_MANAGER
 #define H_XD_ASSET_MANAGER
 
-#include <xd/handle.hpp>
-#include <xd/weak_handle.hpp>
+#include <xd/ref_counted.hpp>
 #include <xd/asset_serializer.hpp>
 #include <boost/any.hpp>
 #include <unordered_map>
@@ -20,7 +19,7 @@ namespace xd
 	public:
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 		template <typename T, typename... Args>
-		typename T::handle load(Args&&... args)
+		typename T::ptr load(Args&&... args)
 		{
 			// create serializer for asset type and get cache key
 			asset_serializer<T> serializer;
@@ -41,13 +40,13 @@ namespace xd
 				loaded_assets.erase(it2);
 			}
 			// not loaded in either map, create it
-			typename T::handle resource(new T(std::forward<Args>(args)...));
+			typename T::ptr resource(new T(std::forward<Args>(args)...));
 			loaded_assets.insert(std::make_pair(cache_key, resource));
 			return resource;
 		}
 
 		template <typename T, typename... Args>
-		typename T::handle load_persistent(Args&&... args)
+		typename T::ptr load_persistent(Args&&... args)
 		{
 			// create serializer for asset type and get cache key
 			asset_serializer<T> serializer;
@@ -72,7 +71,7 @@ namespace xd
 				loaded_assets.erase(it2);
 			}
 			// not loaded in either map, create it
-			typename T::handle resource(new T(std::forward<Args>(args)...));
+			typename T::ptr resource(new T(std::forward<Args>(args)...));
 			persistent_assets.insert(std::make_pair(cache_key, resource));
 			return resource;
 		}

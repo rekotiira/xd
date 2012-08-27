@@ -4,7 +4,7 @@
 namespace xd { namespace detail {
 
 	// keep only a single text_shader loaded
-	xd::text_shader::handle text_renderer_shader;
+	xd::text_shader::ptr text_renderer_shader;
 
 } }
 
@@ -18,7 +18,7 @@ xd::simple_text_renderer::simple_text_renderer(float width, float height)
 	m_shader = detail::text_renderer_shader;
 }
 
-xd::simple_text_renderer::simple_text_renderer(float width, float height, xd::shader_program::handle shader)
+xd::simple_text_renderer::simple_text_renderer(float width, float height, xd::shader_program::ptr shader)
 	: m_shader(shader)
 {
 	// setup an orthographic projection where 0 = top and height = bottom
@@ -29,13 +29,13 @@ xd::simple_text_renderer::~simple_text_renderer()
 {
 }
 
-void xd::simple_text_renderer::render(xd::font::handle font, const xd::font_style& style, float x, float y, const std::string& text)
+void xd::simple_text_renderer::render(xd::font::ptr font, const xd::font_style& style, float x, float y, const std::string& text)
 {
 	glm::vec2 pos(x, y);
 	font->render(text, style, m_shader, m_projection, &pos);
 }
 
-void xd::simple_text_renderer::render_formatted(xd::font::handle font, xd::text_formatter::handle formatter,
+void xd::simple_text_renderer::render_formatted(xd::font::ptr font, xd::text_formatter::ptr formatter,
 	const xd::font_style& style, float x, float y, const std::string& text)
 {
 	auto mvp = xd::translate(m_projection, vec3(x, y, 0));

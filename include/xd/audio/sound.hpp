@@ -2,7 +2,8 @@
 #define H_XD_AUDIO_SOUND
 
 #include <xd/config.hpp>
-#include <xd/handle.hpp>
+#include <xd/ref_counted.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
 
@@ -15,13 +16,14 @@ namespace xd
 		struct sound_handle;
 	}
 
-	class XD_API sound : public boost::noncopyable
+	class XD_API sound : public xd::ref_counted, public boost::noncopyable
 	{
-	public:
-		typedef handle<sound> handle;
-		typedef weak_handle<sound> weak_handle;
-
+	private:
 		sound(const std::string& filename);
+
+	public:
+		typedef boost::intrusive_ptr<sound> ptr;
+
 		virtual ~sound();
 
 		void play();
