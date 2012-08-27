@@ -128,6 +128,7 @@ void xd::window::update()
 	if (m_tick_handler) {
 		m_tick_handler_counter += delta_ticks();
 		while (m_tick_handler_counter >= m_tick_handler_interval) {
+			m_triggered_keys.clear();
 			m_tick_handler();
 			m_tick_handler_counter -= m_tick_handler_interval;
 		}
