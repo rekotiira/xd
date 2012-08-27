@@ -57,10 +57,6 @@ namespace xd
 		typedef typename xd::logic_component<Class>::ptr logic_component_ptr;
 		typedef typename xd::render_component<Class>::ptr render_component_ptr;
 
-		entity()
-		{
-		}
-
 /*
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 		// constructor that delegates parameters to the entity_base
@@ -257,6 +253,13 @@ namespace xd
 					(*j)->render(*static_cast<Class*>(this));
 				}
 			}
+		}
+
+	protected:
+		// you should always construct entity using the derived class
+		// hence constructor is protected to prevent mistakes
+		entity()
+		{
 		}
         
 	private:
