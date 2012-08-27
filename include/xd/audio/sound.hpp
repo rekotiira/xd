@@ -18,12 +18,10 @@ namespace xd
 
 	class XD_API sound : public xd::ref_counted, public boost::noncopyable
 	{
-	private:
-		sound(const std::string& filename);
-
 	public:
 		typedef boost::intrusive_ptr<sound> ptr;
 
+		sound(const std::string& filename);
 		virtual ~sound();
 
 		void play();
