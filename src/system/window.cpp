@@ -127,10 +127,14 @@ void xd::window::update()
 	// invoke tick handler if necessary
 	if (m_tick_handler) {
 		m_tick_handler_counter += delta_ticks();
-		while (m_tick_handler_counter >= m_tick_handler_interval) {
-			m_triggered_keys.clear();
-			m_tick_handler();
-			m_tick_handler_counter -= m_tick_handler_interval;
+		if (m_tick_handler_counter >= m_tick_handler_interval) {
+			trigger_keys_t triggered_keys_copy = m_triggered_keys;
+			while (m_tick_handler_counter >= m_tick_handler_interval) {
+				m_tick_handler();
+				m_tick_handler_counter -= m_tick_handler_interval;
+				m_triggered_keys.clear();
+			}
+			m_triggered_keys = triggered_keys_copy;
 		}
 	}
 
