@@ -106,6 +106,10 @@ namespace xd
 
 		// key triggers
 		trigger_keys_t m_triggered_keys;
+		trigger_keys_t m_tick_handler_triggered_keys;
+
+		// to keep track whether we're in update or not
+		bool m_in_update;
 
 		// event busses
 		event_bus<input_args> m_input_events;

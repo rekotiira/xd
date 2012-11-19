@@ -22,6 +22,7 @@ namespace
 xd::window::window(const std::string& title, int width, int height, const window_options& options)
 	: m_width(width)
 	, m_height(height)
+	, m_in_update(false)
 {
 	// check if there's already a window alive
 	if (window_instance) {
@@ -106,6 +107,7 @@ void xd::window::on_input(input_type type, int key, int action)
 	// add to triggered keys if keydown event and launch the event
 	if (action == GLFW_PRESS) {
 		m_triggered_keys.insert(args.physical_key);
+		m_tick_handler_triggered_keys.insert(args.physical_key);
 		m_input_events["key_down"](args);
 	} else {
 		m_input_events["key_up"](args);
@@ -114,6 +116,9 @@ void xd::window::on_input(input_type type, int key, int action)
 
 void xd::window::update()
 {
+	// this is used to keep track which triggered keys list triggered() uses
+	m_in_update = true;
+
 	// clear the triggered keys
 	m_triggered_keys.clear();
 
@@ -127,14 +132,10 @@ void xd::window::update()
 	// invoke tick handler if necessary
 	if (m_tick_handler) {
 		m_tick_handler_counter += delta_ticks();
-		if (m_tick_handler_counter >= m_tick_handler_interval) {
-			trigger_keys_t triggered_keys_copy = m_triggered_keys;
-			while (m_tick_handler_counter >= m_tick_handler_interval) {
-				m_tick_handler();
-				m_tick_handler_counter -= m_tick_handler_interval;
-				m_triggered_keys.clear();
-			}
-			m_triggered_keys = triggered_keys_copy;
+		while (m_tick_handler_counter >= m_tick_handler_interval) {
+			m_tick_handler();
+			m_tick_handler_counter -= m_tick_handler_interval;
+			m_tick_handler_triggered_keys.clear();
 		}
 	}
 
@@ -147,6 +148,7 @@ void xd::window::update()
 
 	// increase frame count
 	m_frame_count++;
+	m_in_update = false;
 }
 
 void xd::window::clear()
@@ -286,7 +288,10 @@ bool xd::window::pressed(const std::string& key, int modifiers) const
 
 bool xd::window::triggered(const xd::key& key, int modifiers) const
 {
-	return (m_triggered_keys.find(key) != m_triggered_keys.end() && modifier(modifiers));
+	if (m_in_update)
+		return (m_tick_handler_triggered_keys.find(key) != m_tick_handler_triggered_keys.end() && modifier(modifiers));
+	else
+		return (m_triggered_keys.find(key) != m_triggered_keys.end() && modifier(modifiers));
 }
 
 bool xd::window::triggered(const std::string& key, int modifiers) const
